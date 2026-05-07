@@ -1,50 +1,110 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+# Nokia Payment Processing Application Constitution
+
+## Overview
+
+This constitution defines the foundational principles governing the development and operation of the Nokia Payment Processing Backend Server. All architectural and implementation decisions must align with these principles.
 
 ## Core Principles
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### Principle 1: The Law of Idempotency
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+**Rules:**
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+- Every incoming payment request MUST be assigned a unique payment_id at the entry point
+- This ID MUST be used as the Idempotency Key for all downstream services
+- The system MUST persist the record in a RECEIVED state in the Database before acknowledging the client.
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+**Rationale:**
+If we process millions of requests, we will receive duplicates. Without a hard idempotency key persisted at the gateway, we will double-charge customers. The DB is the only authority.
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+### Principle 2: MQ-Driven Statelessness
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+**Rules:**
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+- Application instances MUST be stateless and interchangeable
+- All processing tasks MUST be pulled from a Message Queue.
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+**Rationale:**
+We don't know how many instances a Load Balancer will spin up. A central queue is the only way to ensure tasks are processed fast and concurrently without race conditions.
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+### Principle 3: Hybrid Retry Mechanism (API-Side)
+
+**Rules:**
+
+- If the external Payment API is offline or returns a network error, the worker MUST retry up to 5 times using exponential backoff
+- If the 5th attempt fails, the task MUST be moved to the Dead Letter Queue (DLQ).
+
+**Rationale:**
+Transient network blips are a reality in networking; we engineer around them, but we do not loop forever and block the pipeline.
+
+### Principle 4: Hybrid Retry Mechanism (DB-Side)
+
+**Rules:**
+
+- After receiving a successful response from the Payment API, if the worker fails to update the local Database status, it MUST retry the update 5 times
+- If retries are exhausted, the payment is sent to the DLQ.
+
+**Rationale:**
+A successful external payment that isn't reflected in our Source of Truth is a critical failure. We retry until the internal state matches the external reality.
+
+### Principle 5: The "Hall of Shame" (DLQ Governance)
+
+**Rules:**
+
+- All messages in the DLQ MUST be handled manually
+- Automated DLQ processing is forbidden in this iteration.
+
+**Rationale:**
+If a transaction fails 10 total retries, it is a structural anomaly. A human must inspect the mess before we allow any further automation to touch it.
+
+### Principle 6: Latency and Failure Transparency
+
+**Rules:**
+
+- The system MUST handle the mock API's random 10ms to 2s delay window without blocking primary ingestion threads
+- No silent failures are permitted; all exceptions must be logged at the CRITICAL level.
+
+**Rationale:**
+Payment processing demands absolute reliability. Silent failures hide critical issues, and blocking threads create cascading failures that can bring down the entire system.
+
+## Implementation Standards
+
+### Database Requirements
+
+- ACID compliance mandatory for all payment transactions
+- All state transitions must be atomically recorded
+- Idempotency keys required to prevent duplicate processing
+
+### API Integration
+
+- Exponential backoff with jitter for retry logic
+- Circuit breaker pattern to isolate failing services
+- Request/response logging for all external calls
+
+### Concurrency & Scalability
+
+- No in-process memory for payment state
+- Thread-safe operations or distributed locks required
+- Horizontal scaling without code changes must be supported
+
+### Observability
+
+- Structured logging with full payment state at each transition
+- Metrics collection for latency, success rates, and failure modes
+- Audit trail immutability for all payment records
 
 ## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+**Constitution Compliance:**
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+- Constitution supersedes all other development practices
+- All architectural decisions must be justified against these principles
+- Code reviews must verify compliance with all six principles
+
+**Amendments:**
+
+- Changes to this constitution require explicit documentation and ratification
+- Migration plans mandatory for any principle changes
+- Version updates required with each amendment
+
+**Version:** 3.0.0 | **Ratified:** 2026-05-07 | **Last Amended:** 2026-05-07
