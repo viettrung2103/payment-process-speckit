@@ -21,12 +21,12 @@ The Payment Ingestion API provides the entry point for payment requests into the
 
 #### Request Headers
 
-| Header | Required | Description | Example |
-|--------|----------|-------------|---------|
-| Content-Type | Yes | Must be application/json | application/json |
-| X-API-Key | Yes | API authentication key | pk_live_1234567890 |
-| X-Idempotency-Key | Yes | Unique request identifier | req_550e8400-e29b-41d4-a716-446655440000 |
-| X-Client-Reference | No | Optional client-side reference | order_12345 |
+| Header             | Required | Description                    | Example                                  |
+| ------------------ | -------- | ------------------------------ | ---------------------------------------- |
+| Content-Type       | Yes      | Must be application/json       | application/json                         |
+| X-API-Key          | Yes      | API authentication key         | pk_live_1234567890                       |
+| X-Idempotency-Key  | Yes      | Unique request identifier      | req_550e8400-e29b-41d4-a716-446655440000 |
+| X-Client-Reference | No       | Optional client-side reference | order_12345                              |
 
 #### Request Body Schema
 
@@ -39,7 +39,7 @@ The Payment Ingestion API provides the entry point for payment requests into the
     "amount": {
       "type": "number",
       "minimum": 0.01,
-      "maximum": 1000000.00,
+      "maximum": 1000000.0,
       "description": "Payment amount in decimal format"
     },
     "currency": {
@@ -67,6 +67,7 @@ The Payment Ingestion API provides the entry point for payment requests into the
 #### Request Examples
 
 **Valid Request:**
+
 ```http
 POST /api/v1/payments
 Content-Type: application/json
@@ -85,6 +86,7 @@ X-Idempotency-Key: req_550e8400-e29b-41d4-a716-446655440000
 ```
 
 **Duplicate Request (Idempotency Test):**
+
 ```http
 POST /api/v1/payments
 X-Idempotency-Key: req_550e8400-e29b-41d4-a716-446655440000
@@ -102,6 +104,7 @@ X-Idempotency-Key: req_550e8400-e29b-41d4-a716-446655440000
 **Description**: Payment request accepted and persisted. Processing continues asynchronously.
 
 **Response Headers:**
+
 ```
 Location: /api/v1/payments/status/550e8400-e29b-41d4-a716-446655440000
 Content-Type: application/json
@@ -109,6 +112,7 @@ X-Payment-ID: 550e8400-e29b-41d4-a716-446655440000
 ```
 
 **Response Body:**
+
 ```json
 {
   "paymentId": "550e8400-e29b-41d4-a716-446655440000",
@@ -131,6 +135,7 @@ X-Payment-ID: 550e8400-e29b-41d4-a716-446655440000
 **Description**: Request validation failed.
 
 **Response Body:**
+
 ```json
 {
   "error": "VALIDATION_ERROR",
@@ -153,6 +158,7 @@ X-Payment-ID: 550e8400-e29b-41d4-a716-446655440000
 **Description**: Idempotency key already used for a different request.
 
 **Response Body:**
+
 ```json
 {
   "error": "DUPLICATE_REQUEST",
@@ -171,11 +177,13 @@ X-Payment-ID: 550e8400-e29b-41d4-a716-446655440000
 **Description**: Request rate exceeds configured limits.
 
 **Response Headers:**
+
 ```
 Retry-After: 60
 ```
 
 **Response Body:**
+
 ```json
 {
   "error": "RATE_LIMITED",
@@ -189,6 +197,7 @@ Retry-After: 60
 **Description**: Unexpected system error occurred.
 
 **Response Body:**
+
 ```json
 {
   "error": "INTERNAL_ERROR",
@@ -200,16 +209,19 @@ Retry-After: 60
 ## Processing Guarantees
 
 ### Persistence Guarantee
+
 - Payment record is committed to database before 202 response is sent
 - System restart will not lose accepted payments
 - Implements Principle 1: No-Loss Persistence
 
 ### Idempotency Guarantee
+
 - Same idempotency key always returns same payment ID
 - Duplicate requests are rejected, not processed twice
 - Client references provide additional duplicate detection
 
 ### Asynchronous Processing
+
 - Response indicates acceptance, not completion
 - Processing continues in background via message queue
 - Status can be polled via Location header
@@ -217,16 +229,19 @@ Retry-After: 60
 ## Error Handling
 
 ### Validation Errors
+
 - All input validation occurs before persistence
 - Detailed error messages for client correction
 - No partial processing or side effects
 
 ### System Errors
+
 - Database connection failures return 500
 - Message queue failures return 500
 - All errors logged at CRITICAL level
 
 ### Recovery Behavior
+
 - Failed requests can be safely retried with same idempotency key
 - No duplicate processing due to idempotency guarantees
 - System recovers automatically from transient failures
@@ -234,15 +249,18 @@ Retry-After: 60
 ## Performance Characteristics
 
 ### Latency Targets
+
 - P95 response time: <200ms
 - P99 response time: <500ms
 - Database commit time: <50ms
 
 ### Throughput Targets
+
 - Sustained: 1000 requests/second
 - Burst capacity: 2000 requests/second (30 seconds)
 
 ### Rate Limiting
+
 - Per API key: 100 requests/second
 - Global: 5000 requests/second
 - Burst allowance: 200 requests
@@ -250,6 +268,7 @@ Retry-After: 60
 ## Monitoring & Observability
 
 ### Metrics Collected
+
 - Request rate by endpoint and API key
 - Response time distribution (P50, P95, P99)
 - Error rate by error type
@@ -257,6 +276,7 @@ Retry-After: 60
 - Database commit latency
 
 ### Logs Generated
+
 - All requests logged with payment ID and idempotency key
 - Validation failures logged with detailed reasons
 - System errors logged at CRITICAL level with full context
@@ -265,23 +285,27 @@ Retry-After: 60
 ## Testing Scenarios
 
 ### Happy Path
+
 1. Valid request → 202 Accepted with payment ID
 2. Payment persisted in RECEIVED state
 3. Message queued for processing
 4. Status endpoint returns RECEIVED
 
 ### Idempotency Test
+
 1. Same idempotency key used twice → Second request returns 409
 2. Both responses reference same payment ID
 3. No duplicate processing occurs
 
 ### Validation Test
+
 1. Invalid amount (< 0) → 400 Bad Request
 2. Invalid currency → 400 Bad Request
 3. Missing required fields → 400 Bad Request
 
 ### Error Recovery Test
+
 1. Database temporarily unavailable → 500 Internal Server Error
 2. Request can be safely retried with same idempotency key
 3. No duplicate processing after recovery</content>
-<parameter name="filePath">/Users/mac/Programming/payment-system-speckit/specs/001-resilient-payment-bridge/contracts/payment-ingestion-api.md
+   <parameter name="filePath">/Users/mac/Programming/payment-system-speckit/specs/001-resilient-payment-bridge/contracts/payment-ingestion-api.md

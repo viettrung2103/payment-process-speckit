@@ -19,38 +19,44 @@ Build a high-throughput, horizontally scalable payment middleware using Java 21 
 **Project Type**: Web service (payment middleware API)  
 **Performance Goals**: 1000 payments/minute per instance, P99 latency <500ms  
 **Constraints**: Zero data loss, stateless instances, 10ms-2s API latency tolerance  
-**Scale/Scope**: 10 instances max, 10k payments/minute total throughput  
+**Scale/Scope**: 10 instances max, 10k payments/minute total throughput
 
 ## Constitution Check
 
-*GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
+_GATE: Must pass before Phase 0 research. Re-check after Phase 1 design._
 
 ### ✅ Principle 1: The Law of Idempotency
+
 - **Status**: COMPLIANT
 - **Implementation**: Payment_id generation at gateway, persisted in RECEIVED state before MQ enqueue
 - **Evidence**: POST /api/v1/payments endpoint with X-Idempotency-Key header validation
 
 ### ✅ Principle 2: MQ-Driven Statelessness
+
 - **Status**: COMPLIANT
 - **Implementation**: RabbitMQ Direct Exchange with SimpleMessageListenerContainer
 - **Evidence**: Workers pull tasks from queue, no in-memory state between instances
 
 ### ✅ Principle 3: Hybrid Retry Mechanism (API-Side)
+
 - **Status**: COMPLIANT
 - **Implementation**: Resilience4j Circuit Breaker with Base 1.5 exponential backoff (5 retries)
 - **Evidence**: API error classification (4xx → immediate DLQ, 5xx/transient → retry)
 
 ### ✅ Principle 4: Hybrid Retry Mechanism (DB-Side)
+
 - **Status**: COMPLIANT
 - **Implementation**: 5 immediate retries for DB update failures after successful API response
 - **Evidence**: Manual ACK only after DB commit, rollback on DB failure
 
 ### ✅ Principle 5: The "Hall of Shame" (DLQ Governance)
+
 - **Status**: COMPLIANT
 - **Implementation**: RabbitMQ TTL-based DLQ routing, manual review required
 - **Evidence**: Failed payments after 10 total retries sent to DLQ with full context
 
 ### ✅ Principle 6: Latency and Failure Transparency
+
 - **Status**: COMPLIANT
 - **Implementation**: Virtual Threads + non-blocking I/O, CRITICAL level logging
 - **Evidence**: Prefetch count 20, Circuit Breaker protection, no silent failures
@@ -154,6 +160,7 @@ src/main/resources/
    - Load testing with Gatling
 
 ### Phase 2: Implementation Tasks (Output: tasks.md)
+
 - Dependency-ordered task breakdown
 - TDD test scenarios for each component
 - Integration testing strategy
@@ -165,11 +172,13 @@ src/main/resources/
 ## Risk Assessment
 
 ### High Risk Items
+
 1. **Virtual Threads Maturity**: Java 21 Virtual Threads are relatively new - Phase 0 research critical
 2. **Optimistic Locking Contention**: High concurrency may cause version conflicts - monitor and tune
 3. **Circuit Breaker Configuration**: Incorrect thresholds could cause false positives - extensive testing required
 
 ### Mitigation Strategies
+
 1. **Virtual Threads**: Comprehensive benchmarking in Phase 0, fallback to traditional threads if issues
 2. **Locking**: Start with conservative concurrency settings, scale up based on load testing
 3. **Circuit Breaker**: Configuration-driven settings with environment-specific tuning
@@ -188,4 +197,4 @@ src/main/resources/
 2. **Update Agent Context**: Configure Copilot with payment bridge context
 3. **Re-check Constitution**: Validate Phase 0 findings against principles
 4. **Proceed to Phase 1**: Create detailed design artifacts</content>
-<parameter name="filePath">/Users/mac/Programming/payment-system-speckit/specs/001-resilient-payment-bridge/plan.md
+   <parameter name="filePath">/Users/mac/Programming/payment-system-speckit/specs/001-resilient-payment-bridge/plan.md

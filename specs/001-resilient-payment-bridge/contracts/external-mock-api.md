@@ -20,11 +20,11 @@ The External Mock Payment API simulates a third-party payment processor with int
 
 #### Request Headers
 
-| Header | Required | Description | Example |
-|--------|----------|-------------|---------|
-| Content-Type | Yes | Must be application/json | application/json |
-| X-API-Key | Yes | Mock API authentication | mock_api_key_123 |
-| X-Request-ID | Yes | Unique request identifier | req_550e8400-e29b-41d4-a716-446655440000 |
+| Header       | Required | Description               | Example                                  |
+| ------------ | -------- | ------------------------- | ---------------------------------------- |
+| Content-Type | Yes      | Must be application/json  | application/json                         |
+| X-API-Key    | Yes      | Mock API authentication   | mock_api_key_123                         |
+| X-Request-ID | Yes      | Unique request identifier | req_550e8400-e29b-41d4-a716-446655440000 |
 
 #### Request Body Schema
 
@@ -42,7 +42,7 @@ The External Mock Payment API simulates a third-party payment processor with int
     "amount": {
       "type": "number",
       "minimum": 0.01,
-      "maximum": 1000000.00,
+      "maximum": 1000000.0,
       "description": "Payment amount in decimal format"
     },
     "currency": {
@@ -87,6 +87,7 @@ X-Request-ID: req_550e8400-e29b-41d4-a716-446655440000
 **Description**: Payment successfully processed.
 
 **Response Body:**
+
 ```json
 {
   "transactionId": "txn_mock_1234567890",
@@ -105,6 +106,7 @@ X-Request-ID: req_550e8400-e29b-41d4-a716-446655440000
 **Description**: Payment accepted for asynchronous processing.
 
 **Response Body:**
+
 ```json
 {
   "transactionId": "txn_mock_scheduled_1234567890",
@@ -124,6 +126,7 @@ X-Request-ID: req_550e8400-e29b-41d4-a716-446655440000
 **Description**: Request validation failed. **Immediate DLQ** - no retry.
 
 **Response Body:**
+
 ```json
 {
   "error": "INVALID_REQUEST",
@@ -143,6 +146,7 @@ X-Request-ID: req_550e8400-e29b-41d4-a716-446655440000
 **Description**: Authentication failed. **Immediate DLQ** - no retry.
 
 **Response Body:**
+
 ```json
 {
   "error": "UNAUTHORIZED",
@@ -156,11 +160,13 @@ X-Request-ID: req_550e8400-e29b-41d4-a716-446655440000
 **Description**: Request rate exceeded. **Retry with exponential backoff**.
 
 **Response Headers:**
+
 ```
 Retry-After: 30
 ```
 
 **Response Body:**
+
 ```json
 {
   "error": "RATE_LIMITED",
@@ -175,6 +181,7 @@ Retry-After: 30
 **Description**: Internal processing error. **Retry with exponential backoff**.
 
 **Response Body:**
+
 ```json
 {
   "error": "PROCESSING_ERROR",
@@ -189,6 +196,7 @@ Retry-After: 30
 **Description**: External service unavailable. **Retry with exponential backoff**.
 
 **Response Body:**
+
 ```json
 {
   "error": "UPSTREAM_ERROR",
@@ -203,6 +211,7 @@ Retry-After: 30
 **Description**: Service temporarily unavailable. **Retry with exponential backoff**.
 
 **Response Body:**
+
 ```json
 {
   "error": "SERVICE_UNAVAILABLE",
@@ -218,6 +227,7 @@ Retry-After: 30
 **Description**: Request timed out. **Retry with exponential backoff**.
 
 **Response Body:**
+
 ```json
 {
   "error": "TIMEOUT",
@@ -243,6 +253,7 @@ The mock API intentionally introduces variable latency to test the Payment Bridg
 
 **Success Rate**: 85% of requests succeed (200/201 responses)
 **Failure Distribution**:
+
 - 400 Bad Request: 5% (client errors - immediate DLQ)
 - 401 Unauthorized: 1% (auth errors - immediate DLQ)
 - 429 Rate Limited: 3% (retryable)
@@ -278,6 +289,7 @@ resilience4j.circuitbreaker:
 ### Retry Configuration
 
 **API-Side Retry (Principle 3)**:
+
 - Max attempts: 5
 - Backoff: Base 1.5 exponential (0.5s, 1.25s, 2.25s, 3.375s, 4.75s)
 - Total window: ~12 seconds
@@ -287,6 +299,7 @@ resilience4j.circuitbreaker:
 ### Timeout Configuration
 
 **Request Timeouts**:
+
 - Connect timeout: 5 seconds
 - Read timeout: 2 seconds (matches latency tolerance)
 - Total timeout: 10 seconds (allows for retries)
@@ -316,18 +329,21 @@ public boolean isRetryable(HttpStatusCode statusCode) {
 ### Resilience Testing
 
 **Circuit Breaker Test**:
+
 1. Simulate 50% failure rate for 60 seconds
 2. Verify circuit breaker opens after threshold
 3. Confirm fast-fail behavior during open state
 4. Test half-open recovery after wait duration
 
 **Retry Logic Test**:
+
 1. Force 503 responses for first 4 attempts
 2. Verify exponential backoff timing
 3. Confirm success on 5th attempt
 4. Test DLQ routing after 5 failed retries
 
 **Timeout Test**:
+
 1. Configure mock API to delay 2.5 seconds
 2. Verify timeout triggers 504 response
 3. Confirm retry logic handles timeout errors
@@ -335,12 +351,14 @@ public boolean isRetryable(HttpStatusCode statusCode) {
 ### Load Testing
 
 **Concurrent Request Test**:
+
 1. Send 1000 concurrent requests
 2. Verify latency distribution (P99 < 2s)
 3. Check for thread exhaustion or blocking
 4. Validate Virtual Thread efficiency
 
 **Failure Burst Test**:
+
 1. Normal operation (85% success)
 2. Inject 50% failure rate for 60 seconds
 3. Monitor circuit breaker behavior
@@ -351,12 +369,14 @@ public boolean isRetryable(HttpStatusCode statusCode) {
 ### Metrics to Collect
 
 **API Integration Metrics**:
+
 - Request rate and latency distribution
 - Success/failure rates by status code
 - Circuit breaker state transitions
 - Retry attempt distribution
 
 **Error Classification Metrics**:
+
 - Count of retryable vs non-retryable errors
 - DLQ insertion rate
 - Recovery time after failures
@@ -364,12 +384,14 @@ public boolean isRetryable(HttpStatusCode statusCode) {
 ### Log Aggregation
 
 **Structured Logging**:
+
 - All API requests with request ID and payment ID
 - Circuit breaker state changes
 - Retry attempts with backoff timing
 - DLQ insertions with full context
 
 **Critical Error Logging**:
+
 - Circuit breaker open events
 - DLQ insertions
 - Timeout events
@@ -380,11 +402,13 @@ public boolean isRetryable(HttpStatusCode statusCode) {
 ### API Evolution
 
 **Backward Compatibility**:
+
 - New optional fields can be added to request/response
 - Existing field types cannot change
 - New error codes can be added (treated as retryable by default)
 
 **Breaking Changes**:
+
 - Require new API version in URL path
 - Document migration timeline
 - Maintain old version during transition period
@@ -392,8 +416,9 @@ public boolean isRetryable(HttpStatusCode statusCode) {
 ### Failure Mode Evolution
 
 **Failure Pattern Updates**:
+
 - Success rate can be adjusted via configuration
 - Latency distribution can be modified
 - New error codes can be introduced
 - All changes must be backward compatible with retry logic</content>
-<parameter name="filePath">/Users/mac/Programming/payment-system-speckit/specs/001-resilient-payment-bridge/contracts/external-mock-api.md
+  <parameter name="filePath">/Users/mac/Programming/payment-system-speckit/specs/001-resilient-payment-bridge/contracts/external-mock-api.md

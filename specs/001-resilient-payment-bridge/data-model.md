@@ -88,6 +88,7 @@ public class PaymentTask {
 ```
 
 **RabbitMQ Message Format:**
+
 ```json
 {
   "paymentId": "550e8400-e29b-41d4-a716-446655440000",
@@ -130,6 +131,7 @@ Payment (1) ──── (1) Dead Letter Queue
 ```
 
 **Relationship Rules:**
+
 - One payment can have zero or one DLQ entry
 - DLQ entries are immutable (insert-only)
 - Payment status remains FAILED when sent to DLQ
@@ -206,10 +208,12 @@ public Payment processPayment(UUID paymentId) {
 ### Indexing Strategy
 
 **Read-Heavy Operations:**
+
 - `idx_payment_status`: Fast filtering of RECEIVED payments for workers
 - `idx_payment_created_at`: Time-based queries for monitoring
 
 **Write-Heavy Operations:**
+
 - Primary key on `payment_id`: UUID lookups are fast
 - Version column not indexed: Avoids write contention
 
@@ -219,7 +223,7 @@ public Payment processPayment(UUID paymentId) {
 spring:
   datasource:
     hikari:
-      maximum-pool-size: 20  # Match prefetch count
+      maximum-pool-size: 20 # Match prefetch count
       minimum-idle: 5
       connection-timeout: 30000
 ```
@@ -267,12 +271,14 @@ GROUP BY failed_action;
 ### Schema Evolution
 
 **Version 1.1.0**: Add monitoring columns
+
 ```sql
 ALTER TABLE payment ADD COLUMN processing_started_at TIMESTAMP WITH TIME ZONE;
 ALTER TABLE payment ADD COLUMN processing_completed_at TIMESTAMP WITH TIME ZONE;
 ```
 
 **Version 1.2.0**: Enhanced error tracking
+
 ```sql
 ALTER TABLE payment ADD COLUMN last_retry_at TIMESTAMP WITH TIME ZONE;
 ALTER TABLE payment ADD COLUMN circuit_breaker_state VARCHAR(20);
@@ -283,11 +289,13 @@ ALTER TABLE payment ADD COLUMN circuit_breaker_state VARCHAR(20);
 ### Backup Strategy
 
 **Continuous Archiving:**
+
 - WAL archiving enabled for point-in-time recovery
 - Full backups daily during low-traffic windows
 - Retention: 30 days for full backups, 7 days for WAL
 
 **Backup Contents:**
+
 - Payment records (critical business data)
 - DLQ entries (failure investigation data)
 - Exclude: Transient message queue data (recreated on restart)
@@ -295,12 +303,14 @@ ALTER TABLE payment ADD COLUMN circuit_breaker_state VARCHAR(20);
 ### Recovery Procedures
 
 **Instance Failure Recovery:**
+
 1. Start new instance
 2. RabbitMQ redelivers unacked messages
 3. Workers resume processing from RECEIVED/IN_PROGRESS payments
 4. Optimistic locking prevents duplicate processing
 
 **Database Failure Recovery:**
+
 1. Restore from latest backup
 2. Replay WAL to latest consistent state
 3. Verify payment state integrity
@@ -311,11 +321,13 @@ ALTER TABLE payment ADD COLUMN circuit_breaker_state VARCHAR(20);
 ### Data Protection
 
 **Sensitive Data Handling:**
+
 - Payment amounts: Encrypted at rest (if required by compliance)
 - API responses: May contain sensitive data, audit access
 - DLQ entries: Restricted access, manual review only
 
 **Access Controls:**
+
 - Application service account: CRUD on payment table
 - Monitoring service: Read-only access
 - Manual review team: Read-only on DLQ table
@@ -323,11 +335,13 @@ ALTER TABLE payment ADD COLUMN circuit_breaker_state VARCHAR(20);
 ### Audit Trail
 
 **Automatic Auditing:**
+
 - All state transitions logged via triggers
 - Version changes tracked for concurrency analysis
 - API interactions logged at CRITICAL level
 
 **Manual Audit:**
+
 - DLQ entries serve as audit trail for failed payments
 - Payment history reconstructable from version increments</content>
-<parameter name="filePath">/Users/mac/Programming/payment-system-speckit/specs/001-resilient-payment-bridge/data-model.md
+  <parameter name="filePath">/Users/mac/Programming/payment-system-speckit/specs/001-resilient-payment-bridge/data-model.md

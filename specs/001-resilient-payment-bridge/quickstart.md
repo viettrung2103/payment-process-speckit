@@ -46,6 +46,7 @@ docker-compose -f docker-compose.dev.yml ps
 ```
 
 **Expected Output:**
+
 ```
 NAME                          COMMAND                  SERVICE             STATUS              PORTS
 payment-bridge-postgres-1     "docker-entrypoint.s…"   postgres            running             0.0.0.0:5432->5432/tcp
@@ -91,7 +92,7 @@ open http://localhost:15672
 Create `docker-compose.dev.yml`:
 
 ```yaml
-version: '3.8'
+version: "3.8"
 
 services:
   postgres:
@@ -117,7 +118,7 @@ services:
       RABBITMQ_DEFAULT_USER: admin
       RABBITMQ_DEFAULT_PASS: admin
     ports:
-      - "5672:5672"   # AMQP port
+      - "5672:5672" # AMQP port
       - "15672:15672" # Management UI
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq
@@ -182,7 +183,7 @@ spring:
         concurrency: 10-50
         prefetch: 20
         retry:
-          enabled: false  # We handle retries manually
+          enabled: false # We handle retries manually
 
 logging:
   level:
@@ -253,6 +254,7 @@ curl -X POST http://localhost:8080/api/v1/payments \
 ```
 
 **Expected Response:**
+
 ```json
 {
   "paymentId": "550e8400-e29b-41d4-a716-446655440000",
@@ -278,6 +280,7 @@ curl http://localhost:8080/api/v1/payments/status/$PAYMENT_ID
 ```
 
 **Expected Response (after processing):**
+
 ```json
 {
   "paymentId": "550e8400-e29b-41d4-a716-446655440000",
@@ -334,6 +337,7 @@ curl -X POST http://localhost:8080/api/v1/payments \
 ### Debugging
 
 **Enable Debug Logging:**
+
 ```bash
 # Set logging level
 curl -X POST http://localhost:8080/actuator/loggers/com.payment.bridge \
@@ -342,6 +346,7 @@ curl -X POST http://localhost:8080/actuator/loggers/com.payment.bridge \
 ```
 
 **Check Application Metrics:**
+
 ```bash
 # Prometheus metrics
 curl http://localhost:8080/actuator/prometheus | grep payment
@@ -368,6 +373,7 @@ SELECT dlq_id, payment_id, failed_action, created_at FROM dead_letter_queue ORDE
 ### Common Issues
 
 **Application won't start:**
+
 ```bash
 # Check if ports are available
 lsof -i :8080,5432,5672,15672,8081
@@ -378,6 +384,7 @@ docker-compose -f docker-compose.dev.yml logs <service-name>
 ```
 
 **Database connection fails:**
+
 ```bash
 # Test database connectivity
 docker exec payment-bridge-postgres-1 pg_isready -U payment_user -d payment_bridge
@@ -386,6 +393,7 @@ docker exec payment-bridge-postgres-1 pg_isready -U payment_user -d payment_brid
 ```
 
 **RabbitMQ connection fails:**
+
 ```bash
 # Test RabbitMQ connectivity
 docker exec payment-bridge-rabbitmq-1 rabbitmq-diagnostics ping
@@ -395,6 +403,7 @@ docker-compose -f docker-compose.dev.yml logs rabbitmq
 ```
 
 **Mock API not responding:**
+
 ```bash
 # Test mock API health
 curl http://localhost:8081/health
@@ -406,6 +415,7 @@ docker-compose -f docker-compose.dev.yml logs mock-api
 ### Performance Tuning
 
 **For higher throughput:**
+
 ```yaml
 # Increase concurrency
 spring.rabbitmq.listener.simple.concurrency: 50-200
@@ -418,6 +428,7 @@ spring.datasource.hikari.maximum-pool-size: 50
 ```
 
 **For lower latency:**
+
 ```yaml
 # Reduce prefetch
 spring.rabbitmq.listener.simple.prefetch: 5
@@ -441,4 +452,4 @@ payment.api.timeout.read: 1000
 - **Logs**: Check application logs at `logs/spring.log`
 - **Metrics**: Access via `/actuator/metrics`
 - **Health**: Check system health at `/actuator/health`</content>
-<parameter name="filePath">/Users/mac/Programming/payment-system-speckit/specs/001-resilient-payment-bridge/quickstart.md
+  <parameter name="filePath">/Users/mac/Programming/payment-system-speckit/specs/001-resilient-payment-bridge/quickstart.md
