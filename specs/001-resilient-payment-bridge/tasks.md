@@ -10,6 +10,7 @@
 **Technology**: Java 21 + Spring Boot 3.4 + RabbitMQ + PostgreSQL + Resilience4j
 
 ## Format Reference
+
 - **[P]**: Can run in parallel (different files, no blocking dependencies)
 - **[US#]**: User Story task (US1=Payment Ingestion, US2=MQ Distribution, US3=Retry/DLQ, US4=State Transitions, US5=Latency)
 - **Paths**: `src/main/java/com/payment/bridge/`, `src/test/java/com/payment/bridge/`, `src/main/resources/`
@@ -38,55 +39,55 @@
 
 ### Database Setup
 
-- [ ] T009 Create payment table migration in src/main/resources/db/migration/V001__create_payment_table.sql
-- [ ] T010 Create dead_letter_queue table migration in src/main/resources/db/migration/V002__create_dlq_table.sql
-- [ ] T011 Create payment_audit table migration for state transition tracking in src/main/resources/db/migration/V003__create_payment_audit.sql
+- [ ] T009 Create payment table migration in src/main/resources/db/migration/V001\_\_create_payment_table.sql
+- [x] T010 Create dead_letter_queue table migration in src/main/resources/db/migration/V002\_\_create_dlq_table.sql
+- [x] T011 Create payment_audit table migration for state transition tracking in src/main/resources/db/migration/V003\_\_create_payment_audit.sql
 
 ### JPA Configuration & Models
 
-- [ ] T012 [P] Create Payment JPA entity with @Version annotation in src/main/java/com/payment/bridge/model/Payment.java
-- [ ] T013 [P] Create DeadLetterQueueEntry entity in src/main/java/com/payment/bridge/model/DeadLetterQueueEntry.java
-- [ ] T014 [P] Create PaymentAudit entity for state transition logging in src/main/java/com/payment/bridge/model/PaymentAudit.java
-- [ ] T015 [P] Create Repositories: PaymentRepository in src/main/java/com/payment/bridge/repository/PaymentRepository.java
-- [ ] T016 [P] Create DLQRepository in src/main/java/com/payment/bridge/repository/DeadLetterQueueRepository.java
-- [ ] T017 [P] Create PaymentAuditRepository in src/main/java/com/payment/bridge/repository/PaymentAuditRepository.java
-- [ ] T018 Create PaymentJdbcTemplate class for custom optimistic locking queries in src/main/java/com/payment/bridge/repository/PaymentJdbcTemplate.java
+- [x] T012 [P] Create Payment JPA entity with @Version annotation in src/main/java/com/payment/bridge/model/Payment.java
+- [x] T013 [P] Create DeadLetterQueueEntry entity in src/main/java/com/payment/bridge/model/DeadLetterQueueEntry.java
+- [x] T014 [P] Create PaymentAudit entity for state transition logging in src/main/java/com/payment/bridge/model/PaymentAudit.java
+- [x] T015 [P] Create Repositories: PaymentRepository in src/main/java/com/payment/bridge/repository/PaymentRepository.java
+- [x] T016 [P] Create DLQRepository in src/main/java/com/payment/bridge/repository/DeadLetterQueueRepository.java
+- [x] T017 [P] Create PaymentAuditRepository in src/main/java/com/payment/bridge/repository/PaymentAuditRepository.java
+- [x] T018 Create PaymentJdbcTemplate class for custom optimistic locking queries in src/main/java/com/payment/bridge/repository/PaymentJdbcTemplate.java
 
 ### RabbitMQ Configuration
 
-- [ ] T019 Create RabbitMQConfig class in src/main/java/com/payment/bridge/config/RabbitMQConfig.java
+- [x] T019 Create RabbitMQConfig class in src/main/java/com/payment/bridge/config/RabbitMQConfig.java
   - Direct Exchange: payment-exchange
   - Processing Queue: payment-processing with DLQ binding
   - DLQ Queue: dlq-payment-failed with TTL policy
   - Manual ACK configuration
 
-- [ ] T020 [P] Create MessageQueueTask class (message DTO) in src/main/java/com/payment/bridge/model/MessageQueueTask.java
-- [ ] T021 [P] Create RabbitMQ Publisher in src/main/java/com/payment/bridge/amqp/PaymentPublisher.java
+- [x] T020 [P] Create MessageQueueTask class (message DTO) in src/main/java/com/payment/bridge/model/MessageQueueTask.java
+- [x] T021 [P] Create RabbitMQ Publisher in src/main/java/com/payment/bridge/amqp/PaymentPublisher.java
 
 ### Resilience & Error Handling
 
-- [ ] T022 Create ResilienceConfig class in src/main/java/com/payment/bridge/config/ResilienceConfig.java
+- [x] T022 Create ResilienceConfig class in src/main/java/com/payment/bridge/config/ResilienceConfig.java
   - Circuit Breaker configuration for external API (5 failure threshold, 60s timeout)
   - Retry policy with Base 1.5 exponential backoff (0.5s initial, 5 attempts)
   - Timeout configuration (5s connect, 2s read)
 
-- [ ] T023 [P] Create ErrorClassifier class in src/main/java/com/payment/bridge/service/ErrorClassifier.java (4xx vs 5xx classification)
-- [ ] T024 [P] Create custom exceptions: PaymentProcessingException, IdempotencyViolationException in src/main/java/com/payment/bridge/exception/
+- [x] T023 [P] Create ErrorClassifier class in src/main/java/com/payment/bridge/service/ErrorClassifier.java (4xx vs 5xx classification)
+- [x] T024 [P] Create custom exceptions: PaymentProcessingException, IdempotencyViolationException in src/main/java/com/payment/bridge/exception/
 
 ### Virtual Threads & Async Configuration
 
-- [ ] T025 Create AsyncConfig class in src/main/java/com/payment/bridge/config/AsyncConfig.java
+- [x] T025 Create AsyncConfig class in src/main/java/com/payment/bridge/config/AsyncConfig.java
   - Virtual Threads executor for payment processing
   - Concurrency settings: 20 max concurrent tasks
 
-- [ ] T026 Create DatabaseConfig class in src/main/java/com/payment/bridge/config/DatabaseConfig.java
+- [x] T026 Create DatabaseConfig class in src/main/java/com/payment/bridge/config/DatabaseConfig.java
   - HikariCP pool configuration (20 maximum, 5 minimum)
   - Transaction management for optimistic locking
 
 ### Health & Monitoring
 
-- [ ] T027 [P] Create HealthController in src/main/java/com/payment/bridge/controller/HealthController.java (/actuator/health endpoint)
-- [ ] T028 [P] Create MetricsConfiguration for payment processing metrics in src/main/java/com/payment/bridge/config/MetricsConfig.java
+- [x] T027 [P] Create HealthController in src/main/java/com/payment/bridge/controller/HealthController.java (/actuator/health endpoint)
+- [x] T028 [P] Create MetricsConfiguration for payment processing metrics in src/main/java/com/payment/bridge/config/MetricsConfig.java
 
 **Checkpoint**: Foundation complete - all user story implementation can proceed in parallel
 
@@ -101,31 +102,31 @@
 
 ### Tests for US1 (Write these FIRST ❌ should fail)
 
-- [ ] T029 [P] [US1] Unit test PaymentService.createPayment() idempotency in src/test/java/com/payment/bridge/service/PaymentServiceTest.java
-- [ ] T030 [P] [US1] Unit test duplicate payment rejection in src/test/java/com/payment/bridge/service/IdempotencyServiceTest.java
-- [ ] T031 [P] [US1] Contract test POST /api/v1/payments endpoint in src/test/java/com/payment/bridge/contract/PaymentIngestTest.java
-- [ ] T032 [US1] Integration test payment creation and MQ publish in src/test/java/com/payment/bridge/integration/PaymentIngestIntegrationTest.java
-- [ ] T033 [US1] Integration test system crash recovery scenario in src/test/java/com/payment/bridge/integration/PaymentRecoveryTest.java
+- [x] T029 [P] [US1] Unit test PaymentService.createPayment() idempotency in src/test/java/com/payment/bridge/service/PaymentServiceTest.java
+- [x] T030 [P] [US1] Unit test duplicate payment rejection in src/test/java/com/payment/bridge/service/IdempotencyServiceTest.java
+- [x] T031 [US1] Contract test POST /api/v1/payments endpoint in src/test/java/com/payment/bridge/contract/PaymentIngestTest.java
+- [x] T032 [US1] Integration test payment creation and MQ publish in src/test/java/com/payment/bridge/integration/PaymentIngestIntegrationTest.java
+- [x] T033 [US1] Integration test system crash recovery scenario in src/test/java/com/payment/bridge/integration/PaymentRecoveryTest.java
 
 ### Implementation for US1
 
-- [ ] T034 [P] [US1] Create IdempotencyService in src/main/java/com/payment/bridge/service/IdempotencyService.java
+- [x] T034 [P] [US1] Create IdempotencyService in src/main/java/com/payment/bridge/service/IdempotencyService.java
   - Duplicate detection using client_reference (optional) or request signature
   - Idempotency key validation (X-Idempotency-Key header)
 
-- [ ] T035 [P] [US1] Create PaymentService.createPayment() in src/main/java/com/payment/bridge/service/PaymentService.java
+- [x] T035 [P] [US1] Create PaymentService.createPayment() in src/main/java/com/payment/bridge/service/PaymentService.java
   - Generate UUID payment_id
   - Persist to DB in RECEIVED state (atomic transaction)
   - Return response before MQ enqueue
 
-- [ ] T036 [US1] Create PaymentController POST /api/v1/payments in src/main/java/com/payment/bridge/controller/PaymentController.java
+- [x] T036 [US1] Create PaymentController POST /api/v1/payments in src/main/java/com/payment/bridge/controller/PaymentController.java
   - Request validation (amount > 0, currency ISO 4217)
   - Call PaymentService.createPayment()
   - Return PaymentResponse with 202 Accepted status
 
-- [ ] T037 [US1] Implement after-persistence MQ publish logic in PaymentService (publishes PROCESS_PAYMENT task)
-- [ ] T038 [US1] Add CRITICAL level logging for payment creation in PaymentService and PaymentController
-- [ ] T039 [US1] Create StatusController GET /api/v1/payments/status/{paymentId} in src/main/java/com/payment/bridge/controller/StatusController.java
+- [x] T037 [US1] Implement after-persistence MQ publish logic in PaymentService (publishes PROCESS_PAYMENT task)
+- [x] T038 [US1] Add CRITICAL level logging for payment creation in PaymentService and PaymentController
+- [x] T039 [US1] Create StatusController GET /api/v1/payments/status/{paymentId} in src/main/java/com/payment/bridge/controller/StatusController.java
 
 **Checkpoint**: User Story 1 complete - Payment ingestion works independently with DB persistence guarantee
 
@@ -340,11 +341,11 @@
 ## Task Dependency Graph
 
 ```
-Phase 1 (Setup) 
+Phase 1 (Setup)
     ↓
 Phase 2 (Foundational) ⚠️ CRITICAL GATE
     ↓
-    ├─→ Phase 3 (US1: Ingestion) 🎯 MVP 
+    ├─→ Phase 3 (US1: Ingestion) 🎯 MVP
     │       ↓
     ├─→ Phase 4 (US2: MQ Distribution)
     │       ↓ (can run in parallel with US1)
@@ -363,34 +364,38 @@ Phase 8 (Polish & Cross-Cutting)
 **MVP Scope (Phase 3 only)**: US1 complete in isolation - demonstrates zero data loss persistence
 
 **Phase 4 Start Point**: After T037 (Phase 3 MQ publish implemented)
+
 - Tasks T040-T048 can run while Phase 3 completes
 - Requires PaymentPublisher from Phase 2 (T021)
 
 **Phase 5 Start Point**: After Phase 4 workers processing payments
+
 - Tasks T049-T062 depend on payment status updates from worker
 - Can begin after T046 (worker state transition to IN_PROGRESS)
 
 **Phase 6 Start Point**: After T037 (Phase 3 MQ logic)
+
 - State auditing independent of worker implementation
 - Can run in parallel with Phase 4-5
 
 **Phase 7 Start Point**: After Phase 4 workers operational
+
 - Load testing requires active workers pulling from queue
 - Should begin after T048 (worker configuration complete)
 
 ## Success Criteria per Phase
 
-| Phase | Task Count | Criteria | Owner |
-|-------|-----------|----------|-------|
-| 1. Setup | 8 | Maven + Spring Boot + DTOs | Dev Team |
-| 2. Foundational | 19 | DB + RabbitMQ + Models + Resilience | Dev Team |
-| 3. US1 | 11 | Payment creation + idempotency (100ms) | Dev Team |
-| 4. US2 | 9 | Worker distribution (exact-once semantics) | Dev Team |
-| 5. US3 | 19 | Retry + backoff + DLQ (5 attempts) | Dev Team |
-| 6. US4 | 8 | State audit trail (atomic transitions) | Dev Team |
-| 7. US5 | 5 | Latency p99 < 500ms under 2s delays | Dev Team |
-| 8. Polish | 24 | Coverage + docs + monitoring + CI/CD | Dev Team |
-| **TOTAL** | **103** | **All constitutional principles validated** | **Dev Team** |
+| Phase           | Task Count | Criteria                                    | Owner        |
+| --------------- | ---------- | ------------------------------------------- | ------------ |
+| 1. Setup        | 8          | Maven + Spring Boot + DTOs                  | Dev Team     |
+| 2. Foundational | 19         | DB + RabbitMQ + Models + Resilience         | Dev Team     |
+| 3. US1          | 11         | Payment creation + idempotency (100ms)      | Dev Team     |
+| 4. US2          | 9          | Worker distribution (exact-once semantics)  | Dev Team     |
+| 5. US3          | 19         | Retry + backoff + DLQ (5 attempts)          | Dev Team     |
+| 6. US4          | 8          | State audit trail (atomic transitions)      | Dev Team     |
+| 7. US5          | 5          | Latency p99 < 500ms under 2s delays         | Dev Team     |
+| 8. Polish       | 24         | Coverage + docs + monitoring + CI/CD        | Dev Team     |
+| **TOTAL**       | **103**    | **All constitutional principles validated** | **Dev Team** |
 
 ---
 
@@ -399,6 +404,7 @@ Phase 8 (Polish & Cross-Cutting)
 **TDD Approach**: Write tests BEFORE implementation
 
 **Test Pyramid**:
+
 - Unit Tests (30%): Individual service logic - T029-T030, T040-T041, T049-T051, T063-T064, T071-T073
 - Contract Tests (25%): API endpoint contracts - T031, T043
 - Integration Tests (35%): End-to-end flows with real DB/MQ - T032-T033, T042-T043, T052-T066
@@ -407,6 +413,7 @@ Phase 8 (Polish & Cross-Cutting)
 **Coverage Target**: 80%+ code coverage across all packages
 
 **Validation**:
+
 - Zero data loss: T032 + audit trail verification
 - Horizontal scaling: T042 (3 workers, 10 tasks)
 - Retry effectiveness: T052-T055 (error classification, backoff, DLQ)
