@@ -1,0 +1,38 @@
+QUICK PERFORMANCE TEST RESULTS
+==============================
+
+Test Date: Sun May 10 05:45:26 +07 2026
+Results Directory: quick-20260510-054430
+
+SINGLE INSTANCE RESULTS
+-----------------------
+--- 5 users ---
+SUMMARY METRICS
+---------------
+Total Requests:     60131
+Successful Requests: 16341
+Failed Requests:    43790
+Error Rate:         72.82%
+
+RESPONSE TIME (ms)
+------------------
+Min:     1
+P50:     1
+P95:     4
+P99:     7
+Max:     123
+
+THROUGHPUT
+----------
+Requests/Second: 2006.71
+Test Duration:   29.965s
+
+PERFORMANCE ASSESSMENT
+
+SCALED INSTANCE RESULTS (3 instances)
+-------------------------------------
+No scaled instance results found for 5 users
+
+OVERALL ASSESSMENT
+------------------
+Load 5 users: cannot compare results - missing summary files

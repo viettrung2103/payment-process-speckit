@@ -1,0 +1,17 @@
+QUICK PERFORMANCE TEST RESULTS
+==============================
+
+Test Date: Sun May 10 05:49:44 +07 2026
+Results Directory: quick-20260510-054825
+
+SINGLE INSTANCE RESULTS
+-----------------------
+No single instance results found for 5 users
+
+SCALED INSTANCE RESULTS (3 instances)
+-------------------------------------
+No scaled instance results found for 5 users
+
+OVERALL ASSESSMENT
+------------------
+Load 5 users: cannot compare results - missing summary files

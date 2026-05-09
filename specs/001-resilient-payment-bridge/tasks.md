@@ -46,11 +46,23 @@
 - [ ] T106 Document transaction boundary considerations in API contracts and service interfaces
 - [ ] T107 Align Docker Compose load balancer health checks to Nginx application-facing health endpoint (use /actuator/health instead of /nginx_status)
 
-## Iteration 2026-05-10: Spec Plan & Architecture Documentation
+## Iteration 2026-05-10: Spec Plan, Architecture Documentation & Recovery-on-Startup
 
 - [x] T200 Document selected tech stack in the plan and spec artifacts (Java/Spring Boot, Docker, Nginx, RabbitMQ, PostgreSQL)
 - [x] T201 Document architecture overview for the modular payment bridge, including ingress, processing, queueing, and observability components
 - [x] T202 Align the speckit tasklist with the discussed tech stack and architecture decisions
+- [x] T203 Handle startup recovery for IN_PROGRESS payments when external status service is temporarily unavailable and retry completion after service restart
+- [x] T204 Add explicit integration tests covering deferred recovery while the payment status service is down and server restarts
+- [x] T210 Add offline recovery integration test with realistic service shutdown/restart scenarios and automatic recovery verification
+- [x] T211 Add random shutdown performance test with up to 2 random shutdowns (1-5 seconds each) and automatic catch-up recovery
+- [x] T212 Create standalone Java test runners for offline recovery and random shutdown (no Maven dependency required)
+- [x] T213 Create bash wrapper scripts for easy execution with auto Java detection and colored output
+- [x] T214 Create comprehensive README documentation for resilience test suite with usage examples and success criteria
+- [ ] T205 Add scheduled recovery job for deferred IN_PROGRESS payments (run every 30 seconds instead of only on startup)
+- [ ] T206 Implement health-aware recovery that monitors external service status before attempting recovery
+- [ ] T207 Add circuit breaker pattern for repeated external status check failures
+- [ ] T208 Add metrics tracking for recovery events (deferred, succeeded, failed, retried)
+- [ ] T209 Implement operational alert system for recovery deferred events
 
 ## Iteration 2026-05-08: Phase 2 Advanced Features
 

@@ -275,6 +275,11 @@ public class PaymentService {
         for (Payment payment : inProgressPayments) {
             try {
                 ExternalApiClient.ApiResponse statusResponse = externalApiClient.getPaymentStatus(payment.getPaymentId());
+                if (statusResponse == null || statusResponse.getStatus() == null) {
+                    logger.warn("Recovery status check returned empty response for payment {}, deferring recovery until service becomes available", payment.getPaymentId());
+                    continue;
+                }
+
                 String status = statusResponse.getStatus();
 
                 if ("COMPLETED".equalsIgnoreCase(status) || "SUCCESS".equalsIgnoreCase(status)) {
@@ -286,8 +291,7 @@ public class PaymentService {
                     processPaymentWithExternalAPI(payment.getPaymentId());
                 }
             } catch (Exception e) {
-                logger.warn("Recovery status check failed for payment {}, continuing normal processing", payment.getPaymentId(), e);
-                processPaymentWithExternalAPI(payment.getPaymentId());
+                logger.warn("Recovery status check failed for payment {}, external service may be unavailable; deferring recovery until service restart", payment.getPaymentId(), e);
             }
         }
     }

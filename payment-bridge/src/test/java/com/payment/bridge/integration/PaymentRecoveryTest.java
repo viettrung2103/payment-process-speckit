@@ -8,6 +8,7 @@ import com.payment.bridge.model.PaymentStatus;
 import com.payment.bridge.repository.PaymentRepository;
 import com.payment.bridge.client.ExternalApiClient;
 import com.payment.bridge.service.PaymentService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -37,6 +38,11 @@ class PaymentRecoveryTest {
 
     @Autowired
     private PaymentService paymentService;
+
+    @BeforeEach
+    void clearPayments() {
+        paymentRepository.deleteAll();
+    }
 
     @MockBean
     private PaymentPublisher paymentPublisher;
@@ -235,6 +241,43 @@ class PaymentRecoveryTest {
     }
 
     @Test
+    void testRecoverInProgressTaskDefersRecoveryWhileServerDownThenCompletesAfterRestart() {
+        UUID paymentId = UUID.randomUUID();
+        Payment payment = new Payment();
+        payment.setPaymentId(paymentId);
+        payment.setAmount(new BigDecimal("180.00"));
+        payment.setCurrency("USD");
+        payment.setStatus(PaymentStatus.IN_PROGRESS);
+
+        paymentRepository.save(payment);
+
+        ExternalApiClient.ApiResponse completedResponse = new ExternalApiClient.ApiResponse();
+        completedResponse.setTransactionId(paymentId.toString());
+        completedResponse.setStatus("COMPLETED");
+        completedResponse.setStatusCode(200);
+        completedResponse.setBody("{status=COMPLETED}");
+
+        when(externalApiClient.getPaymentStatus(paymentId))
+            .thenThrow(new RuntimeException("Payment service down"))
+            .thenReturn(completedResponse);
+
+        // First recovery attempt: external service is down, so we should keep the payment IN_PROGRESS.
+        paymentService.recoverInProgressPayments();
+        Optional<Payment> firstCheck = paymentRepository.findById(paymentId);
+        assertThat(firstCheck).isPresent();
+        assertThat(firstCheck.get().getStatus()).isEqualTo(PaymentStatus.IN_PROGRESS);
+
+        // Simulate service restart and retry recovery.
+        paymentService.recoverInProgressPayments();
+
+        Optional<Payment> recoveredPayment = paymentRepository.findById(paymentId);
+        assertThat(recoveredPayment).isPresent();
+        assertThat(recoveredPayment.get().getStatus()).isEqualTo(PaymentStatus.COMPLETED);
+        assertThat(recoveredPayment.get().getExternalTransactionId()).isEqualTo(paymentId.toString());
+        assertThat(recoveredPayment.get().getApiResponse()).contains("COMPLETED");
+    }
+
+    @Test
     @Transactional
     void testPaymentPersistenceWithoutMQPublishFailure() {
         // Given: A payment request that should be persisted even if MQ publishing fails
@@ -259,5 +302,98 @@ class PaymentRecoveryTest {
         Optional<Payment> persisted = paymentRepository.findById(response.getPaymentId());
         assertThat(persisted).isPresent();
         assertThat(persisted.get().getStatus()).isEqualTo(PaymentStatus.RECEIVED);
+    }
+
+    @Test
+    void testComprehensiveRecoveryWhenServerDownThenRestartsWithThirdPartyPayment() {
+        // PHASE 1: THIRD-PARTY INITIATES PAYMENT
+        UUID paymentId = UUID.randomUUID();
+        String clientReference = "third-party-payment-" + System.currentTimeMillis();
+
+        PaymentRequest thirdPartyRequest = new PaymentRequest();
+        thirdPartyRequest.setAmount(new BigDecimal("500.00"));
+        thirdPartyRequest.setCurrency("USD");
+        thirdPartyRequest.setClientReference(clientReference);
+
+        var paymentResponse = paymentService.createPayment(thirdPartyRequest, null);
+        UUID createdPaymentId = paymentResponse.getPaymentId();
+
+        // PHASE 2: VERIFY PAYMENT IN DATABASE - RECEIVED
+        Optional<Payment> createdPayment = paymentRepository.findById(createdPaymentId);
+        assertThat(createdPayment)
+            .as("Third-party payment should be created in database")
+            .isPresent();
+        assertThat(createdPayment.get().getStatus()).isEqualTo(PaymentStatus.RECEIVED);
+        assertThat(createdPayment.get().getClientReference()).isEqualTo(clientReference);
+
+        // PHASE 3: TRANSITION TO IN_PROGRESS
+        Payment inProgressPayment = createdPayment.get();
+        inProgressPayment.setStatus(PaymentStatus.IN_PROGRESS);
+        paymentRepository.save(inProgressPayment);
+
+        Optional<Payment> inProgressCheck = paymentRepository.findById(createdPaymentId);
+        assertThat(inProgressCheck)
+            .as("IN_PROGRESS payment should exist in database")
+            .isPresent();
+        assertThat(inProgressCheck.get().getStatus()).isEqualTo(PaymentStatus.IN_PROGRESS);
+
+        // PHASE 4: SIMULATE SERVER DOWN - RECOVERY DEFERS
+        when(externalApiClient.getPaymentStatus(createdPaymentId))
+            .thenReturn(null);  // Simulates server not responding
+
+        paymentService.recoverInProgressPayments();
+
+        Optional<Payment> afterServerDownCheck = paymentRepository.findById(createdPaymentId);
+        assertThat(afterServerDownCheck).isPresent();
+        assertThat(afterServerDownCheck.get().getStatus())
+            .as("Payment should remain IN_PROGRESS when status check fails")
+            .isEqualTo(PaymentStatus.IN_PROGRESS);
+        assertThat(afterServerDownCheck.get().getExternalTransactionId())
+            .as("No transaction ID when recovery deferred")
+            .isNull();
+
+        // PHASE 5: SERVER RESTARTS - RECOVERY COMPLETES
+        ExternalApiClient.ApiResponse completedResponse = new ExternalApiClient.ApiResponse();
+        completedResponse.setTransactionId(createdPaymentId.toString());
+        completedResponse.setStatus("COMPLETED");
+        completedResponse.setStatusCode(200);
+        completedResponse.setBody("{\"status\": \"COMPLETED\"}");
+
+        when(externalApiClient.getPaymentStatus(createdPaymentId))
+            .thenReturn(completedResponse);
+
+        paymentService.recoverInProgressPayments();
+
+        // PHASE 6: VERIFY RECOVERY SUCCESSFUL AND DATA PERSISTED
+        Optional<Payment> recoveredPayment = paymentRepository.findById(createdPaymentId);
+        assertThat(recoveredPayment)
+            .as("Payment exists after recovery")
+            .isPresent();
+
+        Payment finalPayment = recoveredPayment.get();
+        assertThat(finalPayment.getStatus())
+            .as("Payment completed after server restart")
+            .isEqualTo(PaymentStatus.COMPLETED);
+        assertThat(finalPayment.getExternalTransactionId())
+            .as("External transaction ID captured")
+            .isEqualTo(createdPaymentId.toString());
+        assertThat(finalPayment.getApiStatusCode()).isEqualTo(200);
+        assertThat(finalPayment.getApiResponse()).contains("COMPLETED");
+
+        // PHASE 7: VERIFY THIRD-PARTY DATA PRESERVED
+        assertThat(finalPayment.getClientReference())
+            .as("Client reference preserved from third-party request")
+            .isEqualTo(clientReference);
+        assertThat(finalPayment.getAmount())
+            .as("Amount preserved from third-party request")
+            .isEqualByComparingTo(new BigDecimal("500.00"));
+
+        // PHASE 8: VERIFY DATABASE QUERIES WORK
+        Optional<Payment> byClientRef = paymentRepository.findByClientReference(clientReference);
+        assertThat(byClientRef)
+            .as("Can retrieve payment by client reference after recovery")
+            .isPresent();
+        assertThat(byClientRef.get().getPaymentId()).isEqualTo(createdPaymentId);
+        assertThat(byClientRef.get().getStatus()).isEqualTo(PaymentStatus.COMPLETED);
     }
 }
