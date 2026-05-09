@@ -96,9 +96,19 @@ public class PaymentWorker {
 
         Payment payment = paymentOpt.get();
 
+        if (payment.getStatus() == PaymentStatus.COMPLETED) {
+            logger.info("Skipping already completed payment task: {}", task.getPaymentId());
+            return ProcessingResult.SUCCESS;
+        }
+
+        if (payment.getStatus() == PaymentStatus.FAILED) {
+            logger.info("Skipping already failed payment task: {}", task.getPaymentId());
+            return ProcessingResult.FAILED;
+        }
+
         try {
-            // Only update status to IN_PROGRESS if this is the first attempt
-            if (task.getRetryAttempt() == 0) {
+            // Only update status to IN_PROGRESS if this is the first attempt and we are still in RECEIVED state
+            if (task.getRetryAttempt() == 0 && payment.getStatus() == PaymentStatus.RECEIVED) {
                 payment.setStatus(PaymentStatus.IN_PROGRESS);
                 paymentRepository.save(payment);
             }

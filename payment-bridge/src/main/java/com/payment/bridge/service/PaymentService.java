@@ -263,6 +263,68 @@ public class PaymentService {
         }
     }
 
+    @Transactional
+    public void recoverInProgressPayments() {
+        var inProgressPayments = paymentRepository.findByStatus(PaymentStatus.IN_PROGRESS);
+        if (inProgressPayments.isEmpty()) {
+            logger.info("No in-progress payments found for recovery");
+            return;
+        }
+
+        logger.info("Recovering {} in-progress payment(s)", inProgressPayments.size());
+        for (Payment payment : inProgressPayments) {
+            try {
+                ExternalApiClient.ApiResponse statusResponse = externalApiClient.getPaymentStatus(payment.getPaymentId());
+                String status = statusResponse.getStatus();
+
+                if ("COMPLETED".equalsIgnoreCase(status) || "SUCCESS".equalsIgnoreCase(status)) {
+                    completeRecoveredPayment(payment, statusResponse);
+                } else if ("FAILED".equalsIgnoreCase(status)) {
+                    failRecoveredPayment(payment, statusResponse);
+                } else {
+                    logger.info("Payment {} still pending in external system (status={}), continuing normal processing", payment.getPaymentId(), status);
+                    processPaymentWithExternalAPI(payment.getPaymentId());
+                }
+            } catch (Exception e) {
+                logger.warn("Recovery status check failed for payment {}, continuing normal processing", payment.getPaymentId(), e);
+                processPaymentWithExternalAPI(payment.getPaymentId());
+            }
+        }
+    }
+
+    private void completeRecoveredPayment(Payment payment, ExternalApiClient.ApiResponse statusResponse) {
+        payment.setExternalTransactionId(statusResponse.getTransactionId());
+        payment.setApiStatusCode(statusResponse.getStatusCode());
+        try {
+            payment.setApiResponse(objectMapper.writeValueAsString(statusResponse));
+        } catch (JsonProcessingException e) {
+            logger.warn("Failed to serialize recovered API response for payment {}", payment.getPaymentId(), e);
+            payment.setApiResponse(statusResponse.toString());
+        }
+        payment.setStatus(PaymentStatus.COMPLETED);
+        paymentRepository.save(payment);
+        paymentAuditService.recordTransition(payment, PaymentStatus.IN_PROGRESS, PaymentStatus.COMPLETED,
+                "Recovered completed payment from external API status", "recovery");
+        logger.info("Recovered payment {} from IN_PROGRESS to COMPLETED (external status={})", payment.getPaymentId(), statusResponse.getStatus());
+    }
+
+    private void failRecoveredPayment(Payment payment, ExternalApiClient.ApiResponse statusResponse) {
+        payment.setExternalTransactionId(statusResponse.getTransactionId());
+        payment.setApiStatusCode(statusResponse.getStatusCode());
+        try {
+            payment.setApiResponse(objectMapper.writeValueAsString(statusResponse));
+        } catch (JsonProcessingException e) {
+            logger.warn("Failed to serialize recovered API response for payment {}", payment.getPaymentId(), e);
+            payment.setApiResponse(statusResponse.toString());
+        }
+        payment.setErrorReason("Recovered failed external payment");
+        payment.setStatus(PaymentStatus.FAILED);
+        paymentRepository.save(payment);
+        paymentAuditService.recordTransition(payment, PaymentStatus.IN_PROGRESS, PaymentStatus.FAILED,
+                "Recovered failed payment from external API status", "recovery");
+        logger.info("Recovered payment {} as FAILED from external API status", payment.getPaymentId());
+    }
+
     private boolean hasIdempotencyHeader(String idempotencyKeyHeader) {
         return idempotencyKeyHeader != null && !idempotencyKeyHeader.trim().isEmpty();
     }

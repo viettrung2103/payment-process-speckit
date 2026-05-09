@@ -46,6 +46,12 @@
 - [ ] T106 Document transaction boundary considerations in API contracts and service interfaces
 - [ ] T107 Align Docker Compose load balancer health checks to Nginx application-facing health endpoint (use /actuator/health instead of /nginx_status)
 
+## Iteration 2026-05-10: Spec Plan & Architecture Documentation
+
+- [x] T200 Document selected tech stack in the plan and spec artifacts (Java/Spring Boot, Docker, Nginx, RabbitMQ, PostgreSQL)
+- [x] T201 Document architecture overview for the modular payment bridge, including ingress, processing, queueing, and observability components
+- [x] T202 Align the speckit tasklist with the discussed tech stack and architecture decisions
+
 ## Iteration 2026-05-08: Phase 2 Advanced Features
 
 **Completed**:

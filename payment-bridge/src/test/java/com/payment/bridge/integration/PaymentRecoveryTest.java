@@ -6,6 +6,7 @@ import com.payment.bridge.model.Payment;
 import com.payment.bridge.model.PaymentRequest;
 import com.payment.bridge.model.PaymentStatus;
 import com.payment.bridge.repository.PaymentRepository;
+import com.payment.bridge.client.ExternalApiClient;
 import com.payment.bridge.service.PaymentService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +22,6 @@ import java.util.UUID;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
-import static org.assertj.core.api.Assertions.assertThat;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -41,6 +40,9 @@ class PaymentRecoveryTest {
 
     @MockBean
     private PaymentPublisher paymentPublisher;
+
+    @MockBean
+    private ExternalApiClient externalApiClient;
 
     @Test
     void testPaymentRecoveryAfterDatabasePersistence() {
@@ -169,6 +171,67 @@ class PaymentRecoveryTest {
         Optional<Payment> verified = paymentRepository.findById(paymentId);
         assertThat(verified.get().getVersion()).isEqualTo(1);
         assertThat(verified.get().getStatus()).isEqualTo(PaymentStatus.IN_PROGRESS);
+    }
+
+    @Test
+    void testRecoverInProgressTaskCompletedByExternalApi() {
+        UUID paymentId = UUID.randomUUID();
+        Payment payment = new Payment();
+        payment.setPaymentId(paymentId);
+        payment.setAmount(new BigDecimal("150.00"));
+        payment.setCurrency("USD");
+        payment.setStatus(PaymentStatus.IN_PROGRESS);
+
+        paymentRepository.save(payment);
+
+        ExternalApiClient.ApiResponse completedResponse = new ExternalApiClient.ApiResponse();
+        completedResponse.setTransactionId(paymentId.toString());
+        completedResponse.setStatus("COMPLETED");
+        completedResponse.setStatusCode(200);
+        completedResponse.setBody("{status=COMPLETED}");
+
+        when(externalApiClient.getPaymentStatus(paymentId)).thenReturn(completedResponse);
+
+        paymentService.recoverInProgressPayments();
+
+        Optional<Payment> recoveredPayment = paymentRepository.findById(paymentId);
+        assertThat(recoveredPayment).isPresent();
+        assertThat(recoveredPayment.get().getStatus()).isEqualTo(PaymentStatus.COMPLETED);
+        assertThat(recoveredPayment.get().getExternalTransactionId()).isEqualTo(paymentId.toString());
+    }
+
+    @Test
+    void testRecoverInProgressTaskContinuesNormalProcessingWhenPending() {
+        UUID paymentId = UUID.randomUUID();
+        Payment payment = new Payment();
+        payment.setPaymentId(paymentId);
+        payment.setAmount(new BigDecimal("175.00"));
+        payment.setCurrency("USD");
+        payment.setStatus(PaymentStatus.IN_PROGRESS);
+
+        paymentRepository.save(payment);
+
+        ExternalApiClient.ApiResponse processingResponse = new ExternalApiClient.ApiResponse();
+        processingResponse.setTransactionId(paymentId.toString());
+        processingResponse.setStatus("PROCESSING");
+        processingResponse.setStatusCode(200);
+        processingResponse.setBody("{status=PROCESSING}");
+
+        ExternalApiClient.ApiResponse completedResponse = new ExternalApiClient.ApiResponse();
+        completedResponse.setTransactionId(paymentId.toString());
+        completedResponse.setStatus("SUCCESS");
+        completedResponse.setStatusCode(200);
+        completedResponse.setBody("{status=SUCCESS}");
+
+        when(externalApiClient.getPaymentStatus(paymentId)).thenReturn(processingResponse);
+        when(externalApiClient.processPayment(any())).thenReturn(completedResponse);
+
+        paymentService.recoverInProgressPayments();
+
+        Optional<Payment> recoveredPayment = paymentRepository.findById(paymentId);
+        assertThat(recoveredPayment).isPresent();
+        assertThat(recoveredPayment.get().getStatus()).isEqualTo(PaymentStatus.COMPLETED);
+        assertThat(recoveredPayment.get().getApiResponse()).contains("SUCCESS");
     }
 
     @Test
