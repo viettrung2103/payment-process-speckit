@@ -1,0 +1,80 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  build-and-release:
+    name: Build & Release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'zulu'
+          cache: maven
+
+      - name: Extract Version
+        id: version
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/v}
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Release Version: $VERSION"
+
+      - name: Build Release Artifacts
+        run: |
+          mvn clean package \
+            -B \
+            --no-transfer-progress \
+            -DskipTests
+        env:
+          MAVEN_OPTS: "-Xmx2g"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            payment-bridge/target/*.jar
+            mock-payment-api/target/*.jar
+          body: |
+            ## Release ${{ steps.version.outputs.version }}
+            
+            ### Payment Bridge
+            - Main payment processing server with async request handling
+            - RabbitMQ worker integration
+            - Resilience patterns for fault tolerance
+            
+            ### Mock Payment API
+            - External payment API mock for testing
+            - Failure simulation capabilities
+            - Load testing support
+            
+            ### Artifacts
+            - `payment-bridge-${{ steps.version.outputs.version }}.jar`
+            - `mock-payment-api-${{ steps.version.outputs.version }}.jar`
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Archive Release Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-artifacts-${{ steps.version.outputs.version }}
+          path: |
+            payment-bridge/target/*.jar
+            mock-payment-api/target/*.jar
+          retention-days: 90

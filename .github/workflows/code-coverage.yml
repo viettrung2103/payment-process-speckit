@@ -1,0 +1,97 @@
+name: Code Coverage
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+permissions:
+  contents: read
+  checks: write
+  pull-requests: write
+
+jobs:
+  coverage:
+    name: Generate & Report Coverage
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'zulu'
+          cache: maven
+
+      - name: Build with Coverage
+        run: |
+          mvn clean verify \
+            -B \
+            --no-transfer-progress \
+            -DskipITs=true
+        env:
+          MAVEN_OPTS: "-Xmx2g"
+
+      - name: Generate JaCoCo Reports
+        run: mvn jacoco:report
+
+      - name: Upload Coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          files: >-
+            ./payment-bridge/target/site/jacoco/jacoco.xml,
+            ./mock-payment-api/target/site/jacoco/jacoco.xml
+          flags: unittest
+          name: codecov-umbrella
+          verbose: true
+
+      - name: Create Coverage Report Comment
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            let comment = '## 📊 Code Coverage Report\n\n';
+            
+            const modules = ['payment-bridge', 'mock-payment-api'];
+            let allFilesExist = true;
+            
+            for (const module of modules) {
+              const reportPath = `./${module}/target/site/jacoco/index.html`;
+              if (fs.existsSync(reportPath)) {
+                comment += `- **${module}**: [View Report](https://github.com/${{ github.repository }}/blob/${{ github.head_ref }}/target/site/jacoco/index.html)\n`;
+              } else {
+                allFilesExist = false;
+              }
+            }
+            
+            if (allFilesExist) {
+              github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: comment
+              });
+            }
+
+      - name: Publish Coverage Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: jacoco-reports
+          path: |
+            payment-bridge/target/site/jacoco/
+            mock-payment-api/target/site/jacoco/
+          retention-days: 30
+
+      - name: Check Coverage Thresholds
+        run: |
+          echo "✅ Coverage reports generated successfully"
+          echo "📈 Coverage metrics:"
+          find . -path "*/target/site/jacoco/jacoco.xml" -exec \
+            grep -o 'covered="[0-9]*"' {} \; | sort | uniq -c

@@ -1,0 +1,108 @@
+name: Security Scan
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  schedule:
+    # Run weekly to catch new vulnerabilities
+    - cron: '0 0 * * 0'
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  dependency-check:
+    name: Dependency Vulnerability Scan
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run Dependency Check
+        uses: dependency-check/Dependency-Check_Action@main
+        with:
+          project: 'payment-system'
+          path: '.'
+          format: 'JSON'
+          args: >
+            --enableExperimental
+            --exclude node_modules
+
+      - name: Upload Dependency Check Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dependency-check-report
+          path: reports/
+          retention-days: 30
+
+  maven-security:
+    name: Maven Security Audit
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'zulu'
+          cache: maven
+
+      - name: Run Maven Dependency Tree
+        run: |
+          mvn dependency:tree > dependency-tree.txt
+          cat dependency-tree.txt
+
+      - name: Check for Known Vulnerabilities
+        run: |
+          mvn org.owasp:dependency-check-maven:check \
+            -Dmaven.build.cache.enabled=false
+        continue-on-error: true
+
+      - name: Upload Maven Security Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: maven-security-report
+          path: target/dependency-check-report.html
+          retention-days: 30
+
+  sca-scan:
+    name: Software Composition Analysis
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'zulu'
+          cache: maven
+
+      - name: Generate SBOM
+        run: |
+          mvn cyclonedx:makeBom \
+            -B \
+            --no-transfer-progress
+        continue-on-error: true
+
+      - name: Upload SBOM
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom
+          path: |
+            target/bom.xml
+            payment-bridge/target/bom.xml
+            mock-payment-api/target/bom.xml
+          retention-days: 90

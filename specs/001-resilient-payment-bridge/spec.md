@@ -85,10 +85,14 @@ Includes ID generation, persistent ingestion, MQ task distribution, and hybrid r
 - **Acceptance**: No payments lost due to application restart or crash.
 - **Related Principle**: Principle 1 (The Law of Idempotency)
 
-### NFR-003: Performance Baseline
+### NFR-003: Horizontal Scaling Capability
 
-- **Description**: Demonstrated throughput increase when scaling from 1 to N instances.
-- **Acceptance**: Measurable linear or near-linear throughput improvement with horizontal scaling.
+- **Description**: System must support running multiple instances simultaneously with load balancing, demonstrating throughput increase when scaling from 1 to N instances.
+- **Acceptance**:
+  - Multiple payment-bridge instances can run concurrently without conflicts
+  - Load balancer distributes requests across instances
+  - Measurable linear or near-linear throughput improvement with horizontal scaling
+  - No data loss or processing conflicts during scaling operations
 - **Related Principle**: Principle 2 (MQ-Driven Statelessness)
 
 ### NFR-004: Latency Tolerance
@@ -246,7 +250,8 @@ created_at: Timestamp
 
 - **Message Queue**: RabbitMQ with manual ACK mode and TTL-based DLQ routing for at-least-once delivery semantics
 - **Database**: PostgreSQL with ACID compliance and distributed locking support
-- **External API**: Mock REST API with intentional failures and 10ms-2s random delays for testing
+- **External API**: Mock Payment API (Java 21/Spring Boot 3.4) with intentional failures and 10ms-2s random delays for testing
+- **Mock API Technology**: H2 in-memory database, Project Loom Virtual Threads for concurrency
 - **Worker Concurrency**: Non-blocking I/O using async/await or thread pooling
 - **Idempotency**: Payment_id uniqueness enforced at DB constraint level
 

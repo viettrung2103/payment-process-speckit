@@ -1,0 +1,10 @@
+target
+**/target
+*.log
+*.tmp
+*.bak
+.git
+.github
+.specify
+.vscode
+.idea

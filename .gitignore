@@ -14,6 +14,9 @@
 # Logs
 *.log
 
+# Compiled Java classes
+*.class
+
 # Generated wrapper files
 /mvnw
 /mvnw.cmd

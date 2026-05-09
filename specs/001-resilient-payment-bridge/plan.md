@@ -165,6 +165,14 @@ src/main/resources/
 - TDD test scenarios for each component
 - Integration testing strategy
 
+## Phase 7: Latency Resilience & Non-blocking Ingestion
+
+1. Implement `PaymentController` as an asynchronous entry point using `CompletableFuture` and a virtual thread executor.
+2. Record ingestion and processing latency with Micrometer timers and surface p99 metrics and slow-operation logs.
+3. Add JUnit-based load tests in `src/test/java/com/payment/bridge/load/`, a shared load-test scaffold helper, and p95/p99 latency report formatting to validate 100+ concurrent ingestion requests under simulated API delay and mixed latency conditions.
+4. Add a dedicated non-blocking controller integration test in `src/test/java/com/payment/bridge/integration/` to verify ingestion latency remains low when background publishing is slow.
+5. Target p99 ingestion latency <= 500ms while maintaining non-blocking request handling.
+
 ## Complexity Tracking
 
 **No constitution violations detected - no complexity justifications required.**

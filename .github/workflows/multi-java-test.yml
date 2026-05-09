@@ -1,0 +1,94 @@
+name: Multi-Java Version Testing
+
+on:
+  push:
+    branches: [ main, develop, "001-*" ]
+  pull_request:
+    branches: [ main, develop ]
+  schedule:
+    # Run nightly to detect Java version incompatibilities early
+    - cron: '0 2 * * *'
+
+jobs:
+  test-matrix:
+    name: Test Java ${{ matrix.java-version }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        java-version: [ '21', '25' ]
+      fail-fast: false
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK ${{ matrix.java-version }}
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ matrix.java-version }}
+          distribution: 'zulu'
+          cache: maven
+
+      - name: Display Java version
+        run: |
+          echo "Java version:"
+          java -version
+          echo ""
+          echo "Maven version:"
+          mvn --version
+
+      - name: Run Tests with Java ${{ matrix.java-version }}
+        run: |
+          mvn clean test \
+            -B \
+            --no-transfer-progress \
+            -Djacoco.skip=false
+        env:
+          MAVEN_OPTS: "-Xmx2g"
+
+      - name: Generate Coverage Report
+        if: matrix.java-version == '21'
+        run: mvn jacoco:report
+
+      - name: Archive Test Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-java-${{ matrix.java-version }}
+          path: |
+            **/target/surefire-reports/
+            **/target/failsafe-reports/
+          retention-days: 15
+
+      - name: Comment on PR with Test Status
+        if: always() && github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const status = '${{ job.status }}' === 'success' ? '✅' : '❌';
+            const comment = `${status} Java ${{ matrix.java-version }} Tests: ${{ job.status }}`;
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+
+  verify-compatibility:
+    name: Verify Byte Buddy Compatibility
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Verify Byte Buddy 1.18.8 for Java 25
+        run: |
+          grep -A 2 "byte-buddy" pom.xml | grep "1.18.8" && \
+          echo "✅ Byte Buddy 1.18.8 verified" || \
+          (echo "❌ Byte Buddy version mismatch" && exit 1)
+
+      - name: Verify JaCoCo 0.8.14 for Java 25
+        run: |
+          grep "jacoco-maven-plugin" pom.xml | grep -A 1 . | grep "0.8.14" && \
+          echo "✅ JaCoCo 0.8.14 verified" || \
+          (echo "❌ JaCoCo version mismatch" && exit 1)
