@@ -10,7 +10,7 @@ env:
   MAVEN_CACHE_KEY: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
   # Dynamic scaling configuration for performance tests
   MIN_INSTANCES: "1"
-  MAX_INSTANCES: "5" # Changed from 3 to 5 for better scaling capabilities
+  MAX_INSTANCES: "3" # Default deployment instances
   DEFAULT_INSTANCES: "3" # Default deployment instances
 
 jobs:

@@ -235,7 +235,7 @@ jobs:
     if: push to main/develop
     strategy:
       matrix:
-        instance-count: [1, 3, 5]
+        instance-count: [1, 3]
     
     for each instance count:
       - Checkout code
@@ -450,7 +450,7 @@ Trigger: Push event
 ✅ Integration Tests runs
   ├─ payment-bridge integration
   ├─ mock-payment-api integration
-  └─ Load tests (3 concurrent jobs for 1/3/5 instances)
+  └─ Load tests (2 concurrent jobs for 1/3 instances)
   ├─ Load balancer Docker build
   ↓
 ✅ Security Scan runs
@@ -550,7 +550,7 @@ Trigger: 2 AM UTC daily
 ```yaml
 # Dynamic scaling
 MIN_INSTANCES: "1"
-MAX_INSTANCES: "5"
+MAX_INSTANCES: "3"
 DEFAULT_INSTANCES: "3"
 
 # Test configuration
