@@ -39,36 +39,42 @@ Add these badges to your main README.md:
 ## Workflows
 
 ### 1. Build & Test
+
 - **File**: `build-and-test.yml`
-- **Triggers**: Push to main/develop/001-*, PR
+- **Triggers**: Push to main/develop/001-\*, PR
 - **Duration**: ~20 seconds
 - **Outputs**: Test reports, coverage metrics
 
 ### 2. Multi-Java Version Testing
+
 - **File**: `multi-java-test.yml`
 - **Triggers**: Push, PR, daily at 2 AM UTC
 - **Duration**: ~2 minutes
 - **Outputs**: Test results for Java 21
 
 ### 3. Integration Tests
+
 - **File**: `integration-tests.yml`
 - **Triggers**: Push, PR
 - **Duration**: ~5 minutes (45 minutes for load tests on main/develop)
 - **Outputs**: Integration test results, performance metrics
 
 ### 4. Code Coverage
+
 - **File**: `code-coverage.yml`
 - **Triggers**: Push to main/develop, PR
 - **Duration**: ~3 minutes
 - **Outputs**: JaCoCo reports, Codecov upload
 
 ### 5. Security Scan
+
 - **File**: `security-scan.yml`
 - **Triggers**: Push, PR, weekly at midnight UTC
 - **Duration**: ~5 minutes
 - **Outputs**: Vulnerability reports, SBOM
 
 ### 6. Release
+
 - **File**: `release.yml`
 - **Triggers**: Git tags matching `v*`
 - **Duration**: ~2 minutes
@@ -77,6 +83,7 @@ Add these badges to your main README.md:
 ## Recommended Setup
 
 ### 1. Enable Status Checks
+
 Go to Settings → Branches → main/develop → Require status checks:
 
 - ✅ Build & Test
@@ -84,49 +91,57 @@ Go to Settings → Branches → main/develop → Require status checks:
 - ✅ Integration Tests
 
 ### 2. Configure Codecov (Optional)
+
 1. Visit [codecov.io](https://codecov.io)
 2. Add your repository
 3. Copy CODECOV_TOKEN to repository secrets
 
 ### 3. Add Branch Protection Rules
+
 For `main` and `develop` branches:
+
 - Require status checks to pass
 - Require PR reviews
 - Require branches to be up to date
 - Restrict who can push to matching branches
 
 ### 4. Add Status Badges
+
 Update main README.md with workflow badges (see Status Badges above)
 
 ## GitHub Actions Secrets
 
 ### Required Secrets
+
 None (uses auto-generated GITHUB_TOKEN)
 
 ### Optional Secrets
+
 - **CODECOV_TOKEN**: For Codecov integration
 - **SLACK_WEBHOOK**: For Slack notifications (future enhancement)
 
 To add secrets:
+
 1. Go to Settings → Secrets and variables → Actions
 2. Click "New repository secret"
 3. Add name and value
 
 ## Artifact Management
 
-| Artifact | Retention | Size | Usage |
-|----------|-----------|------|-------|
-| Test Reports | 30 days | ~5 MB | Debugging failed tests |
-| Coverage Reports | 30 days | ~20 MB | Coverage tracking |
-| Integration Results | 7 days | ~10 MB | Performance metrics |
-| SBOM | 90 days | ~1 MB | Compliance |
-| Release Artifacts | 90 days | ~100 MB | Distribution |
+| Artifact            | Retention | Size    | Usage                  |
+| ------------------- | --------- | ------- | ---------------------- |
+| Test Reports        | 30 days   | ~5 MB   | Debugging failed tests |
+| Coverage Reports    | 30 days   | ~20 MB  | Coverage tracking      |
+| Integration Results | 7 days    | ~10 MB  | Performance metrics    |
+| SBOM                | 90 days   | ~1 MB   | Compliance             |
+| Release Artifacts   | 90 days   | ~100 MB | Distribution           |
 
 ## Local Development
 
 To test workflows locally before pushing:
 
 ### Using act (GitHub Actions locally)
+
 ```bash
 # Install act
 brew install act
@@ -139,6 +154,7 @@ act push -j build
 ```
 
 ### Manual Testing
+
 ```bash
 # Test build and unit tests
 mvn clean test
@@ -153,16 +169,19 @@ mvn clean verify -Dgroups=integration
 ## Troubleshooting
 
 ### Workflows Not Running?
+
 - Check `.github/workflows/` directory exists
 - Verify workflow YAML syntax (use act or linter)
 - Check GitHub Actions is enabled in Settings
 
 ### Tests Failing in CI but Passing Locally?
+
 - Check Java version (21 vs 25)
 - Check environment variables
 - Review workflow logs for full error messages
 
 ### Slow Workflows?
+
 - Check GitHub Actions runner availability
 - Review Maven cache hit rate
 - Consider splitting jobs

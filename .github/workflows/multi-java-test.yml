@@ -6,14 +6,14 @@ on:
   pull_request:
     branches: [multi-java-testing]
   schedule:
-    - cron: '0 2 * * *'  # Daily at 2 AM UTC
+    - cron: "0 2 * * *" # Daily at 2 AM UTC
 
 jobs:
   test-matrix:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        java-version: ['21']
+        java-version: ["21"]
       fail-fast: false
 
     steps:
@@ -24,7 +24,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           java-version: ${{ matrix.java-version }}
-          distribution: 'temurin'
+          distribution: "temurin"
           cache: maven
 
       - name: Display Java and Maven versions
