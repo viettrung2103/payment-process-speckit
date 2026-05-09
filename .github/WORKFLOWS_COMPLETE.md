@@ -31,6 +31,14 @@ This project now has enterprise-grade CI/CD automation that satisfies all Phase 
   - ✅ Uploads HTML/XML reports
   - **Speckit**: T080, T096
 
+- [x] **Multi-Java Test** (multi-java-test.yml)
+  - ✅ Tests on Java 21 (production)
+  - ✅ Daily schedule (nightly compatibility check)
+  - ✅ Verifies Byte Buddy 1.18.8
+  - ✅ Verifies JaCoCo 0.8.14
+  - **Update**: Removed Java 25 testing, now only tests Java 21
+  - **Speckit**: T096
+
 - [x] **Integration Tests** (integration-tests.yml)
   - ✅ Payment Bridge integration tests
   - ✅ Mock Payment API integration tests
