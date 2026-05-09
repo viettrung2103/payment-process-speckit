@@ -33,10 +33,10 @@ This project now has enterprise-grade CI/CD automation that satisfies all Phase 
 
 - [x] **Multi-Java Test** (multi-java-test.yml)
   - ✅ Tests on Java 21 (production)
-  - ✅ Tests on Java 25 (forward compatible)
   - ✅ Daily schedule (nightly compatibility check)
   - ✅ Verifies Byte Buddy 1.18.8
   - ✅ Verifies JaCoCo 0.8.14
+  - **Update**: Removed Java 25 testing, now only tests Java 21
   - **Speckit**: T096
 
 - [x] **Integration Tests** (integration-tests.yml)
@@ -72,7 +72,7 @@ This project now has enterprise-grade CI/CD automation that satisfies all Phase 
 |---|----------|----------|---------|--------|
 | 1 | Build & Test | Push + PR | ~20s | ✅ READY |
 | 2 | Code Coverage | Push main/dev + PR | ~3m | ✅ READY |
-| 3 | Multi-Java Test | Push + Daily | ~2-4m | ✅ READY |
+| 3 | Java 21 Test | Push + Daily | ~2m | ✅ READY |
 | 4 | Integration Tests | Push + PR | ~5-45m | ✅ READY |
 | 5 | Security Scan | Push + Weekly | ~5m | ✅ READY |
 | 6 | Release | Git tag v* | ~2m | ✅ READY |

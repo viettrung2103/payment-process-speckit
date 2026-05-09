@@ -8,7 +8,7 @@ This directory contains GitHub Actions workflows and configuration files for the
 .github/
 ├── workflows/
 │   ├── build-and-test.yml           # Main build and unit test pipeline
-│   ├── multi-java-test.yml          # Java 21 & Java 25 compatibility testing
+│   ├── multi-java-test.yml          # Java 21 compatibility testing
 │   ├── integration-tests.yml        # Integration and load testing
 │   ├── code-coverage.yml            # Code coverage reporting
 │   ├── security-scan.yml            # Dependency vulnerability scanning
@@ -47,8 +47,8 @@ Add these badges to your main README.md:
 ### 2. Multi-Java Version Testing
 - **File**: `multi-java-test.yml`
 - **Triggers**: Push, PR, daily at 2 AM UTC
-- **Duration**: ~4 minutes
-- **Outputs**: Test results for Java 21 & 25
+- **Duration**: ~2 minutes
+- **Outputs**: Test results for Java 21
 
 ### 3. Integration Tests
 - **File**: `integration-tests.yml`
