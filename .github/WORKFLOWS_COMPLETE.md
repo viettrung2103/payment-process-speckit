@@ -58,6 +58,7 @@ This project now has enterprise-grade CI/CD automation that satisfies all Phase 
   - ✅ Verifies Byte Buddy 1.18.8
   - ✅ Verifies JaCoCo 0.8.14
   - **Note**: Moved to separate branch due to test failures on main branches
+  - **Fixes Applied**: Updated Byte Buddy to 1.18.8 for Java 25 support, removed PR comment permissions issue
   - **Speckit**: T096
   - ✅ Builds mock-payment-api JAR
   - ✅ Creates GitHub Release
