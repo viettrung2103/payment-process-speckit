@@ -1,4 +1,4 @@
-# Payment System Speckit
+# 🚀 Payment System Speckit
 
 [![Build Status](https://github.com/[OWNER]/payment-system-speckit/actions/workflows/build-and-test.yml/badge.svg?branch=main)](https://github.com/[OWNER]/payment-system-speckit/actions/workflows/build-and-test.yml)
 [![Integration Tests](https://github.com/[OWNER]/payment-system-speckit/actions/workflows/integration-tests.yml/badge.svg?branch=main)](https://github.com/[OWNER]/payment-system-speckit/actions/workflows/integration-tests.yml)
@@ -10,43 +10,47 @@
 > **Date**: May 9, 2026  
 > **Repository**: [GitHub URL]
 
+---
+
 ## 📋 Table of Contents
 
-- [Overview](#overview)
-- [Architecture & Design Decisions](#architecture--design-decisions)
-- [Technology Stack](#technology-stack)
-- [Key Features](#key-features)
-- [Prerequisites](#prerequisites)
-- [Installation & Setup](#installation--setup)
-- [Usage](#usage)
-- [Testing](#testing)
-- [Performance Testing Results](#performance-testing-results)
-- [API Documentation](#api-documentation)
-- [Configuration](#configuration)
-- [Development](#development)
-- [Deployment](#deployment)
-- [Troubleshooting](#troubleshooting)
-- [Contributing](#contributing)
-- [License](#license)
+- [🎯 Overview](#-overview)
+- [🏗️ Architecture & Design Decisions](#️-architecture--design-decisions)
+- [🛠️ Technology Stack](#️-technology-stack)
+- [✨ Key Features](#-key-features)
+- [📋 Prerequisites](#-prerequisites)
+- [🚀 Installation & Setup](#-installation--setup)
+- [💻 Usage](#-usage)
+- [🧪 Testing](#-testing)
+- [📊 Performance Testing Results](#-performance-testing-results)
+- [📚 API Documentation](#-api-documentation)
+- [⚙️ Configuration](#️-configuration)
+- [💻 Development](#-development)
+- [🚀 Deployment](#-deployment)
+- [🔧 Troubleshooting](#-troubleshooting)
+- [🤝 Contributing](#-contributing)
+- [📄 License](#-license)
+
+---
 
 ## 🎯 Overview
 
 This project implements a **resilient distributed payment bridge** that processes payment requests by calling an external Payment REST API. The system is designed to handle high-throughput payment processing while ensuring zero data loss through restart scenarios and supporting horizontal scalability.
 
-### Problem Statement
+### 🎯 Problem Statement
 
 Build a payment processing application that:
 
-- Receives payment requests via REST API
-- Persists payment state for tracking
-- Calls external Payment REST API for each request
-- Handles payment states (RECEIVED → IN_PROGRESS → COMPLETED/FAILED)
-- Ensures **no loss on restart** - previously received payments must not be lost
-- Ensures **no loss of Payment Service responses** - external API responses must not be lost
-- Supports **horizontal scalability** - multiple instances can run concurrently
-- Includes **performance testing** demonstrating single and scaled instance behavior
+- ✅ Receives payment requests via REST API
+- ✅ Persists payment state for tracking
+- ✅ Calls external Payment REST API for each request
+- ✅ Handles payment states (RECEIVED → IN_PROGRESS → COMPLETED/FAILED)
+- ✅ Ensures **no loss on restart** - previously received payments must not be lost
+- ✅ Ensures **no loss of Payment Service responses** - external API responses must not be lost
+- ✅ Supports **horizontal scalability** - multiple instances can run concurrently
+- ✅ Includes **performance testing** demonstrating single and scaled instance behavior
 
-### Key Assumptions & Trade-offs
+### 🤔 Key Assumptions & Trade-offs
 
 **Assumptions Made:**
 
@@ -66,6 +70,7 @@ Build a payment processing application that:
 
 ### System Architecture
 
+#### Single Instance Configuration
 ```
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
 │   Client        │────│ Payment Bridge  │────│ Mock Payment   │
@@ -84,6 +89,50 @@ Build a payment processing application that:
                        │   (Message Q)   │
                        └─────────────────┘
 ```
+
+#### Scaled Configuration (Horizontal Scalability)
+```
+┌─────────────────┐    ┌─────────────────┐            ┌─────────────────┐
+│   Client        │────│   Load Balancer │            │ Mock Payment    │
+│                 │    │   (NGINX)       │            │ API             │
+└─────────────────┘    └─────────────────┘            └─────────────────┘
+                              │                             ▲
+                              │                             │
+                   ----------------------------------------------
+                   ▲          │            ▲                    ▲
+                   │          ▼            │                    │
+  --------------------------------------------------            │
+  │                │       │               │       │            │                           
+  ▼                │       ▼               │       ▼            │
+┌─────────────────────┐┌─────────────────────┐┌─────────────────────┐
+│  Payment Bridge     ││  Payment Bridge     ││  Payment Bridge     │   
+│  Instance 1         ││  Instance 2         ││  Instance 3         |                
+│  (Spring Boot)      ││  (Spring Boot)      ││  (Spring Boot)      │
+└─────────────────────┘└─────────────────────┘└─────────────────────
+  │               ▲    │                  ▲    │                ▲
+  │               │    │                  │    │                │
+  │               -----------------------------------------------
+  │                    │                       │    ▲     
+  ▼                    ▼                       ▼    │
+  ----------------------------------------------    │
+                │                                   │
+                ▼                                   │
+        ┌─────────────────┐                 ┌─────────────────┐
+        │  PostgreSQL     │---------------->│   RabbitMQ      │
+        │  (Shared DB)    │                 │   (Shared Queue)│
+        └─────────────────┘                 └─────────────────┘
+                            
+                      
+                      
+                      
+                      
+```
+
+**Architecture Notes:**
+- **All Payment Bridge instances connect to the same PostgreSQL database** for shared payment state
+- **All instances communicate directly with the Mock Payment API** for external payment processing
+- **Load balancer distributes incoming requests** across all healthy instances using round-robin
+- **RabbitMQ provides a shared message queue** accessible by all instances for distributed processing
 
 ### Core Design Principles
 
@@ -325,14 +374,167 @@ mvn verify -Dspring.profiles.active=test
 mvn test -Dtest="*IntegrationTest"
 ```
 
-### Manual Integration Testing
+### Performance Testing
+
+The project includes comprehensive performance testing capabilities with automated scripts for single-instance and scaled testing scenarios.
+
+#### Quick Performance Tests (5 minutes each)
+
+**Single Instance Test:**
+```bash
+cd performance-test && ./scripts/quick-single-performance-test.sh
+```
+- Tests 1 payment bridge instance
+- 20,000 total requests at 5 concurrent users
+- Duration: ~5 minutes
+
+**Scaled Test (3 instances):**
+```bash
+cd performance-test && ./scripts/quick-scaled-performance-test.sh
+```
+- Tests 3 payment bridge instances with load balancer
+- 20,000 total requests at 5 concurrent users
+- Duration: ~5 minutes
+
+**Both Tests (Single + Scaled):**
+```bash
+cd performance-test && ./scripts/quick-performance-test.sh
+```
+- Runs both single instance and scaled tests sequentially
+- Total duration: ~10 minutes
+
+#### Full Performance Tests (Comprehensive)
+
+**Single Instance Full Test:**
+```bash
+cd performance-test && ./scripts/full-performance-test.sh single
+```
+- Tests 1 payment bridge instance
+- 100,000 total requests at multiple load levels (5, 10, 20 concurrent users)
+- Duration: ~15-20 minutes
+
+**Scaled Full Test (3 instances):**
+```bash
+cd performance-test && ./scripts/full-performance-test.sh scaled
+```
+- Tests 3 payment bridge instances with load balancer
+- 100,000 total requests at multiple load levels (5, 10, 20 concurrent users)
+- Duration: ~15-20 minutes
+
+**Both Full Tests (Single + Scaled):**
+```bash
+cd performance-test && ./scripts/full-performance-test.sh
+```
+- Runs comprehensive tests for both single and scaled deployments
+- 200,000 total requests across all load levels
+- Duration: ~30-40 minutes
+
+#### Advanced Performance Testing
 
 ```bash
-# Start services
+# Test rate limiting functionality
+cd performance-test && ./scripts/test-rate-limiting.sh
+
+# Test auto-scaling capabilities
+cd performance-test && ./scripts/test-auto-scaling.sh
+
+# Run JMeter tests directly
+cd performance-test && ./scripts/run-single-instance.sh
+cd performance-test && ./scripts/run-scaled-test.sh
+```
+
+#### Performance Test Reports
+
+**Report Location:**
+- Reports are automatically generated in: `performance-test/results/`
+- Each test run creates a timestamped directory (e.g., `quick-20260510-143000/`)
+- Results include: `.jtl` files (raw JMeter data), `.log` files (JMeter logs), and `.txt` summary files
+
+**Report Contents:**
+Each test generates summary files with the following metrics:
+
+- **Total Requests**: Total number of requests sent
+- **Successful/Failed Requests**: Success rate and error count
+- **Error Rate**: Percentage of failed requests (should be < 1% for good performance)
+- **Response Time Metrics**:
+  - Min/Max: Fastest and slowest response times
+  - P50 (Median): 50th percentile response time
+  - P95/P99: 95th/99th percentile response times (key performance indicators)
+- **Throughput**: Requests per second (RPS) achieved
+- **Test Duration**: Actual time taken for the test
+
+**Performance Assessment:**
+Reports include automated assessment:
+- ✅ **Error Rate**: GOOD if < 1%, WARNING if 1-5%, CRITICAL if > 5%
+- ✅ **P95 Latency**: GOOD if < 1000ms, WARNING if 1000-2000ms, CRITICAL if > 2000ms
+- ✅ **Throughput**: GOOD if > 10 RPS, WARNING if 5-10 RPS, CRITICAL if < 5 RPS
+
+**Example Report:**
+```
+PERFORMANCE TEST RESULTS
+========================
+Total Requests:     100000
+Successful Requests: 95000
+Failed Requests:    5000
+Error Rate:         5.00%
+
+RESPONSE TIME (ms)
+------------------
+Min:     1
+P50:     150
+P95:     800
+P99:     1200
+Max:     2500
+
+THROUGHPUT
+----------
+Requests/Second: 2000.0
+Test Duration:   50.0s
+
+PERFORMANCE ASSESSMENT
+----------------------
+✅ Error Rate: GOOD (< 1%)
+✅ P95 Latency: GOOD (< 1000ms)
+✅ Throughput: EXCELLENT (> 100 RPS)
+```
+
+#### Manual Integration Testing
+
+```bash
+# Start services with Docker Compose
 docker compose up -d
 
-# Run comprehensive test script
+# Run comprehensive test script for both apps
 ./test-both-apps.sh
+```
+
+#### Performance Test Configuration
+
+- **JMeter Scripts**: Located in `performance-test/jmeter/`
+  - `payment-load-test.jmx` - Standard load test
+  - `payment-load-test-100k.jmx` - High-volume test (100k requests)
+
+- **Test Scripts**: Located in `performance-test/scripts/`
+  - Automated environment setup and teardown
+  - Result collection and analysis
+  - Load distribution monitoring
+
+#### Prerequisites for Performance Testing
+
+```bash
+# Required tools
+brew install jmeter          # JMeter for load testing
+brew install docker          # Container runtime
+brew install docker-compose  # Multi-container orchestration
+brew install jq              # JSON processing for health checks
+brew install netcat          # Network connectivity testing
+
+# Verify installations
+jmeter --version
+docker --version
+docker-compose --version
+jq --version
+nc -h
 ```
 
 ## 📊 Performance Testing Results
