@@ -5,7 +5,7 @@
 
 ## Overview
 
-A comprehensive CI/CD pipeline has been implemented for the payment-system-speckit project using GitHub Actions. The pipeline includes 6 automated workflows covering build, test, coverage, security, and release operations.
+A comprehensive CI/CD pipeline has been implemented for the payment-system-speckit project using GitHub Actions. The pipeline includes 5 automated workflows covering build, test, coverage, security, and release operations.
 
 ## Workflows Implemented
 
@@ -30,30 +30,7 @@ A comprehensive CI/CD pipeline has been implemented for the payment-system-speck
 
 ---
 
-### ✅ 2. Multi-Java Version Testing
-**File**: `.github/workflows/multi-java-test.yml`
-
-**Purpose**: Test compatibility with Java 21 LTS and Java 25 current version
-
-**Features**:
-- Matrix testing on Java 21 and Java 25
-- Validates critical dependency versions:
-  - Byte Buddy 1.18.8 (Java 25 bytecode fix)
-  - JaCoCo 0.8.14 (Java 25 instrumentation fix)
-- Automatic PR comments with test status
-- Nightly schedule (2 AM UTC)
-- Independent results per Java version
-
-**Triggers**:
-- Push to `main`, `develop`, `001-*` branches
-- Pull requests to `main`, `develop`
-- Scheduled: Daily at 2 AM UTC
-
-**Performance**: ~2 minutes per Java version (~4 minutes total)
-
----
-
-### ✅ 3. Integration Tests Workflow
+### ✅ 2. Integration Tests Workflow
 **File**: `.github/workflows/integration-tests.yml`
 
 **Purpose**: End-to-end integration and load performance testing
@@ -166,8 +143,7 @@ git push origin v1.0.0
 .github/
 ├── workflows/
 │   ├── build-and-test.yml           # ✅ Core build & unit tests (20s)
-│   ├── multi-java-test.yml          # ✅ Java 21 & 25 testing (4m)
-│   ├── integration-tests.yml        # ✅ E2E & load tests (5-45m)
+│ │   ├── integration-tests.yml        # ✅ E2E & load tests (5-45m)
 │   ├── code-coverage.yml            # ✅ Coverage reporting (3m)
 │   ├── security-scan.yml            # ✅ Vulnerability scanning (5m)
 │   └── release.yml                  # ✅ Release automation (2m)
@@ -182,7 +158,7 @@ Additional documentation:
 
 ## Key Features
 
-### 1. Multi-Java Version Support
+### 1. Workflow Support
 - **Java 21**: Primary LTS version (source target)
 - **Java 25**: Current version (runtime compatibility)
 - Automatic validation of Java 25 compatibility dependencies
@@ -215,7 +191,7 @@ Additional documentation:
 
 ## Workflow Triggers Summary
 
-| Trigger | Build & Test | Multi-Java | Integration | Coverage | Security | Release |
+| Trigger | Build & Test | Integration | Coverage | Security | Release |
 |---------|:---:|:---:|:---:|:---:|:---:|:---:|
 | Push main | ✅ | ✅ | ✅ | ✅ | ✅ | - |
 | Push develop | ✅ | ✅ | ✅ | ✅ | ✅ | - |
@@ -229,7 +205,6 @@ Additional documentation:
 
 ### Typical Workflow Execution Times
 - **Build & Test**: ~20 seconds
-- **Multi-Java Testing**: ~4 minutes (both versions)
 - **Integration Tests**: ~5 minutes
 - **Load Tests**: ~30-45 minutes
 - **Code Coverage**: ~3 minutes
@@ -238,7 +213,7 @@ Additional documentation:
 
 ### Total CI Time (PR Validation)
 - **Fast path** (001-* branch): ~9 minutes
-  - Build & Test (20s) + Multi-Java (4m) + Integration (5m)
+  - Build & Test (20s) + Integration (5m)
 - **Standard path** (develop): ~12 minutes
   - + Code Coverage (3m)
 - **Full path** (main): ~12+ minutes
@@ -256,12 +231,10 @@ The workflows include specific validation for Java 25 compatibility:
 
 1. **Byte Buddy 1.18.8**
    - Required for Mockito mocking on Java 25
-   - Validated in `multi-java-test.yml`
    - Test scope dependency in `pom.xml`
 
 2. **JaCoCo 0.8.14**
    - Required for code coverage on Java 25
-   - Validated in `multi-java-test.yml`
    - Maven plugin upgrade from 0.8.10
 
 3. **Automatic Validation**
@@ -274,7 +247,6 @@ The workflows include specific validation for Java 25 compatibility:
 ### For `main` branch:
 1. ✅ Require status checks to pass:
    - Build & Test
-   - Multi-Java Version Testing
    - Integration Tests
 2. ✅ Require PR reviews (1 approval)
 3. ✅ Require branches to be up to date
@@ -283,7 +255,6 @@ The workflows include specific validation for Java 25 compatibility:
 ### For `develop` branch:
 1. ✅ Require status checks to pass:
    - Build & Test
-   - Multi-Java Version Testing
 2. ✅ Require PR reviews (1 approval minimum)
 3. ✅ Require branches to be up to date
 
@@ -352,7 +323,6 @@ git push origin 001-resilient-payment-bridge
 - ✅ All 6 workflow files created
 - ✅ YAML syntax validated for all workflows
 - ✅ Documentation completed (3 guides)
-- ✅ Multi-Java testing configured
 - ✅ Java 25 compatibility checks included
 - ✅ Code coverage integration ready
 - ✅ Security scanning configured

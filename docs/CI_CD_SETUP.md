@@ -7,11 +7,10 @@ This document describes the GitHub Actions workflows configured for the payment-
 The CI/CD pipeline includes 6 automated workflows that handle building, testing, code coverage, security scanning, and releasing:
 
 1. **Build & Test** - Core build and unit test pipeline
-2. **Multi-Java Version Testing** - Tests against Java 21 and Java 25
-3. **Integration Tests** - Integration and load testing
-4. **Code Coverage** - Coverage reporting and metrics
-5. **Security Scan** - Dependency vulnerability and SCA
-6. **Release** - Automated release artifact publishing
+2. **Integration Tests** - Integration and load testing
+3. **Code Coverage** - Coverage reporting and metrics
+4. **Security Scan** - Dependency vulnerability and SCA
+5. **Release** - Automated release artifact publishing
 
 ## Workflows
 
@@ -36,26 +35,7 @@ The CI/CD pipeline includes 6 automated workflows that handle building, testing,
 - Test reports (30 days retention)
 - Coverage reports
 
-### 2. Multi-Java Version Testing (`multi-java-test.yml`)
-
-**Triggers:** Push to main/develop/001-* branches, Pull requests, Daily at 2 AM UTC
-
-**What it does:**
-- Tests against Java 21 LTS and Java 25
-- Verifies bytecode manipulation compatibility
-- Confirms Byte Buddy 1.18.8 is in place (Java 25 fix)
-- Confirms JaCoCo 0.8.14 is in place (Java 25 fix)
-- Posts results to PRs automatically
-
-**Key Features:**
-- Matrix strategy for multiple Java versions
-- Automatic PR comments with test status
-- Validates critical dependency versions
-
-**Artifacts:**
-- Test results per Java version (15 days retention)
-
-### 3. Integration Tests (`integration-tests.yml`)
+### 2. Integration Tests (`integration-tests.yml`)
 
 **Triggers:** Push to main/develop/001-* branches, Pull requests
 

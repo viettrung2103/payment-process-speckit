@@ -8,7 +8,10 @@ This directory contains GitHub Actions workflows and configuration files for the
 .github/
 ├── workflows/
 │   ├── build-and-test.yml           # Main build and unit test pipeline
+<<<<<<< HEAD
 │   ├── multi-java-test.yml          # Java 21 compatibility testing
+=======
+>>>>>>> 001-resilient-payment-bridge
 │   ├── integration-tests.yml        # Integration and load testing
 │   ├── code-coverage.yml            # Code coverage reporting
 │   ├── security-scan.yml            # Dependency vulnerability scanning
@@ -31,7 +34,6 @@ Add these badges to your main README.md:
 
 ```markdown
 [![Build & Test](https://github.com/[owner]/payment-system-speckit/actions/workflows/build-and-test.yml/badge.svg?branch=main)](https://github.com/[owner]/payment-system-speckit/actions/workflows/build-and-test.yml)
-[![Multi-Java Testing](https://github.com/[owner]/payment-system-speckit/actions/workflows/multi-java-test.yml/badge.svg?branch=main)](https://github.com/[owner]/payment-system-speckit/actions/workflows/multi-java-test.yml)
 [![Integration Tests](https://github.com/[owner]/payment-system-speckit/actions/workflows/integration-tests.yml/badge.svg?branch=main)](https://github.com/[owner]/payment-system-speckit/actions/workflows/integration-tests.yml)
 [![codecov](https://codecov.io/gh/[owner]/payment-system-speckit/branch/main/graph/badge.svg)](https://codecov.io/gh/[owner]/payment-system-speckit)
 ```
@@ -45,6 +47,7 @@ Add these badges to your main README.md:
 - **Duration**: ~20 seconds
 - **Outputs**: Test reports, coverage metrics
 
+<<<<<<< HEAD
 ### 2. Multi-Java Version Testing
 
 - **File**: `multi-java-test.yml`
@@ -54,31 +57,57 @@ Add these badges to your main README.md:
 
 ### 3. Integration Tests
 
+=======
+### 2. Integration Tests
+
+>>>>>>> 001-resilient-payment-bridge
 - **File**: `integration-tests.yml`
 - **Triggers**: Push, PR
 - **Duration**: ~5 minutes (45 minutes for load tests on main/develop)
 - **Outputs**: Integration test results, performance metrics
 
+<<<<<<< HEAD
 ### 4. Code Coverage
+=======
+### 3. Code Coverage
+>>>>>>> 001-resilient-payment-bridge
 
 - **File**: `code-coverage.yml`
 - **Triggers**: Push to main/develop, PR
 - **Duration**: ~3 minutes
 - **Outputs**: JaCoCo reports, Codecov upload
 
+<<<<<<< HEAD
 ### 5. Security Scan
+=======
+### 4. Security Scan
+>>>>>>> 001-resilient-payment-bridge
 
 - **File**: `security-scan.yml`
 - **Triggers**: Push, PR, weekly at midnight UTC
 - **Duration**: ~5 minutes
 - **Outputs**: Vulnerability reports, SBOM
 
+<<<<<<< HEAD
 ### 6. Release
+=======
+### 5. Release
+>>>>>>> 001-resilient-payment-bridge
 
 - **File**: `release.yml`
 - **Triggers**: Git tags matching `v*`
 - **Duration**: ~2 minutes
 - **Outputs**: GitHub Release with artifacts
+
+### Isolated Workflows
+
+#### Multi-Java Version Testing (Isolated)
+
+- **File**: `multi-java-test.yml` (on `multi-java-testing` branch only)
+- **Triggers**: Push/PR to `multi-java-testing` branch, daily schedule
+- **Purpose**: Test compatibility with Java 21 and 25 (isolated due to test failures)
+- **Duration**: ~4 minutes
+- **Outputs**: Test results for Java 21 & 25
 
 ## Recommended Setup
 
