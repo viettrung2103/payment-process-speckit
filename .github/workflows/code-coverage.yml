@@ -51,13 +51,24 @@ jobs:
           name: codecov-umbrella
           verbose: true
 
-      - name: Create Coverage Report Comment
+      - name: Add Coverage PR Comment
         if: github.event_name == 'pull_request'
-        uses: actions/github-script@v7
+        uses: madrauraud/jacoco-report@v1.7.1
         with:
-          script: |
-            const fs = require('fs');
-            let comment = '## 📊 Code Coverage Report\n\n';
+          paths: |
+            ${{ github.workspace }}/payment-bridge/target/site/jacoco/jacoco.xml
+            ${{ github.workspace }}/mock-payment-api/target/site/jacoco/jacoco.xml
+          token: ${{ secrets.GITHUB_TOKEN }}
+          min-coverage-overall: 60
+          min-coverage-changed-files: 60
+
+      - name: Upload JaCoCo HTML Reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: jacoco-reports
+          path: |
+            **/target/site/jacoco/
+          retention-days: 30
 
             const modules = ['payment-bridge', 'mock-payment-api'];
             let allFilesExist = true;
