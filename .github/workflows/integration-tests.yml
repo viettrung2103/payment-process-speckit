@@ -27,8 +27,7 @@ jobs:
           mvn clean verify \
             -B \
             --no-transfer-progress \
-            -pl payment-bridge \
-            -Dgroups=integration
+            -pl payment-bridge
         env:
           MAVEN_OPTS: "-Xmx2g"
 
@@ -60,8 +59,7 @@ jobs:
           mvn clean verify \
             -B \
             --no-transfer-progress \
-            -pl mock-payment-api \
-            -Dgroups=integration
+            -pl mock-payment-api
         env:
           MAVEN_OPTS: "-Xmx2g"
 
