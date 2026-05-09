@@ -37,30 +37,35 @@ Add these badges to your main README.md:
 ## Workflows
 
 ### 1. Build & Test
+
 - **File**: `build-and-test.yml`
-- **Triggers**: Push to main/develop/001-*, PR
+- **Triggers**: Push to main/develop/001-\*, PR
 - **Duration**: ~20 seconds
 - **Outputs**: Test reports, coverage metrics
 
 ### 2. Integration Tests
+
 - **File**: `integration-tests.yml`
 - **Triggers**: Push, PR
 - **Duration**: ~5 minutes (45 minutes for load tests on main/develop)
 - **Outputs**: Integration test results, performance metrics
 
 ### 3. Code Coverage
+
 - **File**: `code-coverage.yml`
 - **Triggers**: Push to main/develop, PR
 - **Duration**: ~3 minutes
 - **Outputs**: JaCoCo reports, Codecov upload
 
 ### 4. Security Scan
+
 - **File**: `security-scan.yml`
 - **Triggers**: Push, PR, weekly at midnight UTC
 - **Duration**: ~5 minutes
 - **Outputs**: Vulnerability reports, SBOM
 
 ### 5. Release
+
 - **File**: `release.yml`
 - **Triggers**: Git tags matching `v*`
 - **Duration**: ~2 minutes
@@ -69,17 +74,20 @@ Add these badges to your main README.md:
 ## Recommended Setup
 
 ### 1. Enable Status Checks
+
 Go to Settings → Branches → main/develop → Require status checks:
 
 - ✅ Build & Test
 - ✅ Integration Tests
 
 ### 2. Configure Codecov (Optional)
+
 1. Visit [codecov.io](https://codecov.io)
 2. Add your repository
 3. Copy CODECOV_TOKEN to repository secrets
 
 ### 3. Add Branch Protection Rules
+
 For `main` and `develop` branches:
 
 ### Isolated Workflows
