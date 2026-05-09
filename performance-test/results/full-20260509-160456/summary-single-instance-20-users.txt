@@ -1,0 +1,33 @@
+PERFORMANCE TEST RESULTS
+========================
+
+Test File: results-single-instance-20-users.jtl
+Generated: Sat May  9 16:07:35 +07 2026
+
+SUMMARY METRICS
+---------------
+Total Requests:     100000
+Successful Requests: 20825
+Failed Requests:    79175
+Error Rate:         79.17%
+
+RESPONSE TIME (ms)
+------------------
+Min:     1
+P50:     2
+P95:     8
+P99:     17
+Max:     225
+
+THROUGHPUT
+----------
+Requests/Second: 2674.08
+Test Duration:   37.396s
+
+PERFORMANCE ASSESSMENT
+----------------------
+❌ Error Rate: HIGH (≥ 1%)
+
+✅ P95 Latency: GOOD (< 1000ms)
+
+✅ Throughput: GOOD (> 10 RPS)

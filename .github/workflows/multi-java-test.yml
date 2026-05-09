@@ -1,0 +1,62 @@
+name: Java 21 Testing
+
+on:
+  push:
+    branches: [multi-java-testing]
+  pull_request:
+    branches: [multi-java-testing]
+  schedule:
+    - cron: "0 2 * * *" # Daily at 2 AM UTC
+
+jobs:
+  test-matrix:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        java-version: ["21"]
+      fail-fast: false
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK ${{ matrix.java-version }}
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ matrix.java-version }}
+          distribution: "temurin"
+          cache: maven
+
+      - name: Display Java and Maven versions
+        run: |
+          java -version
+          mvn -version
+
+      - name: Run tests
+        run: mvn clean test -B --no-transfer-progress -Djacoco.skip=false
+
+      - name: Generate coverage report (Java 21 only)
+        if: matrix.java-version == '21'
+        run: mvn jacoco:report
+
+      - name: Archive test results
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-java-${{ matrix.java-version }}
+          path: |
+            **/target/surefire-reports/
+            **/target/failsafe-reports/
+          retention-days: 15
+
+  verify-compatibility:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Verify dependency versions
+        run: |
+          echo "Checking Byte Buddy version..."
+          mvn dependency:tree | grep byte-buddy || echo "Byte Buddy not found"
+          echo "Checking JaCoCo version..."
+          mvn dependency:tree | grep jacoco || echo "JaCoCo not found"

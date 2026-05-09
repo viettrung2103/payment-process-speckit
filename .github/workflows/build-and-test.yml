@@ -1,0 +1,91 @@
+name: Build & Test
+
+on:
+  push:
+    branches: [main, develop, "001-*"]
+  pull_request:
+    branches: [main, develop]
+
+env:
+  MAVEN_CACHE_KEY: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+  # Dynamic scaling configuration for performance tests
+  MIN_INSTANCES: "1"
+  MAX_INSTANCES: "3" # Default deployment instances
+  DEFAULT_INSTANCES: "3" # Default deployment instances
+
+jobs:
+  build:
+    name: Build & Test
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        java-version: ["21"]
+      fail-fast: false
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up JDK ${{ matrix.java-version }}
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ matrix.java-version }}
+          distribution: "zulu"
+          cache: maven
+
+      - name: Display Java version
+        run: java -version
+
+      - name: Build and Test (Maven Modules)
+        run: |
+          mvn clean install -B --no-transfer-progress -Dtest="!*IntegrationTest,!*ContractTest"
+        env:
+          MAVEN_OPTS: "-Xmx2g"
+
+      - name: Validate Load Balancer Configuration
+        run: |
+          echo "Validating load balancer configuration files..."
+          if [ -f "load-balancer/nginx/nginx.conf" ]; then
+            echo "✅ Nginx configuration found"
+          else
+            echo "❌ Nginx configuration missing"
+            exit 1
+          fi
+          echo "✅ Load balancer configuration validation passed"
+
+      - name: Generate Test Reports
+        if: always()
+        run: |
+          mkdir -p test-reports
+          find . -path "*/target/surefire-reports/*.txt" -exec cp {} test-reports/ \;
+          find . -path "*/target/failsafe-reports/*.txt" -exec cp {} test-reports/ \;
+
+      - name: Upload Test Reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-reports-java-${{ matrix.java-version }}
+          path: test-reports/
+          retention-days: 30
+
+      - name: Publish Test Results
+        if: always()
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        with:
+          files: |
+            **/target/surefire-reports/TEST-*.xml
+            **/target/failsafe-reports/TEST-*.xml
+          check_name: "Test Results (Java ${{ matrix.java-version }})"
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          files: >-
+            ./payment-bridge/target/site/jacoco/jacoco.xml,
+            ./mock-payment-api/target/site/jacoco/jacoco.xml
+          flags: unittest
+          name: codecov-umbrella
+          fail_ci_if_error: false
+          verbose: true

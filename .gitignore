@@ -1,0 +1,27 @@
+# Maven
+/target/
+# /payment-bridge/target/
+# /mock-payment-api/target/
+*/target/
+# IntelliJ
+/.idea/
+*.iml
+
+# VS Code
+.vscode/
+
+# OS files
+.DS_Store
+
+# Logs
+*.log
+
+# Compiled Java classes
+*.class
+
+# Generated wrapper files
+/mvnw
+/mvnw.cmd
+
+# Spring Boot Devtools
+spring-boot-devtools.properties
