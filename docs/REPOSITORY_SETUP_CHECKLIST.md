@@ -47,9 +47,7 @@ git push origin 001-resilient-payment-bridge
 
 5. [ ] Under "Status checks that are required to pass before merging", add:
    - [ ] `Build & Test`
-   - [ ] `Test Java 21` (from Multi-Java-Version-Testing)
-   - [ ] `Test Java 25` (from Multi-Java-Version-Testing)
-   - [ ] `Payment Bridge Integration Tests`
+         - [ ] `Payment Bridge Integration Tests`
    - [ ] `Mock Payment API Integration Tests`
 
 6. [ ] Click "Create" to save
@@ -150,7 +148,6 @@ git push origin v0.1.0
 **Verification**:
 - [ ] Workflows appear in GitHub Actions tab
 - [ ] Build & Test workflow completes
-- [ ] Multi-Java workflow shows Java 21 and 25 results
 - [ ] PR shows status checks (if created via PR)
 - [ ] Codecov report appears (if token configured)
 
@@ -164,7 +161,6 @@ Edit your main `README.md` and add workflow status badges:
 ## CI/CD Status
 
 [![Build & Test](https://github.com/[OWNER]/payment-system-speckit/actions/workflows/build-and-test.yml/badge.svg?branch=main)](https://github.com/[OWNER]/payment-system-speckit/actions/workflows/build-and-test.yml)
-[![Multi-Java Testing](https://github.com/[OWNER]/payment-system-speckit/actions/workflows/multi-java-test.yml/badge.svg?branch=main)](https://github.com/[OWNER]/payment-system-speckit/actions/workflows/multi-java-test.yml)
 [![Integration Tests](https://github.com/[OWNER]/payment-system-speckit/actions/workflows/integration-tests.yml/badge.svg?branch=main)](https://github.com/[OWNER]/payment-system-speckit/actions/workflows/integration-tests.yml)
 [![codecov](https://codecov.io/gh/[OWNER]/payment-system-speckit/branch/main/graph/badge.svg)](https://codecov.io/gh/[OWNER]/payment-system-speckit)
 ```

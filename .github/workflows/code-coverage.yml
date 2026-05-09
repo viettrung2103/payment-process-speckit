@@ -34,7 +34,7 @@ jobs:
           mvn clean verify \
             -B \
             --no-transfer-progress \
-            -DskipITs
+            -Dtest="!*IntegrationTest,!*ContractTest"
         env:
           MAVEN_OPTS: "-Xmx2g"
 

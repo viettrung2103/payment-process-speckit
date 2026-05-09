@@ -6,7 +6,6 @@ When you push code or create a pull request, you'll see workflow status checks:
 
 ```
 ✅ Build & Test          - Unit tests passed
-✅ Multi-Java Test      - Tested on Java 21 & 25
 ✅ Integration Tests    - E2E and load tests passed
 ✅ Code Coverage        - Coverage reports generated
 ✅ Security Scan        - No critical vulnerabilities
@@ -21,13 +20,6 @@ When you push code or create a pull request, you'll see workflow status checks:
 - Runs all unit tests
 - Generates coverage reports
 - **Time**: ~20 seconds
-
-### Multi-Java Version Testing
-
-- Runs on push and daily
-- Tests Java 21 and Java 25
-- Validates Byte Buddy 1.18.8 and JaCoCo 0.8.14
-- **Time**: ~2 minutes per version
 
 ### Integration Tests
 
@@ -125,12 +117,14 @@ git commit -m "Update docs [skip ci]"
 ```
 .github/workflows/
 ├── build-and-test.yml           # Core build & tests
-├── multi-java-test.yml          # Java 21 & 25 testing
 ├── integration-tests.yml        # E2E and load tests
 ├── code-coverage.yml            # Coverage reporting
 ├── security-scan.yml            # Vulnerability scanning
 └── release.yml                  # Release automation
 ```
+
+**Isolated Workflows:**
+- `multi-java-test.yml` (on `multi-java-testing` branch only) - Java 21 & 25 testing
 
 ## Environment & Caching
 

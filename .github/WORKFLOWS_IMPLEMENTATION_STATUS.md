@@ -13,12 +13,12 @@ All required GitHub Actions workflows for the payment-system-speckit project hav
 
 ### Quick Status
 
-| Workflow | Status | Speckit Task | Trigger | Runtime |
-|----------|--------|--------------|---------|---------|
-| Build & Test | ✅ COMPLETE | T096 | Push + PR | ~20s |
-| Code Coverage | ✅ COMPLETE | T080, T096 | P| Code Coverage | ✅ COMPLETE | T080, T096 | P| Code Coverage || Code Coverage | ✅ COMPLETE | T080, T096 | P| Code Coests | ✅ COMPLETE | T082, Phase 9 | Push + PR (load tests on main/develop) | ~5m (45m load) |
-| Security Scan | ✅ COMPLETE | T096 | Push + Weekly | ~5m |
-| Release | ✅ COMPLETE | T097 | Git tag `v*` | ~2m |
+| Workflow      | Status      | Speckit Task | Trigger       | Runtime       |
+| ------------- | ----------- | ------------ | ------------- | ------------- | ----------- | ---------- | --- | ------------- | --- | ------------- | ----------- | ---------- | --- | ----------- | ----------- | ------------- | -------------------------------------- | -------------- |
+| Build & Test  | ✅ COMPLETE | T096         | Push + PR     | ~20s          |
+| Code Coverage | ✅ COMPLETE | T080, T096   | P             | Code Coverage | ✅ COMPLETE | T080, T096 | P   | Code Coverage |     | Code Coverage | ✅ COMPLETE | T080, T096 | P   | Code Coests | ✅ COMPLETE | T082, Phase 9 | Push + PR (load tests on main/develop) | ~5m (45m load) |
+| Security Scan | ✅ COMPLETE | T096         | Push + Weekly | ~5m           |
+| Release       | ✅ COMPLETE | T097         | Git tag `v*`  | ~2m           |
 
 ---
 
@@ -31,10 +31,12 @@ All required GitHub Actions workflows for the payment-system-speckit project hav
 **Speckit Requirement**: T096 - Setup CI/CD pipeline
 
 #### Triggers
+
 - ✅ Push to branches: `main`, `develop`, `001-*`
 - ✅ Pull requests to: `main`, `develop`
 
 #### Implementation Details
+
 ```yaml
 jobs:
   build:
@@ -54,6 +56,7 @@ jobs:
 ```
 
 #### What It Validates
+
 - ✅ Code compiles without errors
 - ✅ All 52+ unit tests pass
 - ✅ Load balancer configuration is present
@@ -61,6 +64,7 @@ jobs:
 - ✅ Coverage data is generated
 
 #### Artifacts Generated
+
 - Test reports (TXT format)
 - SLF4J/log files
 - JaCoCo coverage data
@@ -74,10 +78,12 @@ jobs:
 **Speckit Requirement**: T080 (JaCoCo setup), T096 (CI/CD)
 
 #### Triggers
+
 - ✅ Push to branches: `main`, `develop`
 - ✅ Pull requests to: `main`, `develop`
 
 #### Implementation Details
+
 ```yaml
 jobs:
   coverage:
@@ -100,17 +106,20 @@ jobs:
 ```
 
 #### What It Validates
+
 - ✅ Code coverage meets 60% minimum threshold
 - ✅ JaCoCo reports are generated successfully
 - ✅ Codecov receives coverage data
 - ✅ PR gets coverage report comment (if applicable)
 
 #### Artifacts Generated
+
 - JaCoCo HTML reports
 - JaCoCo XML reports (for Codecov)
 - Coverage metrics display
 
 #### Coverage Configuration (pom.xml)
+
 ```xml
 <rule>
   <element>PACKAGE</element>
@@ -131,64 +140,17 @@ jobs:
 
 ---
 
-### ✅ Workflow #3: Multi-Java Version Testing
+### ✅ Workflow #3: Integration Tests
 
-**File**: `.github/workflows/multi-java-test.yml`  
+**File**: `.github/workflows/integration-tests.yml`  
 **Status**: ✅ COMPLETE and OPERATIONAL  
-**Speckit Requirement**: T096 - Multi-version compatibility
+**Speckit Requirement**: T082 (E2E tests), Phase 9 (Performance)
 
 #### Triggers
-- ✅ Push to branches: `main`, `develop`, `001-*`
+
+- ✅ Push to: `main`, `develop`, `001-*`
 - ✅ Pull requests to: `main`, `develop`
-- ✅ Daily schedule: 2 AM UTC (nightly compatibility check)
-
-#### Implementation Details
-```yaml
-jobs:
-  test-matrix:
-    strategy:
-      matrix:
-        java-version: ['21', '25']
-      fail-fast: false
-    
-    for each Java version:
-      - Checkout code
-      - Setup JDK (matrix version)
-      - Display Java version and Maven version
-      - Run tests:
-        → mvn clean test -Djacoco.skip=false
-        → Runs unit tests on target Java version
-        → Generates coverage data
-      - Generate coverage report (Java 21 only)
-      - Archive test results (15-day retention)
-      - Comment on PR with test status
-  
-  verify-compatibility:
-    - Checkout code
-    - Verify dependency versions:
-      → Check Byte Buddy 1.18.8
-      → Check JaCoCo 0.8.14
-      → Log verification results
-```
-
-#### What It Validates
-- ✅ Code compiles on Java 21
-- ✅ Code compiles on Java 25
-- ✅ All tests pass on Java 21
-- ✅ All tests pass on Java 25
-- ✅ Required dependencies are correct version
-- ✅ No Java version incompatibilities
-
-#### Artifacts Generated
-- Test results per Java version
-- Surefire and Failsafe reports
-
-#### Java Version Policy
-- **Production**: Java 21 (LTS)
-- **Forward Compatibility**: Java 25 (current)
-- **Minimum**: Java 21
-- **Byte Buddy**: 1.18.8+ (for Java 25 support)
-- **JaCoCo**: 0.8.14+ (for Java 25 support)
+- ✅ Load tests only on: `main`, `develop` (performance focus)
 
 ---
 
@@ -199,11 +161,13 @@ jobs:
 **Speckit Requirement**: T082 (E2E tests), Phase 9 (Performance)
 
 #### Triggers
+
 - ✅ Push to: `main`, `develop`, `001-*`
 - ✅ Pull requests to: `main`, `develop`
 - ✅ Load tests only on: `main`, `develop` (performance focus)
 
 #### Job #1: Payment Bridge Integration Tests
+
 ```yaml
   payment-bridge-integration:
     - Checkout code
@@ -217,6 +181,7 @@ jobs:
 ```
 
 #### Job #2: Mock Payment API Integration Tests
+
 ```yaml
   mock-payment-api-integration:
     - Checkout code
@@ -230,28 +195,30 @@ jobs:
 ```
 
 #### Job #3: Load & Performance Tests (main/develop only)
+
 ```yaml
-  load-tests:
-    if: push to main/develop
-    strategy:
-      matrix:
-        instance-count: [1, 3]
-    
-    for each instance count:
-      - Checkout code
-      - Setup JDK 21
-      - Configure dynamic instances: TEST_INSTANCES env var
-      - Run: mvn clean test -pl mock-payment-api \
-             -Dtest=*LoadTest,*FailureDistributionStatTest
-      - Timeout: 45 minutes
-      - Upload results (7-day retention)
+load-tests:
+  if: push to main/develop
+  strategy:
+    matrix:
+      instance-count: [1, 3]
+
+  for each instance count:
+    - Checkout code
+    - Setup JDK 21
+    - Configure dynamic instances: TEST_INSTANCES env var
+    - Run: mvn clean test -pl mock-payment-api \
+        -Dtest=*LoadTest,*FailureDistributionStatTest
+    - Timeout: 45 minutes
+    - Upload results (7-day retention)
 ```
 
 #### Job #4: Load Balancer Docker Build (main/develop only)
+
 ```yaml
   load-balancer-docker-build:
     if: push to main/develop
-    
+
     - Checkout code
     - Setup Docker Buildx
     - Build Dockerfile:
@@ -267,6 +234,7 @@ jobs:
 ```
 
 #### What It Validates
+
 - ✅ Payment bridge integration tests pass
 - ✅ Mock API integration tests pass
 - ✅ System handles 1 instance baseline
@@ -276,6 +244,7 @@ jobs:
 - ✅ All load balancer components present
 
 #### Dynamic Scaling Tests
+
 - **1 Instance**: Baseline performance (sequential processing)
 - **3 Instances**: Horizontal scaling (parallel processing)
 - **5 Instances**: Maximum scaling (advanced parallel)
@@ -290,11 +259,13 @@ jobs:
 **Speckit Requirement**: T096 - Security scanning
 
 #### Triggers
+
 - ✅ Push to: `main`, `develop`
 - ✅ Pull requests to: `main`, `develop`
 - ✅ Weekly schedule: Sunday midnight UTC
 
 #### Job #1: Dependency Vulnerability Scan
+
 ```yaml
   dependency-check:
     - Checkout code
@@ -308,6 +279,7 @@ jobs:
 ```
 
 #### Job #2: Maven Security Audit
+
 ```yaml
   maven-security:
     - Checkout code
@@ -323,6 +295,7 @@ jobs:
 ```
 
 #### Job #3: Software Composition Analysis (SBOM)
+
 ```yaml
   sca-scan:
     - Checkout code
@@ -336,12 +309,14 @@ jobs:
 ```
 
 #### What It Validates
+
 - ✅ No critical vulnerabilities in dependencies
 - ✅ All transitive dependencies audited
 - ✅ Supply chain transparency (SBOM available)
 - ✅ Compliance with security standards
 
 #### Security Artifacts
+
 - Dependency Check JSON report
 - Maven Security HTML report
 - CycloneDX SBOM XML
@@ -355,9 +330,11 @@ jobs:
 **Speckit Requirement**: T097 - Release procedures
 
 #### Triggers
+
 - ✅ Git tag push matching: `v*` (e.g., `v1.0.0`, `v1.2.3-beta`)
 
 #### Implementation Details
+
 ```yaml
 jobs:
   build-and-release:
@@ -380,25 +357,30 @@ jobs:
 ```
 
 #### Release Notes Template
+
 ```markdown
 ## Release ${{ version }}
 
 ### Payment Bridge
+
 - Main payment processing server with async request handling
 - RabbitMQ worker integration
 - Resilience patterns for fault tolerance
 
 ### Mock Payment API
+
 - External payment API mock for testing
 - Failure simulation capabilities
 - Load testing support
 
 ### Artifacts
+
 - `payment-bridge-${{ version }}.jar`
 - `mock-payment-api-${{ version }}.jar`
 ```
 
 #### How to Create a Release
+
 ```bash
 # Create release tag locally
 git tag -a v1.0.0 -m "Release version 1.0.0"
@@ -414,6 +396,7 @@ git push origin v1.0.0
 ```
 
 #### What It Validates
+
 - ✅ Code builds successfully
 - ✅ All tests pass (skip because already tested)
 - ✅ Release artifacts created
@@ -426,6 +409,7 @@ git push origin v1.0.0
 ## Workflow Execution Flow
 
 ### When you push to `feature/001-*` branch:
+
 ```
 Trigger: Push event
   ↓
@@ -434,19 +418,17 @@ Trigger: Push event
   ├─ Run tests
   └─ Generate coverage
   ↓
-✅ Multi-Java Test runs (if scheduled or PR created)
-  └─ Test on Java 21 & 25
   ↓
 Status check passes/fails
 ```
 
 ### When you push to `main` or `develop`:
+
 ```
 Trigger: Push event
   ↓
 ✅ Build & Test runs
 ✅ Code Coverage runs (generates reports)
-✅ Multi-Java Test runs
 ✅ Integration Tests runs
   ├─ payment-bridge integration
   ├─ mock-payment-api integration
@@ -462,6 +444,7 @@ All status checks pass/fail
 ```
 
 ### When you create a Pull Request:
+
 ```
 Trigger: Pull request event to main/develop
   ↓
@@ -470,7 +453,6 @@ Trigger: Pull request event to main/develop
 PR shows all status checks:
   ✅ Build & Test
   ✅ Code Coverage
-  ✅ Multi-Java Version Testing
   ✅ Integration Tests
   ✅ Security Scan
   ↓
@@ -479,6 +461,7 @@ Java version test results commented (if applicable)
 ```
 
 ### When you tag release:
+
 ```
 Trigger: Git tag v1.0.0 pushed
   ↓
@@ -492,10 +475,10 @@ Release available on GitHub
 ```
 
 ### Nightly runs (daily schedule):
+
 ```
 Trigger: 2 AM UTC daily
   ↓
-✅ Multi-Java Test runs
   └─ Tests Java 21 & 25 compatibility
   ↓
 ✅ Security Scan runs (weekly)
@@ -506,47 +489,50 @@ Trigger: 2 AM UTC daily
 
 ## Speckit Phase 8 Requirement Mapping
 
-| Speckit Task | Requirement | Workflow Implementation | Status |
-|--------------|-------------|----------------------|--------|
-| T079 | Docker setup | integration-tests.yml (load-balancer job) | ✅ |
-| T080 | Code coverage (JaCoCo) | code-coverage.yml | ✅ |
-| T081 | SonarQube integration | Planned future enhancement | 🔜 |
-| T082 | E2E test suite | integration-tests.yml | ✅ |
-| T083 | API documentation | README.md, docs/ | ✅ |
-| T084 | Deployment guide | DEPLOYMENT.md | ✅ |
-| T085 | Operations runbook | OPERATIONS.md | ✅ |
-| T086 | Prometheus metrics | Actuator endpoints | ✅ |
-| T087 | Actuator dashboard | Configured in pom.xml | ✅ |
-| T088 | Alerting rules | Monitoring setup | ✅ |
-| T089 | Performance profiling | integration-tests.yml (load tests) | ✅ |
-| T090 | Database optimization | Query indexes in schema | ✅ |
-| T091 | RabbitMQ tuning | Configuration in pom.xml | ✅ |
-| T092 | Input validation | Implemented in controllers | ✅ |
-| T093 | Rate limiting | Nginx + Spring configuration | ✅ |
-| T094 | Sensitive data logging | Redaction in logback.xml | ✅ |
-| T095 | Auth framework | API key validation | ✅ |
-| T096 | CI/CD pipeline | ALL 6 WORKFLOWS | ✅ |
-| T097 | Release procedures | release.yml | ✅ |
-| T098 | Lessons learned | PROBLEM_RESOLUTION.md | ✅ |
-| T099 | Phase 2 backlog | phase2-backlog.md | ✅ |
+| Speckit Task | Requirement            | Workflow Implementation                   | Status |
+| ------------ | ---------------------- | ----------------------------------------- | ------ |
+| T079         | Docker setup           | integration-tests.yml (load-balancer job) | ✅     |
+| T080         | Code coverage (JaCoCo) | code-coverage.yml                         | ✅     |
+| T081         | SonarQube integration  | Planned future enhancement                | 🔜     |
+| T082         | E2E test suite         | integration-tests.yml                     | ✅     |
+| T083         | API documentation      | README.md, docs/                          | ✅     |
+| T084         | Deployment guide       | DEPLOYMENT.md                             | ✅     |
+| T085         | Operations runbook     | OPERATIONS.md                             | ✅     |
+| T086         | Prometheus metrics     | Actuator endpoints                        | ✅     |
+| T087         | Actuator dashboard     | Configured in pom.xml                     | ✅     |
+| T088         | Alerting rules         | Monitoring setup                          | ✅     |
+| T089         | Performance profiling  | integration-tests.yml (load tests)        | ✅     |
+| T090         | Database optimization  | Query indexes in schema                   | ✅     |
+| T091         | RabbitMQ tuning        | Configuration in pom.xml                  | ✅     |
+| T092         | Input validation       | Implemented in controllers                | ✅     |
+| T093         | Rate limiting          | Nginx + Spring configuration              | ✅     |
+| T094         | Sensitive data logging | Redaction in logback.xml                  | ✅     |
+| T095         | Auth framework         | API key validation                        | ✅     |
+| T096         | CI/CD pipeline         | ALL 6 WORKFLOWS                           | ✅     |
+| T097         | Release procedures     | release.yml                               | ✅     |
+| T098         | Lessons learned        | PROBLEM_RESOLUTION.md                     | ✅     |
+| T099         | Phase 2 backlog        | phase2-backlog.md                         | ✅     |
 
 ---
 
 ## Environment Variables & Caching
 
 ### Maven Cache
+
 - **Strategy**: Cache per OS and pom.xml checksum
 - **Key**: `${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}`
 - **Location**: GitHub Actions runner cache
 - **Effect**: Speeds up builds by 60-70%
 
 ### Java Setup
+
 - **Version**: 21 (LTS), tested on 25
 - **Distribution**: Zulu (OpenJDK compatible)
 - **Memory**: 2GB heap allocation (`-Xmx2g`)
 - **Caching**: Maven artifacts cached
 
 ### Environment Variables
+
 ```yaml
 # Dynamic scaling
 MIN_INSTANCES: "1"
@@ -562,39 +548,44 @@ TEST_INSTANCES: (set per load test job)
 
 ## Artifact Retention Policy
 
-| Artifact | Retention | Purpose |
-|----------|-----------|---------|
-| Test reports | 30 days | Debugging failures |
-| Coverage reports | 30 days | Trend analysis |
-| Load test results | 7 days | Performance tracking |
-| Security reports | 30 days | Vulnerability history |
-| Release artifacts | 90 days | Long-term availability |
+| Artifact          | Retention | Purpose                |
+| ----------------- | --------- | ---------------------- |
+| Test reports      | 30 days   | Debugging failures     |
+| Coverage reports  | 30 days   | Trend analysis         |
+| Load test results | 7 days    | Performance tracking   |
+| Security reports  | 30 days   | Vulnerability history  |
+| Release artifacts | 90 days   | Long-term availability |
 
 ---
 
 ## Troubleshooting Guide
 
 ### Issue: "No space left on device"
+
 - **Root Cause**: GitHub runner disk full
 - **Solution**: Artifact cleanup runs automatically (7-90 day retention)
 - **Action**: Retry workflow
 
 ### Issue: Maven dependency resolution fails
+
 - **Root Cause**: Network timeout or Maven Central issue
 - **Solution**: GitHub Actions auto-retries; manual retry via UI
 - **Action**: Re-run failed jobs
 
 ### Issue: Tests pass locally but fail in CI
+
 - **Root Cause**: Java version mismatch (local vs JDK 21)
 - **Solution**: Set JAVA_HOME locally: `export JAVA_HOME=<path>`
 - **Action**: Run: `mvn clean test -B` with matching version
 
 ### Issue: Coverage reports not generating
+
 - **Root Cause**: JaCoCo not in pom.xml or wrong phase
 - **Solution**: Verify pom.xml has JaCoCo plugin
 - **Action**: `mvn clean test -Djacoco.skip=false` locally
 
 ### Issue: Integration tests timeout
+
 - **Root Cause**: Docker services slow to start
 - **Solution**: Increase timeout in workflow
 - **Action**: Update `timeout-minutes` in integration-tests.yml
@@ -604,11 +595,13 @@ TEST_INSTANCES: (set per load test job)
 ## Next Steps (Future Enhancements)
 
 ### Planned Workflows (Phase 12+)
+
 - [ ] Docker Image Build & Push (Kubernetes prep)
 - [ ] Performance Trend Reports (weekly)
 - [ ] Deployment Workflow (staging/prod)
 
 ### Potential Improvements
+
 - [ ] SonarQube code quality integration
 - [ ] Automated performance regression detection
 - [ ] Database migration testing
@@ -633,7 +626,6 @@ TEST_INSTANCES: (set per load test job)
 
 - **Build & Test**: [.github/workflows/build-and-test.yml](.github/workflows/build-and-test.yml)
 - **Code Coverage**: [.github/workflows/code-coverage.yml](.github/workflows/code-coverage.yml)
-- **Multi-Java Test**: [.github/workflows/multi-java-test.yml](.github/workflows/multi-java-test.yml)
 - **Integration Tests**: [.github/workflows/integration-tests.yml](.github/workflows/integration-tests.yml)
 - **Security Scan**: [.github/workflows/security-scan.yml](.github/workflows/security-scan.yml)
 - **Release**: [.github/workflows/release.yml](.github/workflows/release.yml)
