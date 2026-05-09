@@ -36,6 +36,7 @@ This project implements a **resilient distributed payment bridge** that processe
 ### Problem Statement
 
 Build a payment processing application that:
+
 - Receives payment requests via REST API
 - Persists payment state for tracking
 - Calls external Payment REST API for each request
@@ -48,12 +49,14 @@ Build a payment processing application that:
 ### Key Assumptions & Trade-offs
 
 **Assumptions Made:**
+
 - External Payment API simulates real-world conditions (10ms-2s random delays, 90% success rate)
 - Database and message queue are available and reliable
 - Network connectivity between services is generally stable
 - Payment amounts are within reasonable bounds (no overflow concerns)
 
 **Trade-offs Considered:**
+
 - **Consistency vs Availability**: Chose eventual consistency with guaranteed delivery over immediate consistency
 - **Performance vs Reliability**: Implemented comprehensive retry mechanisms that may add latency but ensure delivery
 - **Complexity vs Maintainability**: Used message-driven architecture for scalability at the cost of operational complexity
@@ -96,12 +99,14 @@ The system follows **6 constitutional principles** for resilient distributed sys
 ### Reliability & Restart Behavior
 
 **No Loss on Restart:**
+
 - **Database Persistence**: All payments persisted in PostgreSQL with optimistic locking
 - **Message Durability**: RabbitMQ configured with publisher confirms and durable queues
 - **State Machine**: Explicit state transitions (RECEIVED → IN_PROGRESS → COMPLETED/FAILED)
 - **At-Least-Once Delivery**: Message redelivery ensures no payments are lost
 
 **No Loss of Payment Service Responses:**
+
 - **Transactional Updates**: Database updates only committed after successful external API calls
 - **Manual ACK**: RabbitMQ messages only acknowledged after successful DB commit
 - **Rollback on Failure**: Failed DB operations trigger message redelivery
@@ -110,6 +115,7 @@ The system follows **6 constitutional principles** for resilient distributed sys
 ### Horizontal Scalability
 
 **Multi-Instance Support:**
+
 - **Stateless Workers**: Each instance pulls from shared RabbitMQ queue
 - **Load Balancing**: Nginx distributes requests across payment-bridge instances
 - **Shared Database**: PostgreSQL handles concurrent access with optimistic locking
@@ -118,6 +124,7 @@ The system follows **6 constitutional principles** for resilient distributed sys
 ## 🛠️ Technology Stack
 
 ### Core Technologies
+
 - **Language**: Java 21 (Virtual Threads for concurrency)
 - **Framework**: Spring Boot 3.4
 - **Database**: PostgreSQL (ACID compliance, optimistic locking)
@@ -125,6 +132,7 @@ The system follows **6 constitutional principles** for resilient distributed sys
 - **Build Tool**: Maven (multi-module project)
 
 ### Libraries & Tools
+
 - **Spring AMQP**: RabbitMQ integration with retry mechanisms
 - **Resilience4j**: Circuit Breaker and retry policies
 - **Spring Data JPA**: Database operations with optimistic locking
@@ -134,6 +142,7 @@ The system follows **6 constitutional principles** for resilient distributed sys
 - **Docker & Docker Compose**: Containerization and orchestration
 
 ### Development Tools
+
 - **Speckit**: Specification-driven development workflow
 - **GitHub Actions**: CI/CD pipelines
 - **SonarQube**: Code quality analysis
@@ -142,6 +151,7 @@ The system follows **6 constitutional principles** for resilient distributed sys
 ## ✨ Key Features
 
 ### Functional Features
+
 - ✅ **Payment Ingestion**: REST API endpoint for payment requests
 - ✅ **State Management**: Complete payment lifecycle tracking
 - ✅ **External API Integration**: Calls to simulated Payment Service
@@ -149,6 +159,7 @@ The system follows **6 constitutional principles** for resilient distributed sys
 - ✅ **Audit Trail**: Complete payment history and state transitions
 
 ### Reliability Features
+
 - ✅ **Zero Data Loss**: Guaranteed delivery through restart scenarios
 - ✅ **Retry Mechanisms**: API and database retry with exponential backoff
 - ✅ **Circuit Breaker**: Protection against cascading failures
@@ -156,12 +167,14 @@ The system follows **6 constitutional principles** for resilient distributed sys
 - ✅ **Publisher Confirms**: Guaranteed message delivery to RabbitMQ
 
 ### Scalability Features
+
 - ✅ **Horizontal Scaling**: Multiple instances behind load balancer
 - ✅ **Message-Driven Architecture**: Decoupled processing components
 - ✅ **Virtual Threads**: Efficient concurrency handling
 - ✅ **Optimistic Locking**: Database concurrency control
 
 ### Testing Features
+
 - ✅ **Unit Tests**: Comprehensive business logic coverage
 - ✅ **Integration Tests**: End-to-end component testing
 - ✅ **Performance Tests**: Load testing for single and scaled instances
@@ -170,12 +183,14 @@ The system follows **6 constitutional principles** for resilient distributed sys
 ## 📋 Prerequisites
 
 ### System Requirements
+
 - **Java**: JDK 21+ (OpenJDK or Oracle JDK)
 - **Maven**: 3.8+
 - **Docker**: 20.10+ (for containerized testing)
 - **Docker Compose**: 2.0+ (for local development)
 
 ### Optional (for native performance)
+
 - **JMeter**: 5.6+ (via Homebrew on macOS)
 - **PostgreSQL**: 15+ (for local development)
 - **RabbitMQ**: 3.12+ (for local development)
@@ -323,6 +338,7 @@ docker compose up -d
 ## 📊 Performance Testing Results
 
 ### Test Environment
+
 - **Hardware**: Apple Silicon MacBook Pro (M3, 16GB RAM)
 - **Load Generator**: JMeter 5.6 (native installation)
 - **Target**: Payment Bridge API endpoint
@@ -332,12 +348,14 @@ docker compose up -d
 ### Single Instance Results
 
 **Test Configuration:**
+
 - 1 Payment Bridge instance
 - 5 concurrent users
 - 20,000 total requests
 - Random delay: 10ms-2s
 
 **Results:**
+
 ```
 Total Requests: 20,000
 Successful Requests: 20,000 (100%)
@@ -356,6 +374,7 @@ Error Rate: 0%
 ```
 
 **Observations:**
+
 - Consistent performance with expected latency distribution
 - No failures under moderate load
 - Memory usage stable at ~450MB
@@ -364,12 +383,14 @@ Error Rate: 0%
 ### Scaled Instance Results (3 Instances)
 
 **Test Configuration:**
+
 - 3 Payment Bridge instances behind Nginx load balancer
 - 5 concurrent users
 - 20,000 total requests
 - Random delay: 10ms-2s
 
 **Results:**
+
 ```
 Total Requests: 20,000
 Successful Requests: 20,000 (100%)
@@ -388,6 +409,7 @@ Error Rate: 0%
 ```
 
 **Observations:**
+
 - **32% throughput improvement** (67 → 89 req/sec)
 - **19% reduction** in average response time
 - **20% reduction** in P99 latency
@@ -436,6 +458,7 @@ Error Rate: 0%
 ### Payment Bridge API
 
 #### Create Payment
+
 ```http
 POST /api/v1/payments
 Content-Type: application/json
@@ -449,11 +472,12 @@ X-Idempotency-Key: <unique-key>
 ```
 
 **Response (202 Accepted):**
+
 ```json
 {
   "paymentId": "PAY-20260509-ABC123",
   "status": "RECEIVED",
-  "amount": 100.50,
+  "amount": 100.5,
   "currency": "USD",
   "clientReference": "ORDER-12345",
   "createdAt": "2026-05-09T15:30:00Z"
@@ -461,16 +485,18 @@ X-Idempotency-Key: <unique-key>
 ```
 
 #### Get Payment Status
+
 ```http
 GET /api/v1/payments/status/{paymentId}
 ```
 
 **Response:**
+
 ```json
 {
   "paymentId": "PAY-20260509-ABC123",
   "status": "COMPLETED",
-  "amount": 100.50,
+  "amount": 100.5,
   "currency": "USD",
   "completedAt": "2026-05-09T15:30:05Z",
   "externalTransactionId": "EXT-123456"
@@ -480,6 +506,7 @@ GET /api/v1/payments/status/{paymentId}
 ### Mock Payment API
 
 #### Process Payment
+
 ```http
 POST /api/v1/payments
 Content-Type: application/json
@@ -492,6 +519,7 @@ Content-Type: application/json
 ```
 
 #### Get Transaction History
+
 ```http
 GET /api/v1/transactions?limit=10
 ```
@@ -530,6 +558,7 @@ LOGGING_LEVEL_COM_PAYMENT=INFO
 ### Docker Configuration
 
 See `docker-compose.yml` for complete service configuration including:
+
 - PostgreSQL with persistent volumes
 - RabbitMQ with management interface
 - Nginx load balancer for scaled deployments
@@ -575,6 +604,7 @@ This project uses **Speckit** for specification-driven development:
 ```
 
 **Speckit shaped the implementation by:**
+
 - Providing structured specification framework
 - Ensuring comprehensive requirement coverage
 - Maintaining traceability from spec → plan → tasks → code
@@ -614,6 +644,7 @@ docker compose -f docker-compose.scaled.yml up -d
 ### Kubernetes Deployment
 
 See `docs/DOCKER_DEPLOYMENT.md` for:
+
 - Kubernetes manifests
 - Helm charts
 - Service mesh configuration
@@ -633,6 +664,7 @@ See `docs/DOCKER_DEPLOYMENT.md` for:
 ### Common Issues
 
 **Database Connection Issues:**
+
 ```bash
 # Check database connectivity
 docker compose exec postgres pg_isready -U payment_user -d payment_bridge
@@ -642,6 +674,7 @@ docker compose logs postgres
 ```
 
 **Message Queue Issues:**
+
 ```bash
 # Check RabbitMQ status
 docker compose exec rabbitmq rabbitmq-diagnostics status
@@ -651,6 +684,7 @@ curl -u guest:guest http://localhost:15672/api/queues
 ```
 
 **Application Startup Issues:**
+
 ```bash
 # Check application logs
 docker compose logs payment-bridge
@@ -660,6 +694,7 @@ curl http://localhost:8080/actuator/health
 ```
 
 **Performance Issues:**
+
 ```bash
 # Monitor JVM metrics
 curl http://localhost:8080/actuator/metrics
@@ -718,5 +753,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ---
 
 **Contact**: For questions about this implementation, please reach out to:
+
 - taha.othman@nokia.com
 - xiaoxia.chen@nokia.com

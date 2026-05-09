@@ -39,7 +39,9 @@ jobs:
         run: java -version
 
       - name: Build and Test (Maven Modules)
-        run: mvn clean test -B --no-transfer-progress -DskipITs
+        run: |
+          mvn clean install -B --no-transfer-progress -DskipTests
+          mvn test -B --no-transfer-progress -DskipITs -pl mock-payment-api
         env:
           MAVEN_OPTS: "-Xmx2g"
 

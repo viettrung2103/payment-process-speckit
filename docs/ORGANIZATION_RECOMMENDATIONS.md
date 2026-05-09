@@ -9,6 +9,7 @@
 ## 📚 **Current Structure Review**
 
 Current structure after reorganization:
+
 ```
 payment-system-speckit/
 ├── config/                  # ✅ Configuration files
@@ -30,6 +31,7 @@ payment-system-speckit/
 ### **1. Create `test-logs/` Subdirectories in logs/**
 
 **Current:**
+
 ```
 logs/
 ├── test_output.log
@@ -37,6 +39,7 @@ logs/
 ```
 
 **Recommended:**
+
 ```
 logs/
 ├── maven/
@@ -56,12 +59,14 @@ logs/
 ```
 
 **Benefits:**
+
 - ✅ Organize logs by module and test type
 - ✅ Foundation for log rotation policies
 - ✅ Easy to find specific test output
 - ✅ Supports multiple test runs
 
 **Implementation:**
+
 ```bash
 mkdir -p logs/maven/{payment-bridge,mock-payment-api}
 mkdir -p logs/performance-test/jmeter-results
@@ -73,12 +78,14 @@ mkdir -p logs/ci-cd
 ### **2. Enhance `config/` with Subdirectories**
 
 **Current:**
+
 ```
 config/
 └── jfr-config.jfc
 ```
 
 **Recommended:**
+
 ```
 config/
 ├── jfr/
@@ -103,12 +110,14 @@ config/
 ```
 
 **Benefits:**
+
 - ✅ Centralized configuration management
 - ✅ Environment-specific configs grouped
 - ✅ Clear separation of concerns
 - ✅ Easy environment switching
 
 **Implementation:**
+
 ```bash
 mkdir -p config/{jfr,environments,docker,nginx/{sites-available,snippets},security}
 mv config/jfr-config.jfc config/jfr/
@@ -119,6 +128,7 @@ mv config/jfr-config.jfc config/jfr/
 ### **3. Organize `specs/` with Phase Markers**
 
 **Current:**
+
 ```
 specs/
 ├── 001-resilient-payment-bridge/
@@ -126,6 +136,7 @@ specs/
 ```
 
 **Recommended:**
+
 ```
 specs/
 ├── phases/                      # 🆕 Group by phase
@@ -147,6 +158,7 @@ specs/
 ```
 
 **Benefits:**
+
 - ✅ Phases organized chronologically
 - ✅ Features grouped by capability
 - ✅ Archived work separated
@@ -157,6 +169,7 @@ specs/
 ### **4. Create `scripts/` at Root Level**
 
 **Recommendation:**
+
 ```
 scripts/                        # 🆕 Root-level operational scripts
 ├── setup/
@@ -183,12 +196,14 @@ scripts/                        # 🆕 Root-level operational scripts
 ```
 
 **Benefits:**
+
 - ✅ Easy onboarding for new developers
 - ✅ Standardized operations
 - ✅ Reduced human error
 - ✅ Clear entry points for common tasks
 
 **Examples:**
+
 ```bash
 # Easy commands for developers
 ./scripts/setup/setup-dev-env.sh           # Get started
@@ -203,6 +218,7 @@ scripts/                        # 🆕 Root-level operational scripts
 ### **5. Create `.infrastructure/` for Deployment Code**
 
 **Structure:**
+
 ```
 .infrastructure/                # 🆕 Infrastructure as Code
 ├── docker/
@@ -227,6 +243,7 @@ scripts/                        # 🆕 Root-level operational scripts
 ```
 
 **Benefits:**
+
 - ✅ Infrastructure separated from code
 - ✅ Multi-environment support
 - ✅ Version controlled infrastructure
@@ -237,6 +254,7 @@ scripts/                        # 🆕 Root-level operational scripts
 ### **6. Create `.github/` Subdirectories**
 
 **Current:**
+
 ```
 .github/
 ├── workflows/
@@ -246,6 +264,7 @@ scripts/                        # 🆕 Root-level operational scripts
 ```
 
 **Enhanced:**
+
 ```
 .github/
 ├── workflows/
@@ -271,6 +290,7 @@ scripts/                        # 🆕 Root-level operational scripts
 ```
 
 **Benefits:**
+
 - ✅ Workflows organized by purpose
 - ✅ Standard issue/PR templates
 - ✅ Scalable GitHub automation
@@ -282,11 +302,12 @@ scripts/                        # 🆕 Root-level operational scripts
 
 The `integration-test/` folder has been removed as it contained unused manual test scripts. Integration testing is handled through Maven integration tests in the respective module `src/test/java/.../integration/` directories.
 
-│   ├── payment-flow-tests/
-│   ├── resilience-tests/
-│   ├── failure-scenario-tests/
-│   └── end-to-end-tests/
+│ ├── payment-flow-tests/
+│ ├── resilience-tests/
+│ ├── failure-scenario-tests/
+│ └── end-to-end-tests/
 └── README.md
+
 ```
 
 **Benefits:**
@@ -303,18 +324,20 @@ The `integration-test/` folder has been removed as it contained unused manual te
 
 **Create new folder:**
 ```
-monitoring/                     # 🆕 Observability setup
+
+monitoring/ # 🆕 Observability setup
 ├── prometheus/
-│   ├── prometheus.yml
-│   ├── alerting-rules.yml
-│   └── dashboards/
+│ ├── prometheus.yml
+│ ├── alerting-rules.yml
+│ └── dashboards/
 ├── grafana/
-│   ├── datasources/
-│   └── dashboards/
+│ ├── datasources/
+│ └── dashboards/
 ├── elasticsearch/
-│   ├── logstash-config/
-│   └── kibana-setup/
+│ ├── logstash-config/
+│ └── kibana-setup/
 └── README.md
+
 ```
 
 **Benefits:**
@@ -329,28 +352,30 @@ monitoring/                     # 🆕 Observability setup
 
 **Enhanced `docs/` structure:**
 ```
+
 docs/
-├── getting-started/            # 🆕 Onboarding
-│   ├── local-setup.md
-│   ├── first-build.md
-│   └── debugging-guide.md
-├── architecture/               # 🆕 Design docs
-│   ├── system-design.md
-│   ├── data-flow.md
-│   └── module-interaction.md
-├── operations/                 # 🆕 Runbooks
-│   ├── deployment-runbook.md
-│   ├── incident-response.md
-│   └── scaling-guide.md
-├── development/               # 🆕 Developer guide
-│   ├── contributing.md
-│   ├── coding-standards.md
-│   └── testing-guidelines.md
-├── api/                       # 🆕 API documentation
-│   ├── payment-bridge-api.md
-│   ├── mock-api.md
-│   └── load-balancer-api.md
+├── getting-started/ # 🆕 Onboarding
+│ ├── local-setup.md
+│ ├── first-build.md
+│ └── debugging-guide.md
+├── architecture/ # 🆕 Design docs
+│ ├── system-design.md
+│ ├── data-flow.md
+│ └── module-interaction.md
+├── operations/ # 🆕 Runbooks
+│ ├── deployment-runbook.md
+│ ├── incident-response.md
+│ └── scaling-guide.md
+├── development/ # 🆕 Developer guide
+│ ├── contributing.md
+│ ├── coding-standards.md
+│ └── testing-guidelines.md
+├── api/ # 🆕 API documentation
+│ ├── payment-bridge-api.md
+│ ├── mock-api.md
+│ └── load-balancer-api.md
 └── (existing docs)
+
 ```
 
 **Benefits:**
@@ -364,68 +389,70 @@ docs/
 ## 📊 **Full Recommended Structure (Future State)**
 
 ```
+
 payment-system-speckit/
 │
-├── config/                      # ✅ Done
-│   ├── jfr/
-│   ├── environments/
-│   ├── docker/
-│   ├── nginx/
-│   └── security/
+├── config/ # ✅ Done
+│ ├── jfr/
+│ ├── environments/
+│ ├── docker/
+│ ├── nginx/
+│ └── security/
 │
-├── docs/                        # ✅ Done (+ enhanced)
-│   ├── getting-started/
-│   ├── architecture/
-│   ├── operations/
-│   ├── development/
-│   ├── api/
-│   └── (reference docs)
+├── docs/ # ✅ Done (+ enhanced)
+│ ├── getting-started/
+│ ├── architecture/
+│ ├── operations/
+│ ├── development/
+│ ├── api/
+│ └── (reference docs)
 │
-├── logs/                        # ✅ Done (+ organized)
-│   ├── maven/
-│   ├── performance-test/
-│   └── ci-cd/
+├── logs/ # ✅ Done (+ organized)
+│ ├── maven/
+│ ├── performance-test/
+│ └── ci-cd/
 │
-├── scripts/                     # 🆕 Root-level operations
-│   ├── setup/
-│   ├── testing/
-│   ├── deployment/
-│   ├── monitoring/
-│   └── maintenance/
+├── scripts/ # 🆕 Root-level operations
+│ ├── setup/
+│ ├── testing/
+│ ├── deployment/
+│ ├── monitoring/
+│ └── maintenance/
 │
-├── monitoring/                  # 🆕 Observability
-│   ├── prometheus/
-│   ├── grafana/
-│   └── elasticsearch/
+├── monitoring/ # 🆕 Observability
+│ ├── prometheus/
+│ ├── grafana/
+│ └── elasticsearch/
 │
-├── .infrastructure/             # 🆕 Infrastructure as Code
-│   ├── docker/
-│   ├── kubernetes/
-│   ├── terraform/
-│   └── helm/
+├── .infrastructure/ # 🆕 Infrastructure as Code
+│ ├── docker/
+│ ├── kubernetes/
+│ ├── terraform/
+│ └── helm/
 │
-├── .github/                     # Enhanced
-│   ├── workflows/{ci,cd,maintenance}/
-│   ├── templates/
-│   └── (agents, prompts)
+├── .github/ # Enhanced
+│ ├── workflows/{ci,cd,maintenance}/
+│ ├── templates/
+│ └── (agents, prompts)
 │
-├── specs/                       # Enhanced
-│   ├── phases/
-│   ├── features/
-│   └── archived/
+├── specs/ # Enhanced
+│ ├── phases/
+│ ├── features/
+│ └── archived/
 │
 ├── (Application modules - unchanged)
-│   ├── payment-bridge/
-│   ├── mock-payment-api/
-│   ├── load-balancer/
-│   ├── performance-test/
-│   └── integration-test/ ❌ REMOVED
+│ ├── payment-bridge/
+│ ├── mock-payment-api/
+│ ├── load-balancer/
+│ ├── performance-test/
+│ └── integration-test/ ❌ REMOVED
 │
 └── (Root config files)
-    ├── docker-compose.yml
-    ├── pom.xml
-    ├── README.md
-    └── (.github, .gitignore, etc)
+├── docker-compose.yml
+├── pom.xml
+├── README.md
+└── (.github, .gitignore, etc)
+
 ```
 
 ---
@@ -449,7 +476,7 @@ payment-system-speckit/
 
 ### **Immediate (This Week)**
 - [ ] Create `logs/` subdirectories
-- [ ] Create `config/` subdirectories  
+- [ ] Create `config/` subdirectories
 - [ ] Move logs to appropriate subdirectories
 - [ ] Update CI/CD to use new log paths
 
@@ -484,3 +511,4 @@ payment-system-speckit/
 
 **Remember**: Over-organization is as problematic as under-organization. Implement based on actual needs, not theoretical complexity. Start with Tier 1, validate, then progress to higher tiers.
 
+```
