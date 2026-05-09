@@ -20,6 +20,7 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
@@ -87,7 +88,8 @@ class ExternalApiClientTest {
 
         // When & Then - Should throw exception for retry handling
         assertThatThrownBy(() -> externalApiClient.processPayment(payment))
-            .isInstanceOf(Exception.class);
+            .isInstanceOf(PaymentProcessingException.class) // Be specific here
+            .hasMessageContaining("Unexpected API error");
     }
 
     @Test

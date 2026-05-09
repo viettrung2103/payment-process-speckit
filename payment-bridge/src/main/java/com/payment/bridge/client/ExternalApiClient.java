@@ -46,16 +46,16 @@ public class ExternalApiClient {
         Supplier<ApiResponse> decorated = CircuitBreaker.decorateSupplier(circuitBreaker, supplier);
         decorated = Retry.decorateSupplier(retry, decorated);
 
-        try {
-            return decorated.get();
-        } catch (PaymentApiException e) {
-            throw e;
-        } catch (CallNotPermittedException e) {
-            throw e;
-        } catch (Exception e) {
-            logger.error("External API request failed for payment {}", payment.getPaymentId(), e);
-            throw new PaymentProcessingException("External API request failed", e);
-        }
+try {
+        return decorated.get();
+    } catch (PaymentApiException | CallNotPermittedException | PaymentProcessingException e) {
+        // Let our known business/resilience exceptions through
+        throw e;
+    } catch (Exception e) {
+        // Wrap unexpected checked exceptions or generic runtime errors
+        logger.error("External API request failed for payment {}", payment.getPaymentId(), e);
+        throw new PaymentProcessingException("Unexpected API error", e);
+    }
     }
 
     private ApiResponse callExternalApi(Payment payment) {

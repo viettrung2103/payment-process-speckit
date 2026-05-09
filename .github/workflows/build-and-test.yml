@@ -40,7 +40,7 @@ jobs:
 
       - name: Build and Test (Maven Modules)
         run: |
-          mvn clean install -B --no-transfer-progress
+          mvn clean install -B --no-transfer-progress -Dtest="!*IntegrationTest,!*ContractTest"
         env:
           MAVEN_OPTS: "-Xmx2g"
 
