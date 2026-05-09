@@ -1,5 +1,5 @@
 # Maven
-# /target/
+/target/
 # /payment-bridge/target/
 # /mock-payment-api/target/
 */target/
