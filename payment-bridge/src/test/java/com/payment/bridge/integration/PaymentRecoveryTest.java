@@ -20,8 +20,11 @@ import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.mockito.ArgumentCaptor;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -302,6 +305,32 @@ class PaymentRecoveryTest {
         Optional<Payment> persisted = paymentRepository.findById(response.getPaymentId());
         assertThat(persisted).isPresent();
         assertThat(persisted.get().getStatus()).isEqualTo(PaymentStatus.RECEIVED);
+    }
+
+    @Test
+    void testRecoverReceivedPaymentsRequeuesPendingPayments() {
+        UUID paymentId = UUID.randomUUID();
+        Payment payment = new Payment();
+        payment.setPaymentId(paymentId);
+        payment.setAmount(new BigDecimal("120.00"));
+        payment.setCurrency("USD");
+        payment.setStatus(PaymentStatus.RECEIVED);
+
+        paymentRepository.save(payment);
+
+        paymentService.recoverReceivedPayments();
+
+        ArgumentCaptor<MessageQueueTask> captor = ArgumentCaptor.forClass(MessageQueueTask.class);
+        verify(paymentPublisher).publishPaymentTask(captor.capture());
+
+        MessageQueueTask publishedTask = captor.getValue();
+        assertThat(publishedTask.getPaymentId()).isEqualTo(paymentId);
+        assertThat(publishedTask.getRetryAttempt()).isEqualTo(0);
+        assertThat(publishedTask.getAction()).isEqualTo("PROCESS_PAYMENT");
+
+        Optional<Payment> recoveredPayment = paymentRepository.findById(paymentId);
+        assertThat(recoveredPayment).isPresent();
+        assertThat(recoveredPayment.get().getStatus()).isEqualTo(PaymentStatus.RECEIVED);
     }
 
     @Test

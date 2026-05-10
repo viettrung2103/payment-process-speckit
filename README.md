@@ -1,17 +1,4 @@
 # 🚀 Payment System Speckit
-
-[![Build Status](https://github.com/[OWNER]/payment-system-speckit/actions/workflows/build-and-test.yml/badge.svg?branch=main)](https://github.com/[OWNER]/payment-system-speckit/actions/workflows/build-and-test.yml)
-[![Integration Tests](https://github.com/[OWNER]/payment-system-speckit/actions/workflows/integration-tests.yml/badge.svg?branch=main)](https://github.com/[OWNER]/payment-system-speckit/actions/workflows/integration-tests.yml)
-[![Code Coverage](https://github.com/[OWNER]/payment-system-speckit/actions/workflows/code-coverage.yml/badge.svg?branch=main)](https://github.com/[OWNER]/payment-system-speckit/actions/workflows/code-coverage.yml)
-
-> **Take-Home Assignment Submission** - Resilient Distributed Payment Bridge
->
-> **Submitted by**: [Your Name]  
-> **Date**: May 9, 2026  
-> **Repository**: [GitHub URL]
-
----
-
 ## 📋 Table of Contents
 
 - [🎯 Overview](#-overview)
@@ -289,8 +276,6 @@ curl http://localhost:8080/actuator/health
 
 ### Alternative Startup Methods
 
-### Alternative Startup Methods
-
 #### Option 2: Scaled Deployment (Multiple Instances)
 
 ```bash
@@ -532,11 +517,13 @@ curl http://localhost:8080/actuator/health/rabbit
 
 ```bash
 # Run integration tests (requires Docker)
-mvn verify -Dspring.profiles.active=test
+./run-integration-test.sh
 
 # Run end-to-end tests
-mvn test -Dtest="*IntegrationTest"
+./run-integration-test.sh
 ```
+
+> Note: local integration execution has been run; if failures occur, inspect `mock-payment-api/target/surefire-reports` for forked VM crash details and `mock-payment-api/target/jacoco.exec` for coverage artifacts.
 
 ### Performance Testing
 
@@ -553,6 +540,7 @@ cd performance-test && ./scripts/quick-single-performance-test.sh
 - Tests 1 payment bridge instance
 - 20,000 total requests at 5 concurrent users
 - Duration: ~5 minutes
+- Example local result: `performance-test/results/quick-20260510-185553/combined-summary.txt` (13,143 requests, 0% error rate, 438.905 RPS)
 
 **Scaled Test (3 instances):**
 
@@ -654,6 +642,11 @@ cd performance-test && ./scripts/run-scaled-test.sh
 - Each test run creates a timestamped directory (e.g., `quick-20260510-143000/`)
 - Results include: `.jtl` files (raw JMeter data), `.log` files (JMeter logs), and `.txt` summary files
 
+**Consolidated Results:**
+
+- Use `./consolidate-results.sh` to copy relevant reports into `performance-test/results/consolidated/`
+- This provides a stable target location when you want all artifacts in one place
+
 **Report Contents:**
 Each test generates summary files with the following metrics:
 
@@ -742,6 +735,69 @@ docker-compose --version
 jq --version
 nc -h
 ```
+
+#### Combining Test Results
+
+The project provides a script to combine and analyze results from both Java simulations and JMeter performance tests:
+
+```bash
+cd performance-test/scripts && ./combine-results.sh [simulation-log] [jmeter-csv]
+```
+
+**Examples:**
+
+```bash
+# Analyze JMeter results only
+./combine-results.sh "" /path/to/jmeter-results.csv
+
+# Analyze both simulation and JMeter results
+./combine-results.sh simulation.log /path/to/jmeter-results.csv
+
+# Capture simulation output first
+cd ../java-tests
+java QuickSingleInstanceReceivedRecoveryTestRunner > simulation.log 2>&1
+cd ../scripts
+./combine-results.sh ../../java-tests/simulation.log /path/to/jmeter-results.csv
+```
+
+The script creates a combined report with:
+
+- Simulation recovery metrics (success rates, lost payments)
+- Performance test metrics (throughput, latency, error rates)
+- Overall assessment and recommendations
+
+#### Shutdown/Restart Recovery Simulations
+
+The project includes Java-based simulations to validate that RECEIVED and IN_PROGRESS payments are properly recovered after service shutdown and restart.
+
+**Single Instance Recovery Test:**
+
+```bash
+cd performance-test && ./scripts/run-quick-single-instance-received-recovery-test.sh
+```
+
+- Simulates single payment bridge instance
+- Submits 24 payments, triggers shutdown, then restart
+- Validates all payments are recovered with zero pending
+
+**Multi-Instance Recovery Test:**
+
+```bash
+cd performance-test && ./scripts/run-quick-multi-instance-received-recovery-test.sh
+```
+
+- Simulates 3 payment bridge instances with load balancing
+- Independently shuts down 2 instances while 1 continues processing
+- Restarts the shut-down instances and recovers pending tasks
+- Validates distributed recovery across multiple instances
+
+**Simulation Results:**
+
+- Demonstrates zero payment loss during shutdown/restart
+- Shows proper recovery of RECEIVED tasks (re-queued) and IN_PROGRESS tasks (status checked)
+- Includes detailed logging of recovery operations
+
+For detailed documentation on difficulties, solutions, and suggestions, see: [`docs/shutdown-restart-recovery-documentation.md`](docs/shutdown-restart-recovery-documentation.md)
 
 ## 📊 Performance Testing Results
 

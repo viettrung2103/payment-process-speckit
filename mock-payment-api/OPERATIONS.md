@@ -247,7 +247,7 @@ For questions or enhancements:
 - Review `README.md` for architecture and setup
 - Review `TESTING.md` for verification strategies
 - Review `ENDPOINTS.md` for API contract details
- 
+
 Or contact:
 
 - viettrung21.work@gmail.com
