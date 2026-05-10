@@ -532,10 +532,10 @@ curl http://localhost:8080/actuator/health/rabbit
 
 ```bash
 # Run integration tests (requires Docker)
-mvn verify -Dspring.profiles.active=test
+./run-integration-test.sh
 
 # Run end-to-end tests
-mvn test -Dtest="*IntegrationTest"
+./run-integration-test.sh
 ```
 
 ### Performance Testing

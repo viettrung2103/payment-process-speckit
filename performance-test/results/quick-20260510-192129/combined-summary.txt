@@ -1,0 +1,38 @@
+QUICK PERFORMANCE TEST RESULTS
+==============================
+
+Test Date: Sun May 10 19:22:34 +07 2026
+Results Directory: quick-20260510-192129
+
+SINGLE INSTANCE RESULTS
+-----------------------
+--- 5 users ---
+SUMMARY METRICS
+---------------
+Total Requests:     12319
+Successful Requests: 12319
+Failed Requests:    0
+Error Rate:         0%
+
+RESPONSE TIME (ms)
+------------------
+Min:     3
+P50:     8
+P95:     14
+P99:     23
+Max:     224
+
+THROUGHPUT
+----------
+Requests/Second: 411.511
+Test Duration:   29.936s
+
+PERFORMANCE ASSESSMENT
+
+SCALED INSTANCE RESULTS (3 instances)
+-------------------------------------
+Not run in this mode
+
+OVERALL ASSESSMENT
+------------------
+Comparison not applicable for this mode

@@ -19,7 +19,8 @@ public class PaymentRecoveryRunner {
 
     @EventListener(ApplicationReadyEvent.class)
     public void onApplicationReady() {
-        logger.info("Application started, initiating recovery of in-progress payments");
+        logger.info("Application started, initiating recovery of in-progress and received payments");
         paymentService.recoverInProgressPayments();
+        paymentService.recoverReceivedPayments();
     }
 }

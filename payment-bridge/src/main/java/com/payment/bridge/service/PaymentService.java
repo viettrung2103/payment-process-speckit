@@ -268,30 +268,54 @@ public class PaymentService {
         var inProgressPayments = paymentRepository.findByStatus(PaymentStatus.IN_PROGRESS);
         if (inProgressPayments.isEmpty()) {
             logger.info("No in-progress payments found for recovery");
+        } else {
+            logger.info("Recovering {} in-progress payment(s)", inProgressPayments.size());
+            for (Payment payment : inProgressPayments) {
+                try {
+                    ExternalApiClient.ApiResponse statusResponse = externalApiClient.getPaymentStatus(payment.getPaymentId());
+                    if (statusResponse == null || statusResponse.getStatus() == null) {
+                        logger.warn("Recovery status check returned empty response for payment {}, deferring recovery until service becomes available", payment.getPaymentId());
+                        continue;
+                    }
+
+                    String status = statusResponse.getStatus();
+
+                    if ("COMPLETED".equalsIgnoreCase(status) || "SUCCESS".equalsIgnoreCase(status)) {
+                        completeRecoveredPayment(payment, statusResponse);
+                    } else if ("FAILED".equalsIgnoreCase(status)) {
+                        failRecoveredPayment(payment, statusResponse);
+                    } else {
+                        logger.info("Payment {} still pending in external system (status={}), continuing normal processing", payment.getPaymentId(), status);
+                        processPaymentWithExternalAPI(payment.getPaymentId());
+                    }
+                } catch (Exception e) {
+                    logger.warn("Recovery status check failed for payment {}, external service may be unavailable; deferring recovery until service restart", payment.getPaymentId(), e);
+                }
+            }
+        }
+    }
+
+    public void recoverReceivedPayments() {
+        var receivedPayments = paymentRepository.findByStatus(PaymentStatus.RECEIVED);
+        if (receivedPayments.isEmpty()) {
+            logger.info("No received payments found for recovery");
             return;
         }
 
-        logger.info("Recovering {} in-progress payment(s)", inProgressPayments.size());
-        for (Payment payment : inProgressPayments) {
+        logger.info("Recovering {} received payment(s) by re-publishing processing tasks", receivedPayments.size());
+        for (Payment payment : receivedPayments) {
             try {
-                ExternalApiClient.ApiResponse statusResponse = externalApiClient.getPaymentStatus(payment.getPaymentId());
-                if (statusResponse == null || statusResponse.getStatus() == null) {
-                    logger.warn("Recovery status check returned empty response for payment {}, deferring recovery until service becomes available", payment.getPaymentId());
-                    continue;
-                }
+                MessageQueueTask task = new MessageQueueTask();
+                task.setPaymentId(payment.getPaymentId());
+                task.setAction("PROCESS_PAYMENT");
+                task.setRetryAttempt(0);
+                task.setEnqueuedAt(Instant.now());
+                task.setDequeueCount(0);
 
-                String status = statusResponse.getStatus();
-
-                if ("COMPLETED".equalsIgnoreCase(status) || "SUCCESS".equalsIgnoreCase(status)) {
-                    completeRecoveredPayment(payment, statusResponse);
-                } else if ("FAILED".equalsIgnoreCase(status)) {
-                    failRecoveredPayment(payment, statusResponse);
-                } else {
-                    logger.info("Payment {} still pending in external system (status={}), continuing normal processing", payment.getPaymentId(), status);
-                    processPaymentWithExternalAPI(payment.getPaymentId());
-                }
+                paymentPublisher.publishPaymentTask(task);
+                logger.info("Re-published processing task for pending payment: {}", payment.getPaymentId());
             } catch (Exception e) {
-                logger.warn("Recovery status check failed for payment {}, external service may be unavailable; deferring recovery until service restart", payment.getPaymentId(), e);
+                logger.warn("Failed to re-publish processing task for pending payment {}: {}", payment.getPaymentId(), e.getMessage(), e);
             }
         }
     }
