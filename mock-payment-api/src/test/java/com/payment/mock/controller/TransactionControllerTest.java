@@ -57,6 +57,19 @@ class TransactionControllerTest {
     }
 
     @Test
+    @DisplayName("GET transaction by non-existent id returns 404")
+    void shouldReturn404ForNonExistentTransaction() throws Exception {
+        when(transactionLookupService.findByTransactionIdOrThrow("TXN-NONEXISTENT"))
+                .thenThrow(new TransactionLookupService.TransactionNotFoundException("Transaction TXN-NONEXISTENT not found"));
+
+        mockMvc.perform(get("/api/v1/transactions/TXN-NONEXISTENT")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.error").value("NOT_FOUND"))
+                .andExpect(jsonPath("$.message").value("Transaction TXN-NONEXISTENT not found"));
+    }
+
+    @Test
     @DisplayName("GET transaction history returns paged results")
     void shouldReturnPagedTransactionHistory() throws Exception {
         Transaction txn1 = new Transaction("TXN-101", new BigDecimal("20.00"), "USD", "CLIENT-A");

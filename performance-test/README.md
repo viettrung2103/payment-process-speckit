@@ -296,7 +296,33 @@ performance-test/
 # Results will be in results/scaled-3-instances/
 ```
 
-### 3. Generate Performance Report
+### 3. Realistic Performance Test
+
+```bash
+# Run single-instance realistic stress test
+./scripts/realistic-performance-test.sh single
+
+# Run scaled realistic stress test
+./scripts/realistic-performance-test.sh scaled
+
+# Run both realistic stress tests sequentially
+./scripts/realistic-performance-test.sh all
+```
+
+- Default load parameters are configurable via environment variables:
+  - `USERS` (default 50)
+  - `RAMP_UP` (default 60)
+  - `DURATION` (default 300)
+  - `THINK_TIME` (default 400)
+  - `RANDOM_DELAY` (default 300)
+
+- Example:
+
+```bash
+USERS=100 RAMP_UP=120 DURATION=600 ./scripts/realistic-performance-test.sh scaled
+```
+
+### 4. Generate Performance Report
 
 ```bash
 # Collect and analyze results

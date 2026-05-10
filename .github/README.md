@@ -8,10 +8,6 @@ This directory contains GitHub Actions workflows and configuration files for the
 .github/
 ├── workflows/
 │   ├── build-and-test.yml           # Main build and unit test pipeline
-<<<<<<< HEAD
-│   ├── multi-java-test.yml          # Java 21 compatibility testing
-=======
->>>>>>> 001-resilient-payment-bridge
 │   ├── integration-tests.yml        # Integration and load testing
 │   ├── code-coverage.yml            # Code coverage reporting
 │   ├── security-scan.yml            # Dependency vulnerability scanning
@@ -47,57 +43,52 @@ Add these badges to your main README.md:
 - **Duration**: ~20 seconds
 - **Outputs**: Test reports, coverage metrics
 
-<<<<<<< HEAD
-### 2. Multi-Java Version Testing
-
-- **File**: `multi-java-test.yml`
-- **Triggers**: Push, PR, daily at 2 AM UTC
-- **Duration**: ~2 minutes
-- **Outputs**: Test results for Java 21
-
-### 3. Integration Tests
-
-=======
 ### 2. Integration Tests
 
->>>>>>> 001-resilient-payment-bridge
 - **File**: `integration-tests.yml`
 - **Triggers**: Push, PR
 - **Duration**: ~5 minutes (45 minutes for load tests on main/develop)
 - **Outputs**: Integration test results, performance metrics
 
-<<<<<<< HEAD
-### 4. Code Coverage
-=======
 ### 3. Code Coverage
->>>>>>> 001-resilient-payment-bridge
 
 - **File**: `code-coverage.yml`
 - **Triggers**: Push to main/develop, PR
 - **Duration**: ~3 minutes
 - **Outputs**: JaCoCo reports, Codecov upload
 
-<<<<<<< HEAD
-### 5. Security Scan
-=======
 ### 4. Security Scan
->>>>>>> 001-resilient-payment-bridge
 
 - **File**: `security-scan.yml`
 - **Triggers**: Push, PR, weekly at midnight UTC
 - **Duration**: ~5 minutes
 - **Outputs**: Vulnerability reports, SBOM
 
-<<<<<<< HEAD
-### 6. Release
-=======
 ### 5. Release
->>>>>>> 001-resilient-payment-bridge
 
 - **File**: `release.yml`
 - **Triggers**: Git tags matching `v*`
 - **Duration**: ~2 minutes
 - **Outputs**: GitHub Release with artifacts
+
+## Recommended Setup
+
+### 1. Enable Status Checks
+
+Go to Settings → Branches → main/develop → Require status checks:
+
+- ✅ Build & Test
+- ✅ Integration Tests
+
+### 2. Configure Codecov (Optional)
+
+1. Visit [codecov.io](https://codecov.io)
+2. Add your repository
+3. Copy CODECOV_TOKEN to repository secrets
+
+### 3. Add Branch Protection Rules
+
+For `main` and `develop` branches:
 
 ### Isolated Workflows
 

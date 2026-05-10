@@ -46,6 +46,39 @@
 - [ ] T106 Document transaction boundary considerations in API contracts and service interfaces
 - [ ] T107 Align Docker Compose load balancer health checks to Nginx application-facing health endpoint (use /actuator/health instead of /nginx_status)
 
+## Iteration 2026-05-10: Spec Plan, Architecture Documentation & Recovery-on-Startup
+
+- [x] T200 Document selected tech stack in the plan and spec artifacts (Java/Spring Boot, Docker, Nginx, RabbitMQ, PostgreSQL)
+- [x] T201 Document architecture overview for the modular payment bridge, including ingress, processing, queueing, and observability components
+- [x] T202 Align the speckit tasklist with the discussed tech stack and architecture decisions
+- [x] T203 Handle startup recovery for IN_PROGRESS payments when external status service is temporarily unavailable and retry completion after service restart
+- [x] T204 Add explicit integration tests covering deferred recovery while the payment status service is down and server restarts
+- [x] T210 Add offline recovery integration test with realistic service shutdown/restart scenarios and automatic recovery verification
+- [x] T211 Add random shutdown performance test with up to 2 random shutdowns (1-5 seconds each) and automatic catch-up recovery
+- [x] T212 Create standalone Java test runners for offline recovery and random shutdown (no Maven dependency required)
+- [x] T213 Create bash wrapper scripts for easy execution with auto Java detection and colored output
+- [x] T214 Create comprehensive README documentation for resilience test suite with usage examples and success criteria
+- [ ] T205 Add scheduled recovery job for deferred IN_PROGRESS payments (run every 30 seconds instead of only on startup)
+- [ ] T206 Implement health-aware recovery that monitors external service status before attempting recovery
+- [ ] T207 Add circuit breaker pattern for repeated external status check failures
+- [ ] T208 Add metrics tracking for recovery events (deferred, succeeded, failed, retried)
+- [ ] T209 Implement operational alert system for recovery deferred events
+
+## Iteration 2026-05-10: Test Coverage Enhancement
+
+**Problem Identified**: Mock Payment API test coverage is below 80% (currently 73.89% line coverage)
+
+**Goal**: Increase test coverage to over 80% for better code quality and reliability
+
+**Tasks**:
+
+- [x] T215 Analyze current coverage gaps in mock-payment-api module using Jacoco reports
+- [x] T216 Add unit tests for uncovered service methods and edge cases
+- [x] T217 Add integration tests for controller endpoints with error scenarios
+- [x] T218 Add tests for exception handling and validation logic
+- [x] T219 Verify coverage exceeds 80% after test additions
+- [ ] T220 Update coverage thresholds in pom.xml if needed
+
 ## Iteration 2026-05-08: Phase 2 Advanced Features
 
 **Completed**:
@@ -277,6 +310,16 @@ JMeter measures performance from the perspective of an external client making HT
 - [ ] T140 Implement distributed locking - Add Redis-based distributed locking for cross-service consistency requirements
 - [ ] T141 Design eventual consistency patterns - Move to event-driven architecture to reduce synchronous database conflicts
 - [ ] T142 Add conflict resolution strategies - Implement automatic conflict resolution for known safe payment operations
+
+## Phase 14: Performance Test Automation & Reliability 📈
+
+**Purpose**: Improve performance test repeatability, result analysis, and startup reliability for chaos/shutdown runs
+
+- [x] T143 Add automated performance summary extraction - Parse JMeter output and generate structured summary reports for key metrics (error rate, throughput, P95/P99 latency)
+- [x] T144 Add startup health-check gating for scaled performance tests - Ensure bridge and dependent containers reach healthy readiness before shell/JMeter performance runs begin
+- [x] T157 Add realistic performance test wrapper with single/scaled/all modes
+- [x] T158 Add cleanup/teardown trap to realistic performance scripts so Docker environments are removed after each test
+- [x] T159 Document realistic performance test usage in root README and performance-test README
 
 ## Format Reference
 

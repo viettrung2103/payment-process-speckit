@@ -18,6 +18,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.function.Supplier;
 
 @Service
@@ -46,16 +47,46 @@ public class ExternalApiClient {
         Supplier<ApiResponse> decorated = CircuitBreaker.decorateSupplier(circuitBreaker, supplier);
         decorated = Retry.decorateSupplier(retry, decorated);
 
-try {
-        return decorated.get();
-    } catch (PaymentApiException | CallNotPermittedException | PaymentProcessingException e) {
-        // Let our known business/resilience exceptions through
-        throw e;
-    } catch (Exception e) {
-        // Wrap unexpected checked exceptions or generic runtime errors
-        logger.error("External API request failed for payment {}", payment.getPaymentId(), e);
-        throw new PaymentProcessingException("Unexpected API error", e);
+        try {
+            return decorated.get();
+        } catch (PaymentApiException | CallNotPermittedException | PaymentProcessingException e) {
+            // Let our known business/resilience exceptions through
+            throw e;
+        } catch (Exception e) {
+            // Wrap unexpected checked exceptions or generic runtime errors
+            logger.error("External API request failed for payment {}", payment.getPaymentId(), e);
+            throw new PaymentProcessingException("Unexpected API error", e);
+        }
     }
+
+    public ApiResponse getPaymentStatus(UUID paymentId) {
+        String endpoint = String.format("%s/api/v1/payments/status/%s", baseUrl, paymentId);
+
+        try {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> responseMap = restTemplate.getForObject(endpoint, Map.class);
+            if (responseMap == null) {
+                throw new PaymentProcessingException("External API returned null status response");
+            }
+            return mapToApiResponse(responseMap);
+        } catch (HttpStatusCodeException e) {
+            int statusCode = e.getStatusCode().value();
+            String body = e.getResponseBodyAsString();
+            if (statusCode >= 400 && statusCode < 500) {
+                throw new PaymentApiException("External API status check failed", statusCode, body, e);
+            }
+            throw new RuntimeException("External API status endpoint error", e);
+        }
+    }
+
+    private ApiResponse mapToApiResponse(Map<String, Object> responseMap) {
+        ApiResponse response = new ApiResponse();
+        response.setTransactionId((String) responseMap.get("transactionId"));
+        response.setStatus((String) responseMap.get("status"));
+        response.setStatusCode(responseMap.containsKey("code") ? (Integer) responseMap.get("code") : 200);
+        response.setBody(responseMap.toString());
+        response.setMessage((String) responseMap.get("message"));
+        return response;
     }
 
     private ApiResponse callExternalApi(Payment payment) {
@@ -73,17 +104,16 @@ try {
                 throw new PaymentProcessingException("External API returned null response");
             }
 
-            ApiResponse response = new ApiResponse();
-            response.setTransactionId((String) responseMap.get("transactionId"));
-            response.setStatus((String) responseMap.get("status"));
-            response.setStatusCode(200); // Mock API returns 200 for both success and failure
-            response.setBody(responseMap.toString());
+            ApiResponse response = mapToApiResponse(responseMap);
 
             // Check if the payment failed
             String status = response.getStatus();
             if ("FAILED".equals(status)) {
                 String failureReason = (String) responseMap.get("failureReason");
                 throw new PaymentApiException("Payment processing failed: " + failureReason, 200, responseMap.toString());
+            }
+            if (!"COMPLETED".equals(status) && !"SUCCESS".equals(status)) {
+                throw new PaymentProcessingException("External payment not completed yet: " + status);
             }
 
             return response;
@@ -103,6 +133,7 @@ try {
         private String status;
         private int statusCode;
         private String body;
+        private String message;
 
         public String getTransactionId() {
             return transactionId;
@@ -136,12 +167,21 @@ try {
             this.body = body;
         }
 
+        public String getMessage() {
+            return message;
+        }
+
+        public void setMessage(String message) {
+            this.message = message;
+        }
+
         @Override
         public String toString() {
             return "ApiResponse{" +
                     "transactionId='" + transactionId + '\'' +
                     ", status='" + status + '\'' +
                     ", statusCode=" + statusCode +
+                    ", message='" + message + '\'' +
                     ", body='" + body + '\'' +
                     '}';
         }
