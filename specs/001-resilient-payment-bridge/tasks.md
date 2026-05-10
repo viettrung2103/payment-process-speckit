@@ -296,6 +296,16 @@ JMeter measures performance from the perspective of an external client making HT
 - [ ] T141 Design eventual consistency patterns - Move to event-driven architecture to reduce synchronous database conflicts
 - [ ] T142 Add conflict resolution strategies - Implement automatic conflict resolution for known safe payment operations
 
+## Phase 14: Performance Test Automation & Reliability 📈
+
+**Purpose**: Improve performance test repeatability, result analysis, and startup reliability for chaos/shutdown runs
+
+- [x] T143 Add automated performance summary extraction - Parse JMeter output and generate structured summary reports for key metrics (error rate, throughput, P95/P99 latency)
+- [x] T144 Add startup health-check gating for scaled performance tests - Ensure bridge and dependent containers reach healthy readiness before shell/JMeter performance runs begin
+- [x] T157 Add realistic performance test wrapper with single/scaled/all modes
+- [x] T158 Add cleanup/teardown trap to realistic performance scripts so Docker environments are removed after each test
+- [x] T159 Document realistic performance test usage in root README and performance-test README
+
 ## Format Reference
 
 ---
