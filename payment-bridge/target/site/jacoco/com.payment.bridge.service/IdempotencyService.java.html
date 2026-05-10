@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>IdempotencyService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Payment Bridge</a> &gt; <a href="index.source.html" class="el_package">com.payment.bridge.service</a> &gt; <span class="el_source">IdempotencyService.java</span></div><h1>IdempotencyService.java</h1><pre class="source lang-java linenums">package com.payment.bridge.service;
+
+import com.payment.bridge.exception.IdempotencyViolationException;
+import com.payment.bridge.model.Payment;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
+
+@Service
+<span class="fc" id="L14">public class IdempotencyService {</span>
+
+<span class="fc" id="L16">    private static final Logger logger = LoggerFactory.getLogger(IdempotencyService.class);</span>
+
+    // In production, this would be a distributed cache like Redis
+    // For now, using in-memory map for simplicity
+<span class="fc" id="L20">    private final Map&lt;String, Payment&gt; idempotencyCache = new ConcurrentHashMap&lt;&gt;();</span>
+
+    /**
+     * Checks for idempotency based on client_reference or request signature.
+     * Returns existing payment if found, empty if new request.
+     * Throws IdempotencyViolationException for conflicting requests.
+     */
+    public Optional&lt;Payment&gt; checkIdempotency(String idempotencyKey, Payment newPayment) {
+<span class="fc bfc" id="L28" title="All 4 branches covered.">        if (idempotencyKey == null || idempotencyKey.trim().isEmpty()) {</span>
+            // No idempotency key provided, allow the request
+<span class="fc" id="L30">            return Optional.empty();</span>
+        }
+
+<span class="fc" id="L33">        Payment existingPayment = idempotencyCache.get(idempotencyKey);</span>
+
+<span class="fc bfc" id="L35" title="All 2 branches covered.">        if (existingPayment == null) {</span>
+            // First time seeing this key, cache the payment for future checks
+<span class="fc" id="L37">            idempotencyCache.put(idempotencyKey, newPayment);</span>
+<span class="fc" id="L38">            logger.debug(&quot;New idempotent request with key: {}&quot;, idempotencyKey);</span>
+<span class="fc" id="L39">            return Optional.empty();</span>
+        }
+
+        // Check if the request matches the existing payment
+<span class="fc bfc" id="L43" title="All 2 branches covered.">        if (paymentsMatch(existingPayment, newPayment)) {</span>
+<span class="fc" id="L44">            logger.debug(&quot;Idempotent request matched existing payment: {}&quot;, existingPayment.getPaymentId());</span>
+<span class="fc" id="L45">            return Optional.of(existingPayment);</span>
+        } else {
+<span class="fc" id="L47">            logger.warn(&quot;Idempotency violation detected for key: {}&quot;, idempotencyKey);</span>
+<span class="fc" id="L48">            throw new IdempotencyViolationException(</span>
+                &quot;Idempotency key '&quot; + idempotencyKey + &quot;' already used for a different payment request&quot;
+            );
+        }
+    }
+
+    private boolean paymentsMatch(Payment existing, Payment newPayment) {
+<span class="fc bfc" id="L55" title="All 2 branches covered.">        return existing.getAmount().equals(newPayment.getAmount()) &amp;&amp;</span>
+<span class="pc bpc" id="L56" title="1 of 2 branches missed.">               existing.getCurrency().equals(newPayment.getCurrency()) &amp;&amp;</span>
+<span class="pc bpc" id="L57" title="1 of 2 branches missed.">               existing.getClientReference().equals(newPayment.getClientReference());</span>
+    }
+
+    /**
+     * Generates an idempotency key from request headers or content.
+     * In production, this might use X-Idempotency-Key header or request signature.
+     */
+    public String generateIdempotencyKey(String clientReference, String requestSignature) {
+<span class="pc bpc" id="L65" title="1 of 4 branches missed.">        if (clientReference != null &amp;&amp; !clientReference.trim().isEmpty()) {</span>
+<span class="fc" id="L66">            return &quot;client_ref:&quot; + clientReference;</span>
+        }
+<span class="pc bpc" id="L68" title="1 of 4 branches missed.">        if (requestSignature != null &amp;&amp; !requestSignature.trim().isEmpty()) {</span>
+<span class="fc" id="L69">            return &quot;signature:&quot; + requestSignature;</span>
+        }
+<span class="fc" id="L71">        return null; // No idempotency key available</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

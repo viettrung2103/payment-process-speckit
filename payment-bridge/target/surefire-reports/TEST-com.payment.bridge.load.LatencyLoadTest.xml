@@ -1,0 +1,774 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="com.payment.bridge.load.LatencyLoadTest" time="0.083" tests="1" errors="0" skipped="0" failures="0">
+  <properties>
+    <property name="java.specification.version" value="21"/>
+    <property name="sun.jnu.encoding" value="UTF-8"/>
+    <property name="java.class.path" value="/Users/mac/Programming/payment-system-speckit/payment-bridge/target/test-classes:/Users/mac/Programming/payment-system-speckit/payment-bridge/target/classes:/Users/mac/.m2/repository/org/springframework/boot/spring-boot-starter-web/3.4.0/spring-boot-starter-web-3.4.0.jar:/Users/mac/.m2/repository/org/springframework/boot/spring-boot-starter/3.4.0/spring-boot-starter-3.4.0.jar:/Users/mac/.m2/repository/org/springframework/boot/spring-boot/3.4.0/spring-boot-3.4.0.jar:/Users/mac/.m2/repository/org/springframework/boot/spring-boot-autoconfigure/3.4.0/spring-boot-autoconfigure-3.4.0.jar:/Users/mac/.m2/repository/org/springframework/boot/spring-boot-starter-logging/3.4.0/spring-boot-starter-logging-3.4.0.jar:/Users/mac/.m2/repository/ch/qos/logback/logback-classic/1.5.12/logback-classic-1.5.12.jar:/Users/mac/.m2/repository/ch/qos/logback/logback-core/1.5.12/logback-core-1.5.12.jar:/Users/mac/.m2/repository/org/apache/logging/log4j/log4j-to-slf4j/2.24.1/log4j-to-slf4j-2.24.1.jar:/Users/mac/.m2/repository/org/apache/logging/log4j/log4j-api/2.24.1/log4j-api-2.24.1.jar:/Users/mac/.m2/repository/org/slf4j/jul-to-slf4j/2.0.16/jul-to-slf4j-2.0.16.jar:/Users/mac/.m2/repository/jakarta/annotation/jakarta.annotation-api/2.1.1/jakarta.annotation-api-2.1.1.jar:/Users/mac/.m2/repository/org/yaml/snakeyaml/2.3/snakeyaml-2.3.jar:/Users/mac/.m2/repository/org/springframework/boot/spring-boot-starter-json/3.4.0/spring-boot-starter-json-3.4.0.jar:/Users/mac/.m2/repository/com/fasterxml/jackson/core/jackson-databind/2.18.1/jackson-databind-2.18.1.jar:/Users/mac/.m2/repository/com/fasterxml/jackson/datatype/jackson-datatype-jdk8/2.18.1/jackson-datatype-jdk8-2.18.1.jar:/Users/mac/.m2/repository/com/fasterxml/jackson/module/jackson-module-parameter-names/2.18.1/jackson-module-parameter-names-2.18.1.jar:/Users/mac/.m2/repository/org/springframework/boot/spring-boot-starter-tomcat/3.4.0/spring-boot-starter-tomcat-3.4.0.jar:/Users/mac/.m2/repository/org/apache/tomcat/embed/tomcat-embed-core/10.1.33/tomcat-embed-core-10.1.33.jar:/Users/mac/.m2/repository/org/apache/tomcat/embed/tomcat-embed-websocket/10.1.33/tomcat-embed-websocket-10.1.33.jar:/Users/mac/.m2/repository/org/springframework/spring-web/6.2.0/spring-web-6.2.0.jar:/Users/mac/.m2/repository/org/springframework/spring-beans/6.2.0/spring-beans-6.2.0.jar:/Users/mac/.m2/repository/org/springframework/spring-webmvc/6.2.0/spring-webmvc-6.2.0.jar:/Users/mac/.m2/repository/org/springframework/spring-aop/6.2.0/spring-aop-6.2.0.jar:/Users/mac/.m2/repository/org/springframework/spring-context/6.2.0/spring-context-6.2.0.jar:/Users/mac/.m2/repository/org/springframework/spring-expression/6.2.0/spring-expression-6.2.0.jar:/Users/mac/.m2/repository/org/springframework/boot/spring-boot-starter-data-jpa/3.4.0/spring-boot-starter-data-jpa-3.4.0.jar:/Users/mac/.m2/repository/org/springframework/boot/spring-boot-starter-jdbc/3.4.0/spring-boot-starter-jdbc-3.4.0.jar:/Users/mac/.m2/repository/com/zaxxer/HikariCP/5.1.0/HikariCP-5.1.0.jar:/Users/mac/.m2/repository/org/springframework/spring-jdbc/6.2.0/spring-jdbc-6.2.0.jar:/Users/mac/.m2/repository/org/hibernate/orm/hibernate-core/6.6.2.Final/hibernate-core-6.6.2.Final.jar:/Users/mac/.m2/repository/jakarta/persistence/jakarta.persistence-api/3.1.0/jakarta.persistence-api-3.1.0.jar:/Users/mac/.m2/repository/jakarta/transaction/jakarta.transaction-api/2.0.1/jakarta.transaction-api-2.0.1.jar:/Users/mac/.m2/repository/org/jboss/logging/jboss-logging/3.6.1.Final/jboss-logging-3.6.1.Final.jar:/Users/mac/.m2/repository/org/hibernate/common/hibernate-commons-annotations/7.0.3.Final/hibernate-commons-annotations-7.0.3.Final.jar:/Users/mac/.m2/repository/io/smallrye/jandex/3.2.0/jandex-3.2.0.jar:/Users/mac/.m2/repository/com/fasterxml/classmate/1.7.0/classmate-1.7.0.jar:/Users/mac/.m2/repository/org/glassfish/jaxb/jaxb-runtime/4.0.5/jaxb-runtime-4.0.5.jar:/Users/mac/.m2/repository/org/glassfish/jaxb/jaxb-core/4.0.5/jaxb-core-4.0.5.jar:/Users/mac/.m2/repository/org/eclipse/angus/angus-activation/2.0.2/angus-activation-2.0.2.jar:/Users/mac/.m2/repository/org/glassfish/jaxb/txw2/4.0.5/txw2-4.0.5.jar:/Users/mac/.m2/repository/com/sun/istack/istack-commons-runtime/4.1.2/istack-commons-runtime-4.1.2.jar:/Users/mac/.m2/repository/jakarta/inject/jakarta.inject-api/2.0.1/jakarta.inject-api-2.0.1.jar:/Users/mac/.m2/repository/org/antlr/antlr4-runtime/4.13.0/antlr4-runtime-4.13.0.jar:/Users/mac/.m2/repository/org/springframework/data/spring-data-jpa/3.4.0/spring-data-jpa-3.4.0.jar:/Users/mac/.m2/repository/org/springframework/data/spring-data-commons/3.4.0/spring-data-commons-3.4.0.jar:/Users/mac/.m2/repository/org/springframework/spring-orm/6.2.0/spring-orm-6.2.0.jar:/Users/mac/.m2/repository/org/springframework/spring-tx/6.2.0/spring-tx-6.2.0.jar:/Users/mac/.m2/repository/org/springframework/spring-aspects/6.2.0/spring-aspects-6.2.0.jar:/Users/mac/.m2/repository/org/aspectj/aspectjweaver/1.9.22.1/aspectjweaver-1.9.22.1.jar:/Users/mac/.m2/repository/org/springframework/boot/spring-boot-starter-amqp/3.4.0/spring-boot-starter-amqp-3.4.0.jar:/Users/mac/.m2/repository/org/springframework/spring-messaging/6.2.0/spring-messaging-6.2.0.jar:/Users/mac/.m2/repository/org/springframework/amqp/spring-rabbit/3.2.0/spring-rabbit-3.2.0.jar:/Users/mac/.m2/repository/org/springframework/amqp/spring-amqp/3.2.0/spring-amqp-3.2.0.jar:/Users/mac/.m2/repository/org/springframework/retry/spring-retry/2.0.10/spring-retry-2.0.10.jar:/Users/mac/.m2/repository/com/rabbitmq/amqp-client/5.22.0/amqp-client-5.22.0.jar:/Users/mac/.m2/repository/org/springframework/boot/spring-boot-starter-actuator/3.4.0/spring-boot-starter-actuator-3.4.0.jar:/Users/mac/.m2/repository/org/springframework/boot/spring-boot-actuator-autoconfigure/3.4.0/spring-boot-actuator-autoconfigure-3.4.0.jar:/Users/mac/.m2/repository/org/springframework/boot/spring-boot-actuator/3.4.0/spring-boot-actuator-3.4.0.jar:/Users/mac/.m2/repository/io/micrometer/micrometer-observation/1.14.1/micrometer-observation-1.14.1.jar:/Users/mac/.m2/repository/io/micrometer/micrometer-commons/1.14.1/micrometer-commons-1.14.1.jar:/Users/mac/.m2/repository/io/micrometer/micrometer-jakarta9/1.14.1/micrometer-jakarta9-1.14.1.jar:/Users/mac/.m2/repository/io/micrometer/micrometer-core/1.14.1/micrometer-core-1.14.1.jar:/Users/mac/.m2/repository/org/hdrhistogram/HdrHistogram/2.2.2/HdrHistogram-2.2.2.jar:/Users/mac/.m2/repository/org/latencyutils/LatencyUtils/2.0.3/LatencyUtils-2.0.3.jar:/Users/mac/.m2/repository/io/github/resilience4j/resilience4j-spring-boot3/2.4.0/resilience4j-spring-boot3-2.4.0.jar:/Users/mac/.m2/repository/io/github/resilience4j/resilience4j-spring6/2.4.0/resilience4j-spring6-2.4.0.jar:/Users/mac/.m2/repository/io/github/resilience4j/resilience4j-annotations/2.4.0/resilience4j-annotations-2.4.0.jar:/Users/mac/.m2/repository/io/github/resilience4j/resilience4j-consumer/2.4.0/resilience4j-consumer-2.4.0.jar:/Users/mac/.m2/repository/io/github/resilience4j/resilience4j-core/2.4.0/resilience4j-core-2.4.0.jar:/Users/mac/.m2/repository/io/github/resilience4j/resilience4j-circularbuffer/2.4.0/resilience4j-circularbuffer-2.4.0.jar:/Users/mac/.m2/repository/io/github/resilience4j/resilience4j-framework-common/2.4.0/resilience4j-framework-common-2.4.0.jar:/Users/mac/.m2/repository/org/slf4j/slf4j-api/2.0.16/slf4j-api-2.0.16.jar:/Users/mac/.m2/repository/io/github/resilience4j/resilience4j-micrometer/2.4.0/resilience4j-micrometer-2.4.0.jar:/Users/mac/.m2/repository/io/github/resilience4j/resilience4j-bulkhead/2.4.0/resilience4j-bulkhead-2.4.0.jar:/Users/mac/.m2/repository/io/github/resilience4j/resilience4j-circuitbreaker/2.4.0/resilience4j-circuitbreaker-2.4.0.jar:/Users/mac/.m2/repository/io/github/resilience4j/resilience4j-retry/2.4.0/resilience4j-retry-2.4.0.jar:/Users/mac/.m2/repository/io/github/resilience4j/resilience4j-ratelimiter/2.4.0/resilience4j-ratelimiter-2.4.0.jar:/Users/mac/.m2/repository/io/github/resilience4j/resilience4j-timelimiter/2.4.0/resilience4j-timelimiter-2.4.0.jar:/Users/mac/.m2/repository/org/postgresql/postgresql/42.7.4/postgresql-42.7.4.jar:/Users/mac/.m2/repository/org/checkerframework/checker-qual/3.42.0/checker-qual-3.42.0.jar:/Users/mac/.m2/repository/org/flywaydb/flyway-core/10.20.1/flyway-core-10.20.1.jar:/Users/mac/.m2/repository/com/fasterxml/jackson/dataformat/jackson-dataformat-toml/2.18.1/jackson-dataformat-toml-2.18.1.jar:/Users/mac/.m2/repository/com/fasterxml/jackson/core/jackson-core/2.18.1/jackson-core-2.18.1.jar:/Users/mac/.m2/repository/com/fasterxml/jackson/datatype/jackson-datatype-jsr310/2.18.1/jackson-datatype-jsr310-2.18.1.jar:/Users/mac/.m2/repository/com/fasterxml/jackson/core/jackson-annotations/2.18.1/jackson-annotations-2.18.1.jar:/Users/mac/.m2/repository/org/flywaydb/flyway-database-postgresql/10.20.1/flyway-database-postgresql-10.20.1.jar:/Users/mac/.m2/repository/org/springframework/boot/spring-boot-starter-validation/3.4.0/spring-boot-starter-validation-3.4.0.jar:/Users/mac/.m2/repository/org/apache/tomcat/embed/tomcat-embed-el/10.1.33/tomcat-embed-el-10.1.33.jar:/Users/mac/.m2/repository/org/hibernate/validator/hibernate-validator/8.0.1.Final/hibernate-validator-8.0.1.Final.jar:/Users/mac/.m2/repository/jakarta/validation/jakarta.validation-api/3.0.2/jakarta.validation-api-3.0.2.jar:/Users/mac/.m2/repository/com/h2database/h2/2.3.232/h2-2.3.232.jar:/Users/mac/.m2/repository/org/springframework/boot/spring-boot-starter-test/3.4.0/spring-boot-starter-test-3.4.0.jar:/Users/mac/.m2/repository/org/springframework/boot/spring-boot-test/3.4.0/spring-boot-test-3.4.0.jar:/Users/mac/.m2/repository/org/springframework/boot/spring-boot-test-autoconfigure/3.4.0/spring-boot-test-autoconfigure-3.4.0.jar:/Users/mac/.m2/repository/com/jayway/jsonpath/json-path/2.9.0/json-path-2.9.0.jar:/Users/mac/.m2/repository/jakarta/xml/bind/jakarta.xml.bind-api/4.0.2/jakarta.xml.bind-api-4.0.2.jar:/Users/mac/.m2/repository/jakarta/activation/jakarta.activation-api/2.1.3/jakarta.activation-api-2.1.3.jar:/Users/mac/.m2/repository/net/minidev/json-smart/2.5.1/json-smart-2.5.1.jar:/Users/mac/.m2/repository/net/minidev/accessors-smart/2.5.1/accessors-smart-2.5.1.jar:/Users/mac/.m2/repository/org/ow2/asm/asm/9.6/asm-9.6.jar:/Users/mac/.m2/repository/org/assertj/assertj-core/3.26.3/assertj-core-3.26.3.jar:/Users/mac/.m2/repository/org/awaitility/awaitility/4.2.2/awaitility-4.2.2.jar:/Users/mac/.m2/repository/org/hamcrest/hamcrest/2.2/hamcrest-2.2.jar:/Users/mac/.m2/repository/org/junit/jupiter/junit-jupiter/5.11.3/junit-jupiter-5.11.3.jar:/Users/mac/.m2/repository/org/junit/jupiter/junit-jupiter-api/5.11.3/junit-jupiter-api-5.11.3.jar:/Users/mac/.m2/repository/org/opentest4j/opentest4j/1.3.0/opentest4j-1.3.0.jar:/Users/mac/.m2/repository/org/junit/platform/junit-platform-commons/1.11.3/junit-platform-commons-1.11.3.jar:/Users/mac/.m2/repository/org/apiguardian/apiguardian-api/1.1.2/apiguardian-api-1.1.2.jar:/Users/mac/.m2/repository/org/junit/jupiter/junit-jupiter-params/5.11.3/junit-jupiter-params-5.11.3.jar:/Users/mac/.m2/repository/org/junit/jupiter/junit-jupiter-engine/5.11.3/junit-jupiter-engine-5.11.3.jar:/Users/mac/.m2/repository/org/junit/platform/junit-platform-engine/1.11.3/junit-platform-engine-1.11.3.jar:/Users/mac/.m2/repository/org/mockito/mockito-junit-jupiter/5.14.2/mockito-junit-jupiter-5.14.2.jar:/Users/mac/.m2/repository/org/skyscreamer/jsonassert/1.5.3/jsonassert-1.5.3.jar:/Users/mac/.m2/repository/com/vaadin/external/google/android-json/0.0.20131108.vaadin1/android-json-0.0.20131108.vaadin1.jar:/Users/mac/.m2/repository/org/springframework/spring-core/6.2.0/spring-core-6.2.0.jar:/Users/mac/.m2/repository/org/springframework/spring-jcl/6.2.0/spring-jcl-6.2.0.jar:/Users/mac/.m2/repository/org/springframework/spring-test/6.2.0/spring-test-6.2.0.jar:/Users/mac/.m2/repository/org/xmlunit/xmlunit-core/2.10.0/xmlunit-core-2.10.0.jar:/Users/mac/.m2/repository/org/mockito/mockito-core/5.14.2/mockito-core-5.14.2.jar:/Users/mac/.m2/repository/net/bytebuddy/byte-buddy/1.18.8/byte-buddy-1.18.8.jar:/Users/mac/.m2/repository/net/bytebuddy/byte-buddy-agent/1.18.8/byte-buddy-agent-1.18.8.jar:/Users/mac/.m2/repository/org/objenesis/objenesis/3.3/objenesis-3.3.jar:/Users/mac/.m2/repository/org/testcontainers/junit-jupiter/1.20.4/junit-jupiter-1.20.4.jar:/Users/mac/.m2/repository/org/testcontainers/testcontainers/1.20.4/testcontainers-1.20.4.jar:/Users/mac/.m2/repository/junit/junit/4.13.2/junit-4.13.2.jar:/Users/mac/.m2/repository/org/hamcrest/hamcrest-core/2.2/hamcrest-core-2.2.jar:/Users/mac/.m2/repository/org/apache/commons/commons-compress/1.24.0/commons-compress-1.24.0.jar:/Users/mac/.m2/repository/org/rnorth/duct-tape/duct-tape/1.0.8/duct-tape-1.0.8.jar:/Users/mac/.m2/repository/org/jetbrains/annotations/17.0.0/annotations-17.0.0.jar:/Users/mac/.m2/repository/com/github/docker-java/docker-java-api/3.4.0/docker-java-api-3.4.0.jar:/Users/mac/.m2/repository/com/github/docker-java/docker-java-transport-zerodep/3.4.0/docker-java-transport-zerodep-3.4.0.jar:/Users/mac/.m2/repository/com/github/docker-java/docker-java-transport/3.4.0/docker-java-transport-3.4.0.jar:/Users/mac/.m2/repository/net/java/dev/jna/jna/5.13.0/jna-5.13.0.jar:/Users/mac/.m2/repository/org/testcontainers/postgresql/1.20.4/postgresql-1.20.4.jar:/Users/mac/.m2/repository/org/testcontainers/jdbc/1.20.4/jdbc-1.20.4.jar:/Users/mac/.m2/repository/org/testcontainers/database-commons/1.20.4/database-commons-1.20.4.jar:/Users/mac/.m2/repository/org/testcontainers/rabbitmq/1.20.4/rabbitmq-1.20.4.jar:/Users/mac/.m2/repository/io/rest-assured/rest-assured/5.5.0/rest-assured-5.5.0.jar:/Users/mac/.m2/repository/org/apache/groovy/groovy/4.0.24/groovy-4.0.24.jar:/Users/mac/.m2/repository/org/apache/groovy/groovy-xml/4.0.24/groovy-xml-4.0.24.jar:/Users/mac/.m2/repository/org/apache/httpcomponents/httpclient/4.5.13/httpclient-4.5.13.jar:/Users/mac/.m2/repository/org/apache/httpcomponents/httpcore/4.4.16/httpcore-4.4.16.jar:/Users/mac/.m2/repository/commons-logging/commons-logging/1.2/commons-logging-1.2.jar:/Users/mac/.m2/repository/commons-codec/commons-codec/1.17.1/commons-codec-1.17.1.jar:/Users/mac/.m2/repository/org/apache/httpcomponents/httpmime/4.5.13/httpmime-4.5.13.jar:/Users/mac/.m2/repository/org/ccil/cowan/tagsoup/tagsoup/1.2.1/tagsoup-1.2.1.jar:/Users/mac/.m2/repository/io/rest-assured/json-path/5.5.0/json-path-5.5.0.jar:/Users/mac/.m2/repository/org/apache/groovy/groovy-json/4.0.24/groovy-json-4.0.24.jar:/Users/mac/.m2/repository/io/rest-assured/rest-assured-common/5.5.0/rest-assured-common-5.5.0.jar:/Users/mac/.m2/repository/io/rest-assured/xml-path/5.5.0/xml-path-5.5.0.jar:/Users/mac/.m2/repository/org/apache/commons/commons-lang3/3.17.0/commons-lang3-3.17.0.jar:"/>
+    <property name="java.vm.vendor" value="Microsoft"/>
+    <property name="sun.arch.data.model" value="64"/>
+    <property name="java.vendor.url" value="https://www.microsoft.com"/>
+    <property name="catalina.useNaming" value="false"/>
+    <property name="user.timezone" value="Asia/Bangkok"/>
+    <property name="org.jboss.logging.provider" value="slf4j"/>
+    <property name="os.name" value="Mac OS X"/>
+    <property name="java.vm.specification.version" value="21"/>
+    <property name="sun.java.launcher" value="SUN_STANDARD"/>
+    <property name="user.country" value="FI"/>
+    <property name="sun.boot.library.path" value="/Users/mac/Library/Java/JavaVirtualMachines/ms-21.0.11/Contents/Home/lib"/>
+    <property name="sun.java.command" value="/Users/mac/Programming/payment-system-speckit/payment-bridge/target/surefire/surefirebooter-20260510134833304_3.jar /Users/mac/Programming/payment-system-speckit/payment-bridge/target/surefire 2026-05-10T13-48-33_275-jvmRun1 surefire-20260510134833304_1tmp surefire_0-20260510134833304_2tmp"/>
+    <property name="jdk.debug" value="release"/>
+    <property name="surefire.test.class.path" value="/Users/mac/Programming/payment-system-speckit/payment-bridge/target/test-classes:/Users/mac/Programming/payment-system-speckit/payment-bridge/target/classes:/Users/mac/.m2/repository/org/springframework/boot/spring-boot-starter-web/3.4.0/spring-boot-starter-web-3.4.0.jar:/Users/mac/.m2/repository/org/springframework/boot/spring-boot-starter/3.4.0/spring-boot-starter-3.4.0.jar:/Users/mac/.m2/repository/org/springframework/boot/spring-boot/3.4.0/spring-boot-3.4.0.jar:/Users/mac/.m2/repository/org/springframework/boot/spring-boot-autoconfigure/3.4.0/spring-boot-autoconfigure-3.4.0.jar:/Users/mac/.m2/repository/org/springframework/boot/spring-boot-starter-logging/3.4.0/spring-boot-starter-logging-3.4.0.jar:/Users/mac/.m2/repository/ch/qos/logback/logback-classic/1.5.12/logback-classic-1.5.12.jar:/Users/mac/.m2/repository/ch/qos/logback/logback-core/1.5.12/logback-core-1.5.12.jar:/Users/mac/.m2/repository/org/apache/logging/log4j/log4j-to-slf4j/2.24.1/log4j-to-slf4j-2.24.1.jar:/Users/mac/.m2/repository/org/apache/logging/log4j/log4j-api/2.24.1/log4j-api-2.24.1.jar:/Users/mac/.m2/repository/org/slf4j/jul-to-slf4j/2.0.16/jul-to-slf4j-2.0.16.jar:/Users/mac/.m2/repository/jakarta/annotation/jakarta.annotation-api/2.1.1/jakarta.annotation-api-2.1.1.jar:/Users/mac/.m2/repository/org/yaml/snakeyaml/2.3/snakeyaml-2.3.jar:/Users/mac/.m2/repository/org/springframework/boot/spring-boot-starter-json/3.4.0/spring-boot-starter-json-3.4.0.jar:/Users/mac/.m2/repository/com/fasterxml/jackson/core/jackson-databind/2.18.1/jackson-databind-2.18.1.jar:/Users/mac/.m2/repository/com/fasterxml/jackson/datatype/jackson-datatype-jdk8/2.18.1/jackson-datatype-jdk8-2.18.1.jar:/Users/mac/.m2/repository/com/fasterxml/jackson/module/jackson-module-parameter-names/2.18.1/jackson-module-parameter-names-2.18.1.jar:/Users/mac/.m2/repository/org/springframework/boot/spring-boot-starter-tomcat/3.4.0/spring-boot-starter-tomcat-3.4.0.jar:/Users/mac/.m2/repository/org/apache/tomcat/embed/tomcat-embed-core/10.1.33/tomcat-embed-core-10.1.33.jar:/Users/mac/.m2/repository/org/apache/tomcat/embed/tomcat-embed-websocket/10.1.33/tomcat-embed-websocket-10.1.33.jar:/Users/mac/.m2/repository/org/springframework/spring-web/6.2.0/spring-web-6.2.0.jar:/Users/mac/.m2/repository/org/springframework/spring-beans/6.2.0/spring-beans-6.2.0.jar:/Users/mac/.m2/repository/org/springframework/spring-webmvc/6.2.0/spring-webmvc-6.2.0.jar:/Users/mac/.m2/repository/org/springframework/spring-aop/6.2.0/spring-aop-6.2.0.jar:/Users/mac/.m2/repository/org/springframework/spring-context/6.2.0/spring-context-6.2.0.jar:/Users/mac/.m2/repository/org/springframework/spring-expression/6.2.0/spring-expression-6.2.0.jar:/Users/mac/.m2/repository/org/springframework/boot/spring-boot-starter-data-jpa/3.4.0/spring-boot-starter-data-jpa-3.4.0.jar:/Users/mac/.m2/repository/org/springframework/boot/spring-boot-starter-jdbc/3.4.0/spring-boot-starter-jdbc-3.4.0.jar:/Users/mac/.m2/repository/com/zaxxer/HikariCP/5.1.0/HikariCP-5.1.0.jar:/Users/mac/.m2/repository/org/springframework/spring-jdbc/6.2.0/spring-jdbc-6.2.0.jar:/Users/mac/.m2/repository/org/hibernate/orm/hibernate-core/6.6.2.Final/hibernate-core-6.6.2.Final.jar:/Users/mac/.m2/repository/jakarta/persistence/jakarta.persistence-api/3.1.0/jakarta.persistence-api-3.1.0.jar:/Users/mac/.m2/repository/jakarta/transaction/jakarta.transaction-api/2.0.1/jakarta.transaction-api-2.0.1.jar:/Users/mac/.m2/repository/org/jboss/logging/jboss-logging/3.6.1.Final/jboss-logging-3.6.1.Final.jar:/Users/mac/.m2/repository/org/hibernate/common/hibernate-commons-annotations/7.0.3.Final/hibernate-commons-annotations-7.0.3.Final.jar:/Users/mac/.m2/repository/io/smallrye/jandex/3.2.0/jandex-3.2.0.jar:/Users/mac/.m2/repository/com/fasterxml/classmate/1.7.0/classmate-1.7.0.jar:/Users/mac/.m2/repository/org/glassfish/jaxb/jaxb-runtime/4.0.5/jaxb-runtime-4.0.5.jar:/Users/mac/.m2/repository/org/glassfish/jaxb/jaxb-core/4.0.5/jaxb-core-4.0.5.jar:/Users/mac/.m2/repository/org/eclipse/angus/angus-activation/2.0.2/angus-activation-2.0.2.jar:/Users/mac/.m2/repository/org/glassfish/jaxb/txw2/4.0.5/txw2-4.0.5.jar:/Users/mac/.m2/repository/com/sun/istack/istack-commons-runtime/4.1.2/istack-commons-runtime-4.1.2.jar:/Users/mac/.m2/repository/jakarta/inject/jakarta.inject-api/2.0.1/jakarta.inject-api-2.0.1.jar:/Users/mac/.m2/repository/org/antlr/antlr4-runtime/4.13.0/antlr4-runtime-4.13.0.jar:/Users/mac/.m2/repository/org/springframework/data/spring-data-jpa/3.4.0/spring-data-jpa-3.4.0.jar:/Users/mac/.m2/repository/org/springframework/data/spring-data-commons/3.4.0/spring-data-commons-3.4.0.jar:/Users/mac/.m2/repository/org/springframework/spring-orm/6.2.0/spring-orm-6.2.0.jar:/Users/mac/.m2/repository/org/springframework/spring-tx/6.2.0/spring-tx-6.2.0.jar:/Users/mac/.m2/repository/org/springframework/spring-aspects/6.2.0/spring-aspects-6.2.0.jar:/Users/mac/.m2/repository/org/aspectj/aspectjweaver/1.9.22.1/aspectjweaver-1.9.22.1.jar:/Users/mac/.m2/repository/org/springframework/boot/spring-boot-starter-amqp/3.4.0/spring-boot-starter-amqp-3.4.0.jar:/Users/mac/.m2/repository/org/springframework/spring-messaging/6.2.0/spring-messaging-6.2.0.jar:/Users/mac/.m2/repository/org/springframework/amqp/spring-rabbit/3.2.0/spring-rabbit-3.2.0.jar:/Users/mac/.m2/repository/org/springframework/amqp/spring-amqp/3.2.0/spring-amqp-3.2.0.jar:/Users/mac/.m2/repository/org/springframework/retry/spring-retry/2.0.10/spring-retry-2.0.10.jar:/Users/mac/.m2/repository/com/rabbitmq/amqp-client/5.22.0/amqp-client-5.22.0.jar:/Users/mac/.m2/repository/org/springframework/boot/spring-boot-starter-actuator/3.4.0/spring-boot-starter-actuator-3.4.0.jar:/Users/mac/.m2/repository/org/springframework/boot/spring-boot-actuator-autoconfigure/3.4.0/spring-boot-actuator-autoconfigure-3.4.0.jar:/Users/mac/.m2/repository/org/springframework/boot/spring-boot-actuator/3.4.0/spring-boot-actuator-3.4.0.jar:/Users/mac/.m2/repository/io/micrometer/micrometer-observation/1.14.1/micrometer-observation-1.14.1.jar:/Users/mac/.m2/repository/io/micrometer/micrometer-commons/1.14.1/micrometer-commons-1.14.1.jar:/Users/mac/.m2/repository/io/micrometer/micrometer-jakarta9/1.14.1/micrometer-jakarta9-1.14.1.jar:/Users/mac/.m2/repository/io/micrometer/micrometer-core/1.14.1/micrometer-core-1.14.1.jar:/Users/mac/.m2/repository/org/hdrhistogram/HdrHistogram/2.2.2/HdrHistogram-2.2.2.jar:/Users/mac/.m2/repository/org/latencyutils/LatencyUtils/2.0.3/LatencyUtils-2.0.3.jar:/Users/mac/.m2/repository/io/github/resilience4j/resilience4j-spring-boot3/2.4.0/resilience4j-spring-boot3-2.4.0.jar:/Users/mac/.m2/repository/io/github/resilience4j/resilience4j-spring6/2.4.0/resilience4j-spring6-2.4.0.jar:/Users/mac/.m2/repository/io/github/resilience4j/resilience4j-annotations/2.4.0/resilience4j-annotations-2.4.0.jar:/Users/mac/.m2/repository/io/github/resilience4j/resilience4j-consumer/2.4.0/resilience4j-consumer-2.4.0.jar:/Users/mac/.m2/repository/io/github/resilience4j/resilience4j-core/2.4.0/resilience4j-core-2.4.0.jar:/Users/mac/.m2/repository/io/github/resilience4j/resilience4j-circularbuffer/2.4.0/resilience4j-circularbuffer-2.4.0.jar:/Users/mac/.m2/repository/io/github/resilience4j/resilience4j-framework-common/2.4.0/resilience4j-framework-common-2.4.0.jar:/Users/mac/.m2/repository/org/slf4j/slf4j-api/2.0.16/slf4j-api-2.0.16.jar:/Users/mac/.m2/repository/io/github/resilience4j/resilience4j-micrometer/2.4.0/resilience4j-micrometer-2.4.0.jar:/Users/mac/.m2/repository/io/github/resilience4j/resilience4j-bulkhead/2.4.0/resilience4j-bulkhead-2.4.0.jar:/Users/mac/.m2/repository/io/github/resilience4j/resilience4j-circuitbreaker/2.4.0/resilience4j-circuitbreaker-2.4.0.jar:/Users/mac/.m2/repository/io/github/resilience4j/resilience4j-retry/2.4.0/resilience4j-retry-2.4.0.jar:/Users/mac/.m2/repository/io/github/resilience4j/resilience4j-ratelimiter/2.4.0/resilience4j-ratelimiter-2.4.0.jar:/Users/mac/.m2/repository/io/github/resilience4j/resilience4j-timelimiter/2.4.0/resilience4j-timelimiter-2.4.0.jar:/Users/mac/.m2/repository/org/postgresql/postgresql/42.7.4/postgresql-42.7.4.jar:/Users/mac/.m2/repository/org/checkerframework/checker-qual/3.42.0/checker-qual-3.42.0.jar:/Users/mac/.m2/repository/org/flywaydb/flyway-core/10.20.1/flyway-core-10.20.1.jar:/Users/mac/.m2/repository/com/fasterxml/jackson/dataformat/jackson-dataformat-toml/2.18.1/jackson-dataformat-toml-2.18.1.jar:/Users/mac/.m2/repository/com/fasterxml/jackson/core/jackson-core/2.18.1/jackson-core-2.18.1.jar:/Users/mac/.m2/repository/com/fasterxml/jackson/datatype/jackson-datatype-jsr310/2.18.1/jackson-datatype-jsr310-2.18.1.jar:/Users/mac/.m2/repository/com/fasterxml/jackson/core/jackson-annotations/2.18.1/jackson-annotations-2.18.1.jar:/Users/mac/.m2/repository/org/flywaydb/flyway-database-postgresql/10.20.1/flyway-database-postgresql-10.20.1.jar:/Users/mac/.m2/repository/org/springframework/boot/spring-boot-starter-validation/3.4.0/spring-boot-starter-validation-3.4.0.jar:/Users/mac/.m2/repository/org/apache/tomcat/embed/tomcat-embed-el/10.1.33/tomcat-embed-el-10.1.33.jar:/Users/mac/.m2/repository/org/hibernate/validator/hibernate-validator/8.0.1.Final/hibernate-validator-8.0.1.Final.jar:/Users/mac/.m2/repository/jakarta/validation/jakarta.validation-api/3.0.2/jakarta.validation-api-3.0.2.jar:/Users/mac/.m2/repository/com/h2database/h2/2.3.232/h2-2.3.232.jar:/Users/mac/.m2/repository/org/springframework/boot/spring-boot-starter-test/3.4.0/spring-boot-starter-test-3.4.0.jar:/Users/mac/.m2/repository/org/springframework/boot/spring-boot-test/3.4.0/spring-boot-test-3.4.0.jar:/Users/mac/.m2/repository/org/springframework/boot/spring-boot-test-autoconfigure/3.4.0/spring-boot-test-autoconfigure-3.4.0.jar:/Users/mac/.m2/repository/com/jayway/jsonpath/json-path/2.9.0/json-path-2.9.0.jar:/Users/mac/.m2/repository/jakarta/xml/bind/jakarta.xml.bind-api/4.0.2/jakarta.xml.bind-api-4.0.2.jar:/Users/mac/.m2/repository/jakarta/activation/jakarta.activation-api/2.1.3/jakarta.activation-api-2.1.3.jar:/Users/mac/.m2/repository/net/minidev/json-smart/2.5.1/json-smart-2.5.1.jar:/Users/mac/.m2/repository/net/minidev/accessors-smart/2.5.1/accessors-smart-2.5.1.jar:/Users/mac/.m2/repository/org/ow2/asm/asm/9.6/asm-9.6.jar:/Users/mac/.m2/repository/org/assertj/assertj-core/3.26.3/assertj-core-3.26.3.jar:/Users/mac/.m2/repository/org/awaitility/awaitility/4.2.2/awaitility-4.2.2.jar:/Users/mac/.m2/repository/org/hamcrest/hamcrest/2.2/hamcrest-2.2.jar:/Users/mac/.m2/repository/org/junit/jupiter/junit-jupiter/5.11.3/junit-jupiter-5.11.3.jar:/Users/mac/.m2/repository/org/junit/jupiter/junit-jupiter-api/5.11.3/junit-jupiter-api-5.11.3.jar:/Users/mac/.m2/repository/org/opentest4j/opentest4j/1.3.0/opentest4j-1.3.0.jar:/Users/mac/.m2/repository/org/junit/platform/junit-platform-commons/1.11.3/junit-platform-commons-1.11.3.jar:/Users/mac/.m2/repository/org/apiguardian/apiguardian-api/1.1.2/apiguardian-api-1.1.2.jar:/Users/mac/.m2/repository/org/junit/jupiter/junit-jupiter-params/5.11.3/junit-jupiter-params-5.11.3.jar:/Users/mac/.m2/repository/org/junit/jupiter/junit-jupiter-engine/5.11.3/junit-jupiter-engine-5.11.3.jar:/Users/mac/.m2/repository/org/junit/platform/junit-platform-engine/1.11.3/junit-platform-engine-1.11.3.jar:/Users/mac/.m2/repository/org/mockito/mockito-junit-jupiter/5.14.2/mockito-junit-jupiter-5.14.2.jar:/Users/mac/.m2/repository/org/skyscreamer/jsonassert/1.5.3/jsonassert-1.5.3.jar:/Users/mac/.m2/repository/com/vaadin/external/google/android-json/0.0.20131108.vaadin1/android-json-0.0.20131108.vaadin1.jar:/Users/mac/.m2/repository/org/springframework/spring-core/6.2.0/spring-core-6.2.0.jar:/Users/mac/.m2/repository/org/springframework/spring-jcl/6.2.0/spring-jcl-6.2.0.jar:/Users/mac/.m2/repository/org/springframework/spring-test/6.2.0/spring-test-6.2.0.jar:/Users/mac/.m2/repository/org/xmlunit/xmlunit-core/2.10.0/xmlunit-core-2.10.0.jar:/Users/mac/.m2/repository/org/mockito/mockito-core/5.14.2/mockito-core-5.14.2.jar:/Users/mac/.m2/repository/net/bytebuddy/byte-buddy/1.18.8/byte-buddy-1.18.8.jar:/Users/mac/.m2/repository/net/bytebuddy/byte-buddy-agent/1.18.8/byte-buddy-agent-1.18.8.jar:/Users/mac/.m2/repository/org/objenesis/objenesis/3.3/objenesis-3.3.jar:/Users/mac/.m2/repository/org/testcontainers/junit-jupiter/1.20.4/junit-jupiter-1.20.4.jar:/Users/mac/.m2/repository/org/testcontainers/testcontainers/1.20.4/testcontainers-1.20.4.jar:/Users/mac/.m2/repository/junit/junit/4.13.2/junit-4.13.2.jar:/Users/mac/.m2/repository/org/hamcrest/hamcrest-core/2.2/hamcrest-core-2.2.jar:/Users/mac/.m2/repository/org/apache/commons/commons-compress/1.24.0/commons-compress-1.24.0.jar:/Users/mac/.m2/repository/org/rnorth/duct-tape/duct-tape/1.0.8/duct-tape-1.0.8.jar:/Users/mac/.m2/repository/org/jetbrains/annotations/17.0.0/annotations-17.0.0.jar:/Users/mac/.m2/repository/com/github/docker-java/docker-java-api/3.4.0/docker-java-api-3.4.0.jar:/Users/mac/.m2/repository/com/github/docker-java/docker-java-transport-zerodep/3.4.0/docker-java-transport-zerodep-3.4.0.jar:/Users/mac/.m2/repository/com/github/docker-java/docker-java-transport/3.4.0/docker-java-transport-3.4.0.jar:/Users/mac/.m2/repository/net/java/dev/jna/jna/5.13.0/jna-5.13.0.jar:/Users/mac/.m2/repository/org/testcontainers/postgresql/1.20.4/postgresql-1.20.4.jar:/Users/mac/.m2/repository/org/testcontainers/jdbc/1.20.4/jdbc-1.20.4.jar:/Users/mac/.m2/repository/org/testcontainers/database-commons/1.20.4/database-commons-1.20.4.jar:/Users/mac/.m2/repository/org/testcontainers/rabbitmq/1.20.4/rabbitmq-1.20.4.jar:/Users/mac/.m2/repository/io/rest-assured/rest-assured/5.5.0/rest-assured-5.5.0.jar:/Users/mac/.m2/repository/org/apache/groovy/groovy/4.0.24/groovy-4.0.24.jar:/Users/mac/.m2/repository/org/apache/groovy/groovy-xml/4.0.24/groovy-xml-4.0.24.jar:/Users/mac/.m2/repository/org/apache/httpcomponents/httpclient/4.5.13/httpclient-4.5.13.jar:/Users/mac/.m2/repository/org/apache/httpcomponents/httpcore/4.4.16/httpcore-4.4.16.jar:/Users/mac/.m2/repository/commons-logging/commons-logging/1.2/commons-logging-1.2.jar:/Users/mac/.m2/repository/commons-codec/commons-codec/1.17.1/commons-codec-1.17.1.jar:/Users/mac/.m2/repository/org/apache/httpcomponents/httpmime/4.5.13/httpmime-4.5.13.jar:/Users/mac/.m2/repository/org/ccil/cowan/tagsoup/tagsoup/1.2.1/tagsoup-1.2.1.jar:/Users/mac/.m2/repository/io/rest-assured/json-path/5.5.0/json-path-5.5.0.jar:/Users/mac/.m2/repository/org/apache/groovy/groovy-json/4.0.24/groovy-json-4.0.24.jar:/Users/mac/.m2/repository/io/rest-assured/rest-assured-common/5.5.0/rest-assured-common-5.5.0.jar:/Users/mac/.m2/repository/io/rest-assured/xml-path/5.5.0/xml-path-5.5.0.jar:/Users/mac/.m2/repository/org/apache/commons/commons-lang3/3.17.0/commons-lang3-3.17.0.jar:"/>
+    <property name="sun.cpu.endian" value="little"/>
+    <property name="user.home" value="/Users/mac"/>
+    <property name="user.language" value="en"/>
+    <property name="java.specification.vendor" value="Oracle Corporation"/>
+    <property name="java.version.date" value="2026-04-21"/>
+    <property name="java.home" value="/Users/mac/Library/Java/JavaVirtualMachines/ms-21.0.11/Contents/Home"/>
+    <property name="file.separator" value="/"/>
+    <property name="basedir" value="/Users/mac/Programming/payment-system-speckit/payment-bridge"/>
+    <property name="java.vm.compressedOopsMode" value="Non-zero based"/>
+    <property name="line.separator" value="&#10;"/>
+    <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
+    <property name="java.specification.name" value="Java Platform API Specification"/>
+    <property name="FILE_LOG_CHARSET" value="UTF-8"/>
+    <property name="java.awt.headless" value="true"/>
+    <property name="apple.awt.application.name" value="ForkedBooter"/>
+    <property name="surefire.real.class.path" value="/Users/mac/Programming/payment-system-speckit/payment-bridge/target/surefire/surefirebooter-20260510134833304_3.jar"/>
+    <property name="polyglot.engine.WarnInterpreterOnly" value="false"/>
+    <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
+    <property name="java.runtime.version" value="21.0.11+10-LTS"/>
+    <property name="user.name" value="mac"/>
+    <property name="stdout.encoding" value="UTF-8"/>
+    <property name="path.separator" value=":"/>
+    <property name="os.version" value="26.3"/>
+    <property name="java.runtime.name" value="OpenJDK Runtime Environment"/>
+    <property name="file.encoding" value="UTF-8"/>
+    <property name="java.vm.name" value="OpenJDK 64-Bit Server VM"/>
+    <property name="java.vendor.version" value="Microsoft-13877178"/>
+    <property name="localRepository" value="/Users/mac/.m2/repository"/>
+    <property name="java.vendor.url.bug" value="https://github.com/microsoft/openjdk/issues"/>
+    <property name="java.io.tmpdir" value="/var/folders/m0/xq7r_xqn1x3cg7sxg_ctcpcm0000gn/T/"/>
+    <property name="catalina.home" value="/private/var/folders/m0/xq7r_xqn1x3cg7sxg_ctcpcm0000gn/T/tomcat.0.1417564065418527245"/>
+    <property name="java.version" value="21.0.11"/>
+    <property name="user.dir" value="/Users/mac/Programming/payment-system-speckit/payment-bridge"/>
+    <property name="os.arch" value="aarch64"/>
+    <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
+    <property name="PID" value="7041"/>
+    <property name="CONSOLE_LOG_CHARSET" value="UTF-8"/>
+    <property name="catalina.base" value="/private/var/folders/m0/xq7r_xqn1x3cg7sxg_ctcpcm0000gn/T/tomcat.0.15071726456701306056"/>
+    <property name="native.encoding" value="UTF-8"/>
+    <property name="java.library.path" value="/Users/mac/Library/Java/Extensions:/Library/Java/Extensions:/Network/Library/Java/Extensions:/System/Library/Java/Extensions:/usr/lib/java:."/>
+    <property name="java.vm.info" value="mixed mode, sharing"/>
+    <property name="stderr.encoding" value="UTF-8"/>
+    <property name="java.vendor" value="Microsoft"/>
+    <property name="java.vm.version" value="21.0.11+10-LTS"/>
+    <property name="sun.io.unicode.encoding" value="UnicodeBig"/>
+    <property name="java.class.version" value="65.0"/>
+  </properties>
+  <testcase name="testConcurrentIngestionRequestsReturnAcceptedUnderThreshold" classname="com.payment.bridge.load.LatencyLoadTest" time="0.081">
+    <system-out><![CDATA[2026-05-10 13:48:45.957 INFO  [main] o.s.t.c.s.AnnotationConfigContextLoaderUtils - Could not detect default configuration classes for test class [com.payment.bridge.load.LatencyLoadTest]: LatencyLoadTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-05-10 13:48:45.958 INFO  [main] o.s.b.t.c.SpringBootTestContextBootstrapper - Found @SpringBootConfiguration com.payment.bridge.PaymentBridgeApplication for test class com.payment.bridge.load.LatencyLoadTest
+2026-05-10 13:48:45.974 INFO  [http-nio-auto-2-exec-3] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:45.974 INFO  [http-nio-auto-2-exec-4] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:45.974 INFO  [http-nio-auto-2-exec-5] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:45.974 INFO  [payment-worker-%d121] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:45.974 INFO  [http-nio-auto-2-exec-2] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:45.974 DEBUG [payment-worker-%d121] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-16
+2026-05-10 13:48:45.975 INFO  [http-nio-auto-2-exec-1] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:45.974 INFO  [http-nio-auto-2-exec-9] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:45.975 INFO  [payment-worker-%d122] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:45.975 INFO  [http-nio-auto-2-exec-3] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:45.975 DEBUG [payment-worker-%d122] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-27
+2026-05-10 13:48:45.974 INFO  [payment-worker-%d120] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:45.975 DEBUG [payment-worker-%d120] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-0
+2026-05-10 13:48:45.975 INFO  [http-nio-auto-2-exec-10] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:45.975 INFO  [payment-worker-%d126] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:45.975 INFO  [payment-worker-%d123] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:45.975 DEBUG [payment-worker-%d126] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-10
+2026-05-10 13:48:45.975 DEBUG [payment-worker-%d123] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-14
+2026-05-10 13:48:45.975 INFO  [payment-worker-%d121] c.p.bridge.service.PaymentService - Successfully created payment: 87e852a6-dbbf-4be3-8fc1-1cbbcb5e4680 with status: RECEIVED
+2026-05-10 13:48:45.975 INFO  [payment-worker-%d122] c.p.bridge.service.PaymentService - Successfully created payment: d587f2ac-ce9a-4dc9-8d08-6d1b8b1df42c with status: RECEIVED
+2026-05-10 13:48:45.975 INFO  [payment-worker-%d124] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:45.975 DEBUG [payment-worker-%d124] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-1
+2026-05-10 13:48:45.975 INFO  [payment-worker-%d125] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:45.975 DEBUG [payment-worker-%d125] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-23
+2026-05-10 13:48:45.976 INFO  [payment-worker-%d124] c.p.bridge.service.PaymentService - Successfully created payment: 5df669d1-f70f-4cd3-99f7-39dd13575163 with status: RECEIVED
+2026-05-10 13:48:45.976 INFO  [payment-worker-%d123] c.p.bridge.service.PaymentService - Successfully created payment: 699c97bd-a3b2-4551-b72a-18d1debe01f5 with status: RECEIVED
+2026-05-10 13:48:45.975 INFO  [payment-worker-%d120] c.p.bridge.service.PaymentService - Successfully created payment: 5ebe3ee0-3597-4de2-bcc2-9f3af693bdea with status: RECEIVED
+2026-05-10 13:48:45.976 INFO  [payment-worker-%d121] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: 87e852a6-dbbf-4be3-8fc1-1cbbcb5e4680
+2026-05-10 13:48:45.976 INFO  [http-nio-auto-2-exec-4] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:45.976 INFO  [payment-worker-%d121] c.p.b.controller.PaymentController - Payment request processed successfully: 87e852a6-dbbf-4be3-8fc1-1cbbcb5e4680
+2026-05-10 13:48:45.976 INFO  [payment-worker-%d125] c.p.bridge.service.PaymentService - Successfully created payment: 4cf384ec-c8bf-4de1-83d1-0074bd3bc1ff with status: RECEIVED
+2026-05-10 13:48:45.976 INFO  [payment-worker-%d124] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: 5df669d1-f70f-4cd3-99f7-39dd13575163
+2026-05-10 13:48:45.976 INFO  [payment-worker-%d129] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:45.976 DEBUG [payment-worker-%d129] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-31
+2026-05-10 13:48:45.976 INFO  [payment-worker-%d122] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: d587f2ac-ce9a-4dc9-8d08-6d1b8b1df42c
+2026-05-10 13:48:45.976 INFO  [payment-worker-%d122] c.p.b.controller.PaymentController - Payment request processed successfully: d587f2ac-ce9a-4dc9-8d08-6d1b8b1df42c
+2026-05-10 13:48:45.976 DEBUG [payment-worker-%d130] c.p.bridge.service.PaymentService - Published payment task for processing: 5df669d1-f70f-4cd3-99f7-39dd13575163
+2026-05-10 13:48:45.976 INFO  [payment-worker-%d126] c.p.bridge.service.PaymentService - Successfully created payment: a6d021c4-c7ec-43c7-97fe-aa4df6091ec7 with status: RECEIVED
+2026-05-10 13:48:45.976 INFO  [payment-worker-%d129] c.p.bridge.service.PaymentService - Successfully created payment: 1ee6bfca-b7e7-4ad6-82df-ca72f46f1396 with status: RECEIVED
+2026-05-10 13:48:45.976 INFO  [http-nio-auto-2-exec-8] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:45.977 DEBUG [payment-worker-%d128] c.p.bridge.service.PaymentService - Published payment task for processing: 87e852a6-dbbf-4be3-8fc1-1cbbcb5e4680
+2026-05-10 13:48:45.977 INFO  [payment-worker-%d120] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: 5ebe3ee0-3597-4de2-bcc2-9f3af693bdea
+2026-05-10 13:48:45.977 INFO  [payment-worker-%d126] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: a6d021c4-c7ec-43c7-97fe-aa4df6091ec7
+2026-05-10 13:48:45.977 INFO  [payment-worker-%d126] c.p.b.controller.PaymentController - Payment request processed successfully: a6d021c4-c7ec-43c7-97fe-aa4df6091ec7
+2026-05-10 13:48:45.977 DEBUG [payment-worker-%d131] c.p.bridge.service.PaymentService - Published payment task for processing: d587f2ac-ce9a-4dc9-8d08-6d1b8b1df42c
+2026-05-10 13:48:45.977 INFO  [payment-worker-%d129] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: 1ee6bfca-b7e7-4ad6-82df-ca72f46f1396
+2026-05-10 13:48:45.976 INFO  [payment-worker-%d124] c.p.b.controller.PaymentController - Payment request processed successfully: 5df669d1-f70f-4cd3-99f7-39dd13575163
+2026-05-10 13:48:45.977 INFO  [payment-worker-%d123] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: 699c97bd-a3b2-4551-b72a-18d1debe01f5
+2026-05-10 13:48:45.977 INFO  [payment-worker-%d129] c.p.b.controller.PaymentController - Payment request processed successfully: 1ee6bfca-b7e7-4ad6-82df-ca72f46f1396
+2026-05-10 13:48:45.977 INFO  [payment-worker-%d123] c.p.b.controller.PaymentController - Payment request processed successfully: 699c97bd-a3b2-4551-b72a-18d1debe01f5
+2026-05-10 13:48:45.977 INFO  [payment-worker-%d132] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:45.977 INFO  [payment-worker-%d127] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:45.977 DEBUG [payment-worker-%d132] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-11
+2026-05-10 13:48:45.977 DEBUG [payment-worker-%d127] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-5
+2026-05-10 13:48:45.977 DEBUG [payment-worker-%d135] c.p.bridge.service.PaymentService - Published payment task for processing: 1ee6bfca-b7e7-4ad6-82df-ca72f46f1396
+2026-05-10 13:48:45.977 INFO  [payment-worker-%d125] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: 4cf384ec-c8bf-4de1-83d1-0074bd3bc1ff
+2026-05-10 13:48:45.977 INFO  [payment-worker-%d125] c.p.b.controller.PaymentController - Payment request processed successfully: 4cf384ec-c8bf-4de1-83d1-0074bd3bc1ff
+2026-05-10 13:48:45.977 DEBUG [payment-worker-%d136] c.p.bridge.service.PaymentService - Published payment task for processing: 699c97bd-a3b2-4551-b72a-18d1debe01f5
+2026-05-10 13:48:45.977 DEBUG [payment-worker-%d137] c.p.bridge.service.PaymentService - Published payment task for processing: 4cf384ec-c8bf-4de1-83d1-0074bd3bc1ff
+2026-05-10 13:48:45.977 INFO  [payment-worker-%d120] c.p.b.controller.PaymentController - Payment request processed successfully: 5ebe3ee0-3597-4de2-bcc2-9f3af693bdea
+2026-05-10 13:48:45.978 DEBUG [payment-worker-%d134] c.p.bridge.service.PaymentService - Published payment task for processing: a6d021c4-c7ec-43c7-97fe-aa4df6091ec7
+2026-05-10 13:48:45.978 DEBUG [payment-worker-%d133] c.p.bridge.service.PaymentService - Published payment task for processing: 5ebe3ee0-3597-4de2-bcc2-9f3af693bdea
+2026-05-10 13:48:45.978 INFO  [payment-worker-%d132] c.p.bridge.service.PaymentService - Successfully created payment: 0a06b6ee-fea2-485e-a229-a554ead180ad with status: RECEIVED
+2026-05-10 13:48:45.978 INFO  [payment-worker-%d127] c.p.bridge.service.PaymentService - Successfully created payment: 5f15f283-3ddf-4f64-9ade-be4bf31c48af with status: RECEIVED
+2026-05-10 13:48:45.978 INFO  [payment-worker-%d132] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: 0a06b6ee-fea2-485e-a229-a554ead180ad
+2026-05-10 13:48:45.978 INFO  [payment-worker-%d132] c.p.b.controller.PaymentController - Payment request processed successfully: 0a06b6ee-fea2-485e-a229-a554ead180ad
+2026-05-10 13:48:45.978 DEBUG [payment-worker-%d138] c.p.bridge.service.PaymentService - Published payment task for processing: 0a06b6ee-fea2-485e-a229-a554ead180ad
+2026-05-10 13:48:45.979 INFO  [http-nio-auto-2-exec-6] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:45.979 INFO  [http-nio-auto-2-exec-8] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:45.979 INFO  [payment-worker-%d140] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:45.979 DEBUG [payment-worker-%d140] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-18
+2026-05-10 13:48:45.979 INFO  [payment-worker-%d139] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:45.979 DEBUG [payment-worker-%d139] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-17
+2026-05-10 13:48:45.979 INFO  [payment-worker-%d140] c.p.bridge.service.PaymentService - Successfully created payment: e84af72b-7a9b-4425-8abc-cd247131d9e4 with status: RECEIVED
+2026-05-10 13:48:45.980 INFO  [http-nio-auto-2-exec-10] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:45.980 INFO  [payment-worker-%d127] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: 5f15f283-3ddf-4f64-9ade-be4bf31c48af
+2026-05-10 13:48:45.980 INFO  [http-nio-auto-2-exec-9] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:45.980 INFO  [http-nio-auto-2-exec-5] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:45.980 INFO  [payment-worker-%d139] c.p.bridge.service.PaymentService - Successfully created payment: 171c6d0a-d027-45a8-aed1-f582cc68e4cd with status: RECEIVED
+2026-05-10 13:48:45.980 INFO  [payment-worker-%d127] c.p.b.controller.PaymentController - Payment request processed successfully: 5f15f283-3ddf-4f64-9ade-be4bf31c48af
+2026-05-10 13:48:45.980 INFO  [http-nio-auto-2-exec-4] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:45.980 INFO  [payment-worker-%d140] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: e84af72b-7a9b-4425-8abc-cd247131d9e4
+2026-05-10 13:48:45.980 DEBUG [payment-worker-%d142] c.p.bridge.service.PaymentService - Published payment task for processing: 5f15f283-3ddf-4f64-9ade-be4bf31c48af
+2026-05-10 13:48:45.980 INFO  [payment-worker-%d144] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:45.980 INFO  [payment-worker-%d140] c.p.b.controller.PaymentController - Payment request processed successfully: e84af72b-7a9b-4425-8abc-cd247131d9e4
+2026-05-10 13:48:45.980 DEBUG [payment-worker-%d144] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-12
+2026-05-10 13:48:45.980 INFO  [payment-worker-%d141] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:45.980 DEBUG [payment-worker-%d141] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-2
+2026-05-10 13:48:45.980 INFO  [payment-worker-%d145] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:45.980 DEBUG [payment-worker-%d145] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-21
+2026-05-10 13:48:45.980 DEBUG [payment-worker-%d146] c.p.bridge.service.PaymentService - Published payment task for processing: e84af72b-7a9b-4425-8abc-cd247131d9e4
+2026-05-10 13:48:45.980 INFO  [payment-worker-%d143] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:45.980 DEBUG [payment-worker-%d143] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-19
+2026-05-10 13:48:45.980 INFO  [payment-worker-%d141] c.p.bridge.service.PaymentService - Successfully created payment: 9a70af18-b191-4d48-b843-b51ee73adc54 with status: RECEIVED
+2026-05-10 13:48:45.980 INFO  [payment-worker-%d144] c.p.bridge.service.PaymentService - Successfully created payment: 31cedb1f-0ad2-4867-adec-16880b42f861 with status: RECEIVED
+2026-05-10 13:48:45.981 INFO  [payment-worker-%d143] c.p.bridge.service.PaymentService - Successfully created payment: d58af009-501b-449c-a032-8b416d911be8 with status: RECEIVED
+2026-05-10 13:48:45.981 INFO  [payment-worker-%d141] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: 9a70af18-b191-4d48-b843-b51ee73adc54
+2026-05-10 13:48:45.981 INFO  [payment-worker-%d145] c.p.bridge.service.PaymentService - Successfully created payment: 6d6f5c30-a732-440b-8913-e6ac638effc6 with status: RECEIVED
+2026-05-10 13:48:45.981 INFO  [payment-worker-%d144] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: 31cedb1f-0ad2-4867-adec-16880b42f861
+2026-05-10 13:48:45.981 INFO  [payment-worker-%d139] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: 171c6d0a-d027-45a8-aed1-f582cc68e4cd
+2026-05-10 13:48:45.981 INFO  [payment-worker-%d139] c.p.b.controller.PaymentController - Payment request processed successfully: 171c6d0a-d027-45a8-aed1-f582cc68e4cd
+2026-05-10 13:48:45.981 DEBUG [payment-worker-%d147] c.p.bridge.service.PaymentService - Published payment task for processing: 9a70af18-b191-4d48-b843-b51ee73adc54
+2026-05-10 13:48:45.981 DEBUG [payment-worker-%d148] c.p.bridge.service.PaymentService - Published payment task for processing: 171c6d0a-d027-45a8-aed1-f582cc68e4cd
+2026-05-10 13:48:45.981 INFO  [payment-worker-%d141] c.p.b.controller.PaymentController - Payment request processed successfully: 9a70af18-b191-4d48-b843-b51ee73adc54
+2026-05-10 13:48:45.981 INFO  [payment-worker-%d144] c.p.b.controller.PaymentController - Payment request processed successfully: 31cedb1f-0ad2-4867-adec-16880b42f861
+2026-05-10 13:48:45.981 DEBUG [payment-worker-%d149] c.p.bridge.service.PaymentService - Published payment task for processing: 31cedb1f-0ad2-4867-adec-16880b42f861
+2026-05-10 13:48:45.982 INFO  [payment-worker-%d145] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: 6d6f5c30-a732-440b-8913-e6ac638effc6
+2026-05-10 13:48:45.982 INFO  [http-nio-auto-2-exec-3] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:45.982 INFO  [payment-worker-%d145] c.p.b.controller.PaymentController - Payment request processed successfully: 6d6f5c30-a732-440b-8913-e6ac638effc6
+2026-05-10 13:48:45.982 INFO  [payment-worker-%d151] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:45.982 DEBUG [payment-worker-%d151] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-3
+2026-05-10 13:48:45.982 INFO  [http-nio-auto-2-exec-8] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:45.982 INFO  [payment-worker-%d143] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: d58af009-501b-449c-a032-8b416d911be8
+2026-05-10 13:48:45.982 DEBUG [payment-worker-%d150] c.p.bridge.service.PaymentService - Published payment task for processing: 6d6f5c30-a732-440b-8913-e6ac638effc6
+2026-05-10 13:48:45.982 INFO  [payment-worker-%d143] c.p.b.controller.PaymentController - Payment request processed successfully: d58af009-501b-449c-a032-8b416d911be8
+2026-05-10 13:48:45.982 INFO  [payment-worker-%d151] c.p.bridge.service.PaymentService - Successfully created payment: 039de9f9-bf6b-4479-9e51-ec82446128d1 with status: RECEIVED
+2026-05-10 13:48:45.982 INFO  [payment-worker-%d152] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:45.982 DEBUG [payment-worker-%d152] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-8
+2026-05-10 13:48:45.982 DEBUG [payment-worker-%d153] c.p.bridge.service.PaymentService - Published payment task for processing: d58af009-501b-449c-a032-8b416d911be8
+2026-05-10 13:48:45.983 INFO  [payment-worker-%d151] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: 039de9f9-bf6b-4479-9e51-ec82446128d1
+2026-05-10 13:48:45.983 INFO  [payment-worker-%d151] c.p.b.controller.PaymentController - Payment request processed successfully: 039de9f9-bf6b-4479-9e51-ec82446128d1
+2026-05-10 13:48:45.983 DEBUG [payment-worker-%d154] c.p.bridge.service.PaymentService - Published payment task for processing: 039de9f9-bf6b-4479-9e51-ec82446128d1
+2026-05-10 13:48:45.983 INFO  [payment-worker-%d152] c.p.bridge.service.PaymentService - Successfully created payment: ae4ac92e-1761-4f0b-b547-0b54f5bfdfea with status: RECEIVED
+2026-05-10 13:48:45.983 INFO  [http-nio-auto-2-exec-4] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:45.983 INFO  [http-nio-auto-2-exec-5] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:45.983 INFO  [payment-worker-%d155] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:45.984 DEBUG [payment-worker-%d155] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-7
+2026-05-10 13:48:45.984 INFO  [payment-worker-%d152] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: ae4ac92e-1761-4f0b-b547-0b54f5bfdfea
+2026-05-10 13:48:45.984 INFO  [payment-worker-%d156] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:45.984 DEBUG [payment-worker-%d156] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-24
+2026-05-10 13:48:45.984 INFO  [payment-worker-%d152] c.p.b.controller.PaymentController - Payment request processed successfully: ae4ac92e-1761-4f0b-b547-0b54f5bfdfea
+2026-05-10 13:48:45.984 DEBUG [payment-worker-%d157] c.p.bridge.service.PaymentService - Published payment task for processing: ae4ac92e-1761-4f0b-b547-0b54f5bfdfea
+2026-05-10 13:48:45.984 INFO  [payment-worker-%d156] c.p.bridge.service.PaymentService - Successfully created payment: 478598c9-72c9-4573-818e-9db36037116c with status: RECEIVED
+2026-05-10 13:48:45.984 INFO  [payment-worker-%d155] c.p.bridge.service.PaymentService - Successfully created payment: 6db3bf3f-b8d5-45ef-b3a1-2640b9c664ff with status: RECEIVED
+2026-05-10 13:48:45.985 INFO  [payment-worker-%d156] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: 478598c9-72c9-4573-818e-9db36037116c
+2026-05-10 13:48:45.985 INFO  [payment-worker-%d156] c.p.b.controller.PaymentController - Payment request processed successfully: 478598c9-72c9-4573-818e-9db36037116c
+2026-05-10 13:48:45.985 DEBUG [payment-worker-%d158] c.p.bridge.service.PaymentService - Published payment task for processing: 478598c9-72c9-4573-818e-9db36037116c
+2026-05-10 13:48:45.985 INFO  [payment-worker-%d155] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: 6db3bf3f-b8d5-45ef-b3a1-2640b9c664ff
+2026-05-10 13:48:45.985 INFO  [payment-worker-%d155] c.p.b.controller.PaymentController - Payment request processed successfully: 6db3bf3f-b8d5-45ef-b3a1-2640b9c664ff
+2026-05-10 13:48:45.986 DEBUG [payment-worker-%d159] c.p.bridge.service.PaymentService - Published payment task for processing: 6db3bf3f-b8d5-45ef-b3a1-2640b9c664ff
+2026-05-10 13:48:45.985 INFO  [http-nio-auto-2-exec-10] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:45.986 INFO  [payment-worker-%d160] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:45.986 DEBUG [payment-worker-%d160] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-33
+2026-05-10 13:48:45.986 INFO  [http-nio-auto-2-exec-6] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:45.986 INFO  [http-nio-auto-2-exec-9] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:45.986 INFO  [payment-worker-%d162] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:45.986 DEBUG [payment-worker-%d162] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-29
+2026-05-10 13:48:45.987 INFO  [payment-worker-%d160] c.p.bridge.service.PaymentService - Successfully created payment: c6df96db-2fb9-44b0-9da9-6811c0adf1ed with status: RECEIVED
+2026-05-10 13:48:45.987 INFO  [payment-worker-%d161] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:45.987 DEBUG [payment-worker-%d161] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-55
+2026-05-10 13:48:45.987 INFO  [payment-worker-%d162] c.p.bridge.service.PaymentService - Successfully created payment: 85dd47d4-c4a8-4ed2-989b-51486df56512 with status: RECEIVED
+2026-05-10 13:48:45.987 INFO  [http-nio-auto-2-exec-7] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:45.987 INFO  [http-nio-auto-2-exec-10] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:45.987 INFO  [payment-worker-%d162] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: 85dd47d4-c4a8-4ed2-989b-51486df56512
+2026-05-10 13:48:45.987 INFO  [payment-worker-%d162] c.p.b.controller.PaymentController - Payment request processed successfully: 85dd47d4-c4a8-4ed2-989b-51486df56512
+2026-05-10 13:48:45.987 INFO  [http-nio-auto-2-exec-2] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:45.987 INFO  [payment-worker-%d163] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:45.987 INFO  [payment-worker-%d161] c.p.bridge.service.PaymentService - Successfully created payment: cd1a5150-b33d-4282-8084-868eebbaff09 with status: RECEIVED
+2026-05-10 13:48:45.987 INFO  [payment-worker-%d165] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:45.987 DEBUG [payment-worker-%d164] c.p.bridge.service.PaymentService - Published payment task for processing: 85dd47d4-c4a8-4ed2-989b-51486df56512
+2026-05-10 13:48:45.987 DEBUG [payment-worker-%d163] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-34
+2026-05-10 13:48:45.987 INFO  [payment-worker-%d160] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: c6df96db-2fb9-44b0-9da9-6811c0adf1ed
+2026-05-10 13:48:45.987 DEBUG [payment-worker-%d165] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-41
+2026-05-10 13:48:45.988 INFO  [payment-worker-%d166] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:45.988 INFO  [payment-worker-%d160] c.p.b.controller.PaymentController - Payment request processed successfully: c6df96db-2fb9-44b0-9da9-6811c0adf1ed
+2026-05-10 13:48:45.988 DEBUG [payment-worker-%d166] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-15
+2026-05-10 13:48:45.988 DEBUG [payment-worker-%d167] c.p.bridge.service.PaymentService - Published payment task for processing: c6df96db-2fb9-44b0-9da9-6811c0adf1ed
+2026-05-10 13:48:45.988 INFO  [http-nio-auto-2-exec-5] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:45.988 INFO  [payment-worker-%d166] c.p.bridge.service.PaymentService - Successfully created payment: 84e877ed-67c0-43a7-b379-5e80448b37e7 with status: RECEIVED
+2026-05-10 13:48:45.988 INFO  [http-nio-auto-2-exec-2] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:45.988 INFO  [payment-worker-%d168] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:45.988 DEBUG [payment-worker-%d168] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-13
+2026-05-10 13:48:45.988 INFO  [payment-worker-%d169] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:45.988 DEBUG [payment-worker-%d169] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-26
+2026-05-10 13:48:45.988 INFO  [payment-worker-%d163] c.p.bridge.service.PaymentService - Successfully created payment: db62870e-2405-4037-9dbd-af4a69f66e6a with status: RECEIVED
+2026-05-10 13:48:45.988 INFO  [payment-worker-%d165] c.p.bridge.service.PaymentService - Successfully created payment: 4b9b2e13-9cea-40d6-a551-2169d28bfc56 with status: RECEIVED
+2026-05-10 13:48:45.988 INFO  [payment-worker-%d168] c.p.bridge.service.PaymentService - Successfully created payment: 17314220-5b17-497d-8b51-8150f932931f with status: RECEIVED
+2026-05-10 13:48:45.988 INFO  [payment-worker-%d169] c.p.bridge.service.PaymentService - Successfully created payment: 75699f00-0a6d-4333-b673-8e212d995391 with status: RECEIVED
+2026-05-10 13:48:45.988 INFO  [payment-worker-%d166] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: 84e877ed-67c0-43a7-b379-5e80448b37e7
+2026-05-10 13:48:45.988 INFO  [payment-worker-%d166] c.p.b.controller.PaymentController - Payment request processed successfully: 84e877ed-67c0-43a7-b379-5e80448b37e7
+2026-05-10 13:48:45.989 INFO  [payment-worker-%d168] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: 17314220-5b17-497d-8b51-8150f932931f
+2026-05-10 13:48:45.989 INFO  [payment-worker-%d168] c.p.b.controller.PaymentController - Payment request processed successfully: 17314220-5b17-497d-8b51-8150f932931f
+2026-05-10 13:48:45.989 INFO  [payment-worker-%d169] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: 75699f00-0a6d-4333-b673-8e212d995391
+2026-05-10 13:48:45.989 INFO  [payment-worker-%d169] c.p.b.controller.PaymentController - Payment request processed successfully: 75699f00-0a6d-4333-b673-8e212d995391
+2026-05-10 13:48:45.989 DEBUG [payment-worker-%d171] c.p.bridge.service.PaymentService - Published payment task for processing: 17314220-5b17-497d-8b51-8150f932931f
+2026-05-10 13:48:45.989 DEBUG [payment-worker-%d172] c.p.bridge.service.PaymentService - Published payment task for processing: 75699f00-0a6d-4333-b673-8e212d995391
+2026-05-10 13:48:45.989 DEBUG [payment-worker-%d170] c.p.bridge.service.PaymentService - Published payment task for processing: 84e877ed-67c0-43a7-b379-5e80448b37e7
+2026-05-10 13:48:45.989 INFO  [payment-worker-%d161] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: cd1a5150-b33d-4282-8084-868eebbaff09
+2026-05-10 13:48:45.989 INFO  [payment-worker-%d161] c.p.b.controller.PaymentController - Payment request processed successfully: cd1a5150-b33d-4282-8084-868eebbaff09
+2026-05-10 13:48:45.989 DEBUG [payment-worker-%d173] c.p.bridge.service.PaymentService - Published payment task for processing: cd1a5150-b33d-4282-8084-868eebbaff09
+2026-05-10 13:48:45.989 INFO  [http-nio-auto-2-exec-4] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:45.990 INFO  [payment-worker-%d165] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: 4b9b2e13-9cea-40d6-a551-2169d28bfc56
+2026-05-10 13:48:45.990 INFO  [payment-worker-%d163] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: db62870e-2405-4037-9dbd-af4a69f66e6a
+2026-05-10 13:48:45.990 INFO  [payment-worker-%d165] c.p.b.controller.PaymentController - Payment request processed successfully: 4b9b2e13-9cea-40d6-a551-2169d28bfc56
+2026-05-10 13:48:45.990 INFO  [payment-worker-%d174] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:45.990 DEBUG [payment-worker-%d176] c.p.bridge.service.PaymentService - Published payment task for processing: db62870e-2405-4037-9dbd-af4a69f66e6a
+2026-05-10 13:48:45.990 DEBUG [payment-worker-%d175] c.p.bridge.service.PaymentService - Published payment task for processing: 4b9b2e13-9cea-40d6-a551-2169d28bfc56
+2026-05-10 13:48:45.990 INFO  [payment-worker-%d163] c.p.b.controller.PaymentController - Payment request processed successfully: db62870e-2405-4037-9dbd-af4a69f66e6a
+2026-05-10 13:48:45.990 DEBUG [payment-worker-%d174] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-45
+2026-05-10 13:48:45.990 INFO  [http-nio-auto-2-exec-7] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:45.990 INFO  [payment-worker-%d177] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:45.990 DEBUG [payment-worker-%d177] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-30
+2026-05-10 13:48:45.991 INFO  [payment-worker-%d177] c.p.bridge.service.PaymentService - Successfully created payment: d0c60f87-b53e-4c6c-a08a-89e6de48b20a with status: RECEIVED
+2026-05-10 13:48:45.991 INFO  [http-nio-auto-2-exec-9] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:45.991 INFO  [payment-worker-%d174] c.p.bridge.service.PaymentService - Successfully created payment: a049c4f7-f90f-46e0-aa63-38f66689b242 with status: RECEIVED
+2026-05-10 13:48:45.991 INFO  [http-nio-auto-2-exec-10] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:45.991 INFO  [payment-worker-%d178] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:45.991 INFO  [http-nio-auto-2-exec-8] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:45.991 DEBUG [payment-worker-%d178] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-20
+2026-05-10 13:48:45.991 INFO  [http-nio-auto-2-exec-6] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:45.991 INFO  [payment-worker-%d178] c.p.bridge.service.PaymentService - Successfully created payment: 0a1db09e-49a9-45bd-92c3-f7ab0581a35c with status: RECEIVED
+2026-05-10 13:48:45.991 INFO  [payment-worker-%d180] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:45.991 DEBUG [payment-worker-%d180] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-49
+2026-05-10 13:48:45.991 INFO  [payment-worker-%d177] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: d0c60f87-b53e-4c6c-a08a-89e6de48b20a
+2026-05-10 13:48:45.991 INFO  [payment-worker-%d177] c.p.b.controller.PaymentController - Payment request processed successfully: d0c60f87-b53e-4c6c-a08a-89e6de48b20a
+2026-05-10 13:48:45.991 INFO  [payment-worker-%d181] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:45.991 INFO  [payment-worker-%d179] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:45.991 DEBUG [payment-worker-%d179] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-42
+2026-05-10 13:48:45.991 DEBUG [payment-worker-%d181] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-46
+2026-05-10 13:48:45.991 INFO  [payment-worker-%d180] c.p.bridge.service.PaymentService - Successfully created payment: d72eb846-d862-449a-b1f8-b6944c1707fa with status: RECEIVED
+2026-05-10 13:48:45.991 DEBUG [payment-worker-%d182] c.p.bridge.service.PaymentService - Published payment task for processing: d0c60f87-b53e-4c6c-a08a-89e6de48b20a
+2026-05-10 13:48:45.992 INFO  [payment-worker-%d178] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: 0a1db09e-49a9-45bd-92c3-f7ab0581a35c
+2026-05-10 13:48:45.992 INFO  [payment-worker-%d178] c.p.b.controller.PaymentController - Payment request processed successfully: 0a1db09e-49a9-45bd-92c3-f7ab0581a35c
+2026-05-10 13:48:45.992 DEBUG [payment-worker-%d183] c.p.bridge.service.PaymentService - Published payment task for processing: 0a1db09e-49a9-45bd-92c3-f7ab0581a35c
+2026-05-10 13:48:45.992 INFO  [payment-worker-%d179] c.p.bridge.service.PaymentService - Successfully created payment: 2b10de8d-a989-4d4e-9f4d-7ed65b633b9e with status: RECEIVED
+2026-05-10 13:48:45.992 INFO  [payment-worker-%d181] c.p.bridge.service.PaymentService - Successfully created payment: 04bfb7cf-d244-4725-9b39-79e18301dd8f with status: RECEIVED
+2026-05-10 13:48:45.992 INFO  [http-nio-auto-2-exec-9] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:45.992 INFO  [payment-worker-%d174] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: a049c4f7-f90f-46e0-aa63-38f66689b242
+2026-05-10 13:48:45.992 INFO  [payment-worker-%d180] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: d72eb846-d862-449a-b1f8-b6944c1707fa
+2026-05-10 13:48:45.992 INFO  [payment-worker-%d180] c.p.b.controller.PaymentController - Payment request processed successfully: d72eb846-d862-449a-b1f8-b6944c1707fa
+2026-05-10 13:48:45.992 INFO  [payment-worker-%d174] c.p.b.controller.PaymentController - Payment request processed successfully: a049c4f7-f90f-46e0-aa63-38f66689b242
+2026-05-10 13:48:45.992 DEBUG [payment-worker-%d186] c.p.bridge.service.PaymentService - Published payment task for processing: d72eb846-d862-449a-b1f8-b6944c1707fa
+2026-05-10 13:48:45.992 INFO  [payment-worker-%d184] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:45.992 DEBUG [payment-worker-%d184] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-44
+2026-05-10 13:48:45.993 DEBUG [payment-worker-%d185] c.p.bridge.service.PaymentService - Published payment task for processing: a049c4f7-f90f-46e0-aa63-38f66689b242
+2026-05-10 13:48:45.993 INFO  [payment-worker-%d184] c.p.bridge.service.PaymentService - Successfully created payment: c40c99a6-23cd-483e-bbfe-3e15b2d37dca with status: RECEIVED
+2026-05-10 13:48:45.993 INFO  [http-nio-auto-2-exec-3] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:45.993 INFO  [payment-worker-%d187] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:45.993 DEBUG [payment-worker-%d187] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-47
+2026-05-10 13:48:45.993 INFO  [payment-worker-%d184] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: c40c99a6-23cd-483e-bbfe-3e15b2d37dca
+2026-05-10 13:48:45.993 INFO  [payment-worker-%d184] c.p.b.controller.PaymentController - Payment request processed successfully: c40c99a6-23cd-483e-bbfe-3e15b2d37dca
+2026-05-10 13:48:45.994 DEBUG [payment-worker-%d188] c.p.bridge.service.PaymentService - Published payment task for processing: c40c99a6-23cd-483e-bbfe-3e15b2d37dca
+2026-05-10 13:48:45.994 INFO  [payment-worker-%d187] c.p.bridge.service.PaymentService - Successfully created payment: 030bb08b-ea5b-4843-94b4-fb97f1f31b1b with status: RECEIVED
+2026-05-10 13:48:45.994 INFO  [payment-worker-%d181] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: 04bfb7cf-d244-4725-9b39-79e18301dd8f
+2026-05-10 13:48:45.994 INFO  [payment-worker-%d181] c.p.b.controller.PaymentController - Payment request processed successfully: 04bfb7cf-d244-4725-9b39-79e18301dd8f
+2026-05-10 13:48:45.994 INFO  [payment-worker-%d179] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: 2b10de8d-a989-4d4e-9f4d-7ed65b633b9e
+2026-05-10 13:48:45.994 DEBUG [payment-worker-%d189] c.p.bridge.service.PaymentService - Published payment task for processing: 04bfb7cf-d244-4725-9b39-79e18301dd8f
+2026-05-10 13:48:45.994 INFO  [payment-worker-%d179] c.p.b.controller.PaymentController - Payment request processed successfully: 2b10de8d-a989-4d4e-9f4d-7ed65b633b9e
+2026-05-10 13:48:45.994 INFO  [payment-worker-%d187] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: 030bb08b-ea5b-4843-94b4-fb97f1f31b1b
+2026-05-10 13:48:45.994 INFO  [http-nio-auto-2-exec-4] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:45.994 INFO  [payment-worker-%d187] c.p.b.controller.PaymentController - Payment request processed successfully: 030bb08b-ea5b-4843-94b4-fb97f1f31b1b
+2026-05-10 13:48:45.994 DEBUG [payment-worker-%d190] c.p.bridge.service.PaymentService - Published payment task for processing: 2b10de8d-a989-4d4e-9f4d-7ed65b633b9e
+2026-05-10 13:48:45.994 INFO  [payment-worker-%d192] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:45.994 DEBUG [payment-worker-%d191] c.p.bridge.service.PaymentService - Published payment task for processing: 030bb08b-ea5b-4843-94b4-fb97f1f31b1b
+2026-05-10 13:48:45.994 DEBUG [payment-worker-%d192] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-51
+2026-05-10 13:48:45.995 INFO  [payment-worker-%d192] c.p.bridge.service.PaymentService - Successfully created payment: 17cc4f1b-7d56-494a-a539-dfc7b708fb56 with status: RECEIVED
+2026-05-10 13:48:45.995 INFO  [http-nio-auto-2-exec-4] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:45.995 INFO  [payment-worker-%d193] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:45.995 DEBUG [payment-worker-%d193] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-52
+2026-05-10 13:48:45.995 INFO  [http-nio-auto-2-exec-10] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:45.995 INFO  [payment-worker-%d193] c.p.bridge.service.PaymentService - Successfully created payment: 12f3b8fb-cbba-4ac4-9b5e-82ccc9f0724a with status: RECEIVED
+2026-05-10 13:48:45.995 INFO  [payment-worker-%d192] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: 17cc4f1b-7d56-494a-a539-dfc7b708fb56
+2026-05-10 13:48:45.995 INFO  [payment-worker-%d192] c.p.b.controller.PaymentController - Payment request processed successfully: 17cc4f1b-7d56-494a-a539-dfc7b708fb56
+2026-05-10 13:48:45.995 INFO  [payment-worker-%d194] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:45.995 DEBUG [payment-worker-%d195] c.p.bridge.service.PaymentService - Published payment task for processing: 17cc4f1b-7d56-494a-a539-dfc7b708fb56
+2026-05-10 13:48:45.995 DEBUG [payment-worker-%d194] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-28
+2026-05-10 13:48:45.996 INFO  [http-nio-auto-2-exec-7] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:45.996 INFO  [payment-worker-%d193] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: 12f3b8fb-cbba-4ac4-9b5e-82ccc9f0724a
+2026-05-10 13:48:45.996 INFO  [payment-worker-%d193] c.p.b.controller.PaymentController - Payment request processed successfully: 12f3b8fb-cbba-4ac4-9b5e-82ccc9f0724a
+2026-05-10 13:48:45.996 INFO  [payment-worker-%d196] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:45.996 DEBUG [payment-worker-%d196] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-48
+2026-05-10 13:48:45.996 INFO  [payment-worker-%d196] c.p.bridge.service.PaymentService - Successfully created payment: e16a7bd8-a9f2-4006-8865-1d40d48b88de with status: RECEIVED
+2026-05-10 13:48:45.996 INFO  [http-nio-auto-2-exec-1] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:45.996 INFO  [http-nio-auto-2-exec-9] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:45.996 INFO  [payment-worker-%d194] c.p.bridge.service.PaymentService - Successfully created payment: 5629fee1-2b8f-4e07-81ab-468d5b79cf64 with status: RECEIVED
+2026-05-10 13:48:45.996 DEBUG [payment-worker-%d197] c.p.bridge.service.PaymentService - Published payment task for processing: 12f3b8fb-cbba-4ac4-9b5e-82ccc9f0724a
+2026-05-10 13:48:45.996 INFO  [payment-worker-%d198] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:45.996 DEBUG [payment-worker-%d198] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-9
+2026-05-10 13:48:45.997 INFO  [payment-worker-%d199] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:45.997 INFO  [payment-worker-%d196] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: e16a7bd8-a9f2-4006-8865-1d40d48b88de
+2026-05-10 13:48:45.997 DEBUG [payment-worker-%d199] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-54
+2026-05-10 13:48:45.997 INFO  [payment-worker-%d196] c.p.b.controller.PaymentController - Payment request processed successfully: e16a7bd8-a9f2-4006-8865-1d40d48b88de
+2026-05-10 13:48:45.997 INFO  [payment-worker-%d198] c.p.bridge.service.PaymentService - Successfully created payment: e3e8886f-90d8-45a3-9de9-7b4f0d1e0214 with status: RECEIVED
+2026-05-10 13:48:45.997 DEBUG [payment-worker-%d200] c.p.bridge.service.PaymentService - Published payment task for processing: e16a7bd8-a9f2-4006-8865-1d40d48b88de
+2026-05-10 13:48:45.997 INFO  [payment-worker-%d198] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: e3e8886f-90d8-45a3-9de9-7b4f0d1e0214
+2026-05-10 13:48:45.997 INFO  [payment-worker-%d199] c.p.bridge.service.PaymentService - Successfully created payment: 09d6f0be-089c-4021-8721-74ec2f7aa80e with status: RECEIVED
+2026-05-10 13:48:45.997 DEBUG [payment-worker-%d201] c.p.bridge.service.PaymentService - Published payment task for processing: e3e8886f-90d8-45a3-9de9-7b4f0d1e0214
+2026-05-10 13:48:45.997 INFO  [http-nio-auto-2-exec-5] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:45.998 INFO  [payment-worker-%d194] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: 5629fee1-2b8f-4e07-81ab-468d5b79cf64
+2026-05-10 13:48:45.998 INFO  [payment-worker-%d194] c.p.b.controller.PaymentController - Payment request processed successfully: 5629fee1-2b8f-4e07-81ab-468d5b79cf64
+2026-05-10 13:48:45.997 INFO  [payment-worker-%d198] c.p.b.controller.PaymentController - Payment request processed successfully: e3e8886f-90d8-45a3-9de9-7b4f0d1e0214
+2026-05-10 13:48:45.998 INFO  [payment-worker-%d202] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:45.998 DEBUG [payment-worker-%d202] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-59
+2026-05-10 13:48:45.998 DEBUG [payment-worker-%d203] c.p.bridge.service.PaymentService - Published payment task for processing: 5629fee1-2b8f-4e07-81ab-468d5b79cf64
+2026-05-10 13:48:45.998 INFO  [payment-worker-%d202] c.p.bridge.service.PaymentService - Successfully created payment: 3ebb3aa0-ceef-4492-8dd9-9ec23b2c0c5d with status: RECEIVED
+2026-05-10 13:48:45.999 INFO  [payment-worker-%d202] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: 3ebb3aa0-ceef-4492-8dd9-9ec23b2c0c5d
+2026-05-10 13:48:45.999 INFO  [payment-worker-%d202] c.p.b.controller.PaymentController - Payment request processed successfully: 3ebb3aa0-ceef-4492-8dd9-9ec23b2c0c5d
+2026-05-10 13:48:45.999 DEBUG [payment-worker-%d204] c.p.bridge.service.PaymentService - Published payment task for processing: 3ebb3aa0-ceef-4492-8dd9-9ec23b2c0c5d
+2026-05-10 13:48:45.999 INFO  [http-nio-auto-2-exec-5] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:45.999 INFO  [payment-worker-%d199] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: 09d6f0be-089c-4021-8721-74ec2f7aa80e
+2026-05-10 13:48:45.999 INFO  [payment-worker-%d199] c.p.b.controller.PaymentController - Payment request processed successfully: 09d6f0be-089c-4021-8721-74ec2f7aa80e
+2026-05-10 13:48:45.999 INFO  [payment-worker-%d205] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:45.999 DEBUG [payment-worker-%d205] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-43
+2026-05-10 13:48:45.999 DEBUG [payment-worker-%d206] c.p.bridge.service.PaymentService - Published payment task for processing: 09d6f0be-089c-4021-8721-74ec2f7aa80e
+2026-05-10 13:48:46.000 INFO  [payment-worker-%d205] c.p.bridge.service.PaymentService - Successfully created payment: 03f91de8-192c-4068-a6de-db37736141df with status: RECEIVED
+2026-05-10 13:48:46.000 INFO  [http-nio-auto-2-exec-7] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:46.000 INFO  [payment-worker-%d207] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:46.000 DEBUG [payment-worker-%d207] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-35
+2026-05-10 13:48:46.000 INFO  [http-nio-auto-2-exec-8] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:46.000 INFO  [http-nio-auto-2-exec-9] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:46.000 INFO  [payment-worker-%d207] c.p.bridge.service.PaymentService - Successfully created payment: 3ca10959-a8e6-499b-8a8f-1e930165c434 with status: RECEIVED
+2026-05-10 13:48:46.000 INFO  [payment-worker-%d205] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: 03f91de8-192c-4068-a6de-db37736141df
+2026-05-10 13:48:46.000 INFO  [payment-worker-%d209] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:46.000 INFO  [payment-worker-%d205] c.p.b.controller.PaymentController - Payment request processed successfully: 03f91de8-192c-4068-a6de-db37736141df
+2026-05-10 13:48:46.000 INFO  [payment-worker-%d208] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:46.000 DEBUG [payment-worker-%d209] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-32
+2026-05-10 13:48:46.000 DEBUG [payment-worker-%d208] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-25
+2026-05-10 13:48:46.000 DEBUG [payment-worker-%d210] c.p.bridge.service.PaymentService - Published payment task for processing: 03f91de8-192c-4068-a6de-db37736141df
+2026-05-10 13:48:46.001 INFO  [payment-worker-%d207] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: 3ca10959-a8e6-499b-8a8f-1e930165c434
+2026-05-10 13:48:46.001 INFO  [payment-worker-%d207] c.p.b.controller.PaymentController - Payment request processed successfully: 3ca10959-a8e6-499b-8a8f-1e930165c434
+2026-05-10 13:48:46.001 DEBUG [payment-worker-%d211] c.p.bridge.service.PaymentService - Published payment task for processing: 3ca10959-a8e6-499b-8a8f-1e930165c434
+2026-05-10 13:48:46.001 INFO  [http-nio-auto-2-exec-9] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:46.001 INFO  [payment-worker-%d208] c.p.bridge.service.PaymentService - Successfully created payment: fb49c9b9-0c3f-4809-835b-20ea23c25e29 with status: RECEIVED
+2026-05-10 13:48:46.001 INFO  [payment-worker-%d209] c.p.bridge.service.PaymentService - Successfully created payment: 1ff3ceaa-0be6-4ed9-b235-bf772dff3e7b with status: RECEIVED
+2026-05-10 13:48:46.001 INFO  [payment-worker-%d212] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:46.001 DEBUG [payment-worker-%d212] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-39
+2026-05-10 13:48:46.002 INFO  [payment-worker-%d212] c.p.bridge.service.PaymentService - Successfully created payment: f190fe4b-1256-49de-bdf3-665ad1865f0b with status: RECEIVED
+2026-05-10 13:48:46.002 INFO  [http-nio-auto-2-exec-3] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:46.002 INFO  [payment-worker-%d212] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: f190fe4b-1256-49de-bdf3-665ad1865f0b
+2026-05-10 13:48:46.002 INFO  [payment-worker-%d209] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: 1ff3ceaa-0be6-4ed9-b235-bf772dff3e7b
+2026-05-10 13:48:46.003 INFO  [payment-worker-%d212] c.p.b.controller.PaymentController - Payment request processed successfully: f190fe4b-1256-49de-bdf3-665ad1865f0b
+2026-05-10 13:48:46.003 INFO  [payment-worker-%d208] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: fb49c9b9-0c3f-4809-835b-20ea23c25e29
+2026-05-10 13:48:46.003 INFO  [payment-worker-%d209] c.p.b.controller.PaymentController - Payment request processed successfully: 1ff3ceaa-0be6-4ed9-b235-bf772dff3e7b
+2026-05-10 13:48:46.003 INFO  [payment-worker-%d208] c.p.b.controller.PaymentController - Payment request processed successfully: fb49c9b9-0c3f-4809-835b-20ea23c25e29
+2026-05-10 13:48:46.003 INFO  [payment-worker-%d213] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:46.003 DEBUG [payment-worker-%d213] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-58
+2026-05-10 13:48:46.003 DEBUG [payment-worker-%d215] c.p.bridge.service.PaymentService - Published payment task for processing: 1ff3ceaa-0be6-4ed9-b235-bf772dff3e7b
+2026-05-10 13:48:46.003 DEBUG [payment-worker-%d214] c.p.bridge.service.PaymentService - Published payment task for processing: f190fe4b-1256-49de-bdf3-665ad1865f0b
+2026-05-10 13:48:46.004 DEBUG [payment-worker-%d216] c.p.bridge.service.PaymentService - Published payment task for processing: fb49c9b9-0c3f-4809-835b-20ea23c25e29
+2026-05-10 13:48:46.004 INFO  [payment-worker-%d213] c.p.bridge.service.PaymentService - Successfully created payment: e3f81bde-ff02-4461-84f6-9ac4dffd6f9b with status: RECEIVED
+2026-05-10 13:48:46.004 INFO  [http-nio-auto-2-exec-4] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:46.004 INFO  [payment-worker-%d213] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: e3f81bde-ff02-4461-84f6-9ac4dffd6f9b
+2026-05-10 13:48:46.005 INFO  [http-nio-auto-2-exec-6] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:46.005 INFO  [payment-worker-%d217] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:46.005 INFO  [payment-worker-%d213] c.p.b.controller.PaymentController - Payment request processed successfully: e3f81bde-ff02-4461-84f6-9ac4dffd6f9b
+2026-05-10 13:48:46.005 DEBUG [payment-worker-%d217] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-50
+2026-05-10 13:48:46.005 INFO  [payment-worker-%d219] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:46.005 DEBUG [payment-worker-%d219] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-57
+2026-05-10 13:48:46.005 DEBUG [payment-worker-%d218] c.p.bridge.service.PaymentService - Published payment task for processing: e3f81bde-ff02-4461-84f6-9ac4dffd6f9b
+2026-05-10 13:48:46.005 INFO  [payment-worker-%d217] c.p.bridge.service.PaymentService - Successfully created payment: 5451d08a-d16a-4bb1-9228-35fbc684574d with status: RECEIVED
+2026-05-10 13:48:46.005 INFO  [http-nio-auto-2-exec-6] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:46.005 INFO  [payment-worker-%d219] c.p.bridge.service.PaymentService - Successfully created payment: 1ccb1dd6-066d-4b62-b96d-89fa85d30ac6 with status: RECEIVED
+2026-05-10 13:48:46.005 INFO  [payment-worker-%d220] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:46.005 INFO  [payment-worker-%d217] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: 5451d08a-d16a-4bb1-9228-35fbc684574d
+2026-05-10 13:48:46.005 INFO  [http-nio-auto-2-exec-10] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:46.006 INFO  [payment-worker-%d219] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: 1ccb1dd6-066d-4b62-b96d-89fa85d30ac6
+2026-05-10 13:48:46.006 INFO  [payment-worker-%d217] c.p.b.controller.PaymentController - Payment request processed successfully: 5451d08a-d16a-4bb1-9228-35fbc684574d
+2026-05-10 13:48:46.006 INFO  [payment-worker-%d219] c.p.b.controller.PaymentController - Payment request processed successfully: 1ccb1dd6-066d-4b62-b96d-89fa85d30ac6
+2026-05-10 13:48:46.006 INFO  [payment-worker-%d222] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:46.005 INFO  [http-nio-auto-2-exec-9] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:46.006 DEBUG [payment-worker-%d222] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-91
+2026-05-10 13:48:46.006 DEBUG [payment-worker-%d221] c.p.bridge.service.PaymentService - Published payment task for processing: 5451d08a-d16a-4bb1-9228-35fbc684574d
+2026-05-10 13:48:46.006 DEBUG [payment-worker-%d220] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-87
+2026-05-10 13:48:46.006 INFO  [payment-worker-%d222] c.p.bridge.service.PaymentService - Successfully created payment: a5e99570-3a54-4035-86a7-579451285fd2 with status: RECEIVED
+2026-05-10 13:48:46.006 INFO  [payment-worker-%d224] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:46.006 DEBUG [payment-worker-%d223] c.p.bridge.service.PaymentService - Published payment task for processing: 1ccb1dd6-066d-4b62-b96d-89fa85d30ac6
+2026-05-10 13:48:46.006 INFO  [http-nio-auto-2-exec-2] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:46.006 DEBUG [payment-worker-%d224] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-72
+2026-05-10 13:48:46.006 INFO  [http-nio-auto-2-exec-3] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:46.006 INFO  [payment-worker-%d222] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: a5e99570-3a54-4035-86a7-579451285fd2
+2026-05-10 13:48:46.006 INFO  [payment-worker-%d222] c.p.b.controller.PaymentController - Payment request processed successfully: a5e99570-3a54-4035-86a7-579451285fd2
+2026-05-10 13:48:46.006 INFO  [payment-worker-%d225] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:46.007 DEBUG [payment-worker-%d225] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-74
+2026-05-10 13:48:46.007 INFO  [payment-worker-%d226] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:46.007 INFO  [payment-worker-%d220] c.p.bridge.service.PaymentService - Successfully created payment: 9a0a6d1c-6e4b-449e-8006-fcb541561f3e with status: RECEIVED
+2026-05-10 13:48:46.007 DEBUG [payment-worker-%d226] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-38
+2026-05-10 13:48:46.007 INFO  [payment-worker-%d224] c.p.bridge.service.PaymentService - Successfully created payment: 7c6f0819-9cc9-4852-b2e4-a0009dff537f with status: RECEIVED
+2026-05-10 13:48:46.007 DEBUG [payment-worker-%d227] c.p.bridge.service.PaymentService - Published payment task for processing: a5e99570-3a54-4035-86a7-579451285fd2
+2026-05-10 13:48:46.007 INFO  [payment-worker-%d225] c.p.bridge.service.PaymentService - Successfully created payment: 951d295b-f98f-447b-9996-e37ff679b896 with status: RECEIVED
+2026-05-10 13:48:46.007 INFO  [payment-worker-%d220] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: 9a0a6d1c-6e4b-449e-8006-fcb541561f3e
+2026-05-10 13:48:46.007 INFO  [payment-worker-%d220] c.p.b.controller.PaymentController - Payment request processed successfully: 9a0a6d1c-6e4b-449e-8006-fcb541561f3e
+2026-05-10 13:48:46.007 INFO  [payment-worker-%d225] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: 951d295b-f98f-447b-9996-e37ff679b896
+2026-05-10 13:48:46.007 DEBUG [payment-worker-%d228] c.p.bridge.service.PaymentService - Published payment task for processing: 9a0a6d1c-6e4b-449e-8006-fcb541561f3e
+2026-05-10 13:48:46.007 INFO  [payment-worker-%d225] c.p.b.controller.PaymentController - Payment request processed successfully: 951d295b-f98f-447b-9996-e37ff679b896
+2026-05-10 13:48:46.007 DEBUG [payment-worker-%d229] c.p.bridge.service.PaymentService - Published payment task for processing: 951d295b-f98f-447b-9996-e37ff679b896
+2026-05-10 13:48:46.007 INFO  [payment-worker-%d226] c.p.bridge.service.PaymentService - Successfully created payment: 79cf9758-6979-4ca2-8c6d-c84dcd1caa8a with status: RECEIVED
+2026-05-10 13:48:46.008 INFO  [http-nio-auto-2-exec-8] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:46.008 INFO  [payment-worker-%d224] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: 7c6f0819-9cc9-4852-b2e4-a0009dff537f
+2026-05-10 13:48:46.008 INFO  [payment-worker-%d230] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:46.008 DEBUG [payment-worker-%d230] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-71
+2026-05-10 13:48:46.008 INFO  [payment-worker-%d226] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: 79cf9758-6979-4ca2-8c6d-c84dcd1caa8a
+2026-05-10 13:48:46.008 DEBUG [payment-worker-%d231] c.p.bridge.service.PaymentService - Published payment task for processing: 7c6f0819-9cc9-4852-b2e4-a0009dff537f
+2026-05-10 13:48:46.008 INFO  [payment-worker-%d224] c.p.b.controller.PaymentController - Payment request processed successfully: 7c6f0819-9cc9-4852-b2e4-a0009dff537f
+2026-05-10 13:48:46.008 INFO  [payment-worker-%d226] c.p.b.controller.PaymentController - Payment request processed successfully: 79cf9758-6979-4ca2-8c6d-c84dcd1caa8a
+2026-05-10 13:48:46.008 DEBUG [payment-worker-%d232] c.p.bridge.service.PaymentService - Published payment task for processing: 79cf9758-6979-4ca2-8c6d-c84dcd1caa8a
+2026-05-10 13:48:46.008 INFO  [payment-worker-%d230] c.p.bridge.service.PaymentService - Successfully created payment: 3fdc3c82-8a41-4422-9741-5dd5bc811aed with status: RECEIVED
+2026-05-10 13:48:46.009 INFO  [payment-worker-%d230] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: 3fdc3c82-8a41-4422-9741-5dd5bc811aed
+2026-05-10 13:48:46.009 INFO  [payment-worker-%d230] c.p.b.controller.PaymentController - Payment request processed successfully: 3fdc3c82-8a41-4422-9741-5dd5bc811aed
+2026-05-10 13:48:46.009 DEBUG [payment-worker-%d233] c.p.bridge.service.PaymentService - Published payment task for processing: 3fdc3c82-8a41-4422-9741-5dd5bc811aed
+2026-05-10 13:48:46.009 INFO  [http-nio-auto-2-exec-9] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:46.009 INFO  [http-nio-auto-2-exec-7] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:46.010 INFO  [payment-worker-%d235] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:46.010 DEBUG [payment-worker-%d235] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-60
+2026-05-10 13:48:46.010 INFO  [payment-worker-%d234] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:46.010 INFO  [http-nio-auto-2-exec-10] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:46.010 DEBUG [payment-worker-%d234] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-97
+2026-05-10 13:48:46.010 INFO  [payment-worker-%d235] c.p.bridge.service.PaymentService - Successfully created payment: 5ceb9424-4103-4e9d-8b8f-35e981e58a66 with status: RECEIVED
+2026-05-10 13:48:46.010 INFO  [payment-worker-%d236] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:46.010 DEBUG [payment-worker-%d236] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-92
+2026-05-10 13:48:46.010 INFO  [payment-worker-%d234] c.p.bridge.service.PaymentService - Successfully created payment: c680fe7f-5bb6-425f-bb03-151ab727aed8 with status: RECEIVED
+2026-05-10 13:48:46.010 INFO  [payment-worker-%d236] c.p.bridge.service.PaymentService - Successfully created payment: bc50e772-30f5-47d1-a80c-dcef3b061e4a with status: RECEIVED
+2026-05-10 13:48:46.010 INFO  [payment-worker-%d235] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: 5ceb9424-4103-4e9d-8b8f-35e981e58a66
+2026-05-10 13:48:46.011 INFO  [payment-worker-%d234] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: c680fe7f-5bb6-425f-bb03-151ab727aed8
+2026-05-10 13:48:46.011 INFO  [payment-worker-%d235] c.p.b.controller.PaymentController - Payment request processed successfully: 5ceb9424-4103-4e9d-8b8f-35e981e58a66
+2026-05-10 13:48:46.011 INFO  [payment-worker-%d234] c.p.b.controller.PaymentController - Payment request processed successfully: c680fe7f-5bb6-425f-bb03-151ab727aed8
+2026-05-10 13:48:46.011 INFO  [payment-worker-%d236] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: bc50e772-30f5-47d1-a80c-dcef3b061e4a
+2026-05-10 13:48:46.011 INFO  [payment-worker-%d236] c.p.b.controller.PaymentController - Payment request processed successfully: bc50e772-30f5-47d1-a80c-dcef3b061e4a
+2026-05-10 13:48:46.011 DEBUG [payment-worker-%d238] c.p.bridge.service.PaymentService - Published payment task for processing: c680fe7f-5bb6-425f-bb03-151ab727aed8
+2026-05-10 13:48:46.011 DEBUG [payment-worker-%d239] c.p.bridge.service.PaymentService - Published payment task for processing: bc50e772-30f5-47d1-a80c-dcef3b061e4a
+2026-05-10 13:48:46.011 INFO  [http-nio-auto-2-exec-1] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:46.011 INFO  [http-nio-auto-2-exec-2] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:46.011 DEBUG [payment-worker-%d237] c.p.bridge.service.PaymentService - Published payment task for processing: 5ceb9424-4103-4e9d-8b8f-35e981e58a66
+2026-05-10 13:48:46.011 INFO  [payment-worker-%d241] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:46.011 INFO  [http-nio-auto-2-exec-4] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:46.011 DEBUG [payment-worker-%d241] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-83
+2026-05-10 13:48:46.012 INFO  [payment-worker-%d242] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:46.012 INFO  [payment-worker-%d240] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:46.012 DEBUG [payment-worker-%d242] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-6
+2026-05-10 13:48:46.012 DEBUG [payment-worker-%d240] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-99
+2026-05-10 13:48:46.012 INFO  [payment-worker-%d242] c.p.bridge.service.PaymentService - Successfully created payment: 2e66d236-b187-48c8-b793-2cc42e7b9cbe with status: RECEIVED
+2026-05-10 13:48:46.012 INFO  [payment-worker-%d240] c.p.bridge.service.PaymentService - Successfully created payment: c3378f3b-1b0f-46a2-9bda-391fd2637cc9 with status: RECEIVED
+2026-05-10 13:48:46.012 INFO  [payment-worker-%d241] c.p.bridge.service.PaymentService - Successfully created payment: 252912b5-02ce-4df6-a158-7cfce256beca with status: RECEIVED
+2026-05-10 13:48:46.012 INFO  [http-nio-auto-2-exec-1] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:46.012 INFO  [http-nio-auto-2-exec-9] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:46.013 INFO  [payment-worker-%d242] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: 2e66d236-b187-48c8-b793-2cc42e7b9cbe
+2026-05-10 13:48:46.013 INFO  [payment-worker-%d240] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: c3378f3b-1b0f-46a2-9bda-391fd2637cc9
+2026-05-10 13:48:46.013 INFO  [payment-worker-%d242] c.p.b.controller.PaymentController - Payment request processed successfully: 2e66d236-b187-48c8-b793-2cc42e7b9cbe
+2026-05-10 13:48:46.013 INFO  [payment-worker-%d240] c.p.b.controller.PaymentController - Payment request processed successfully: c3378f3b-1b0f-46a2-9bda-391fd2637cc9
+2026-05-10 13:48:46.013 INFO  [payment-worker-%d244] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:46.013 INFO  [payment-worker-%d243] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:46.013 DEBUG [payment-worker-%d246] c.p.bridge.service.PaymentService - Published payment task for processing: c3378f3b-1b0f-46a2-9bda-391fd2637cc9
+2026-05-10 13:48:46.013 DEBUG [payment-worker-%d244] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-89
+2026-05-10 13:48:46.013 DEBUG [payment-worker-%d243] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-96
+2026-05-10 13:48:46.013 DEBUG [payment-worker-%d245] c.p.bridge.service.PaymentService - Published payment task for processing: 2e66d236-b187-48c8-b793-2cc42e7b9cbe
+2026-05-10 13:48:46.013 INFO  [payment-worker-%d243] c.p.bridge.service.PaymentService - Successfully created payment: 8792015f-6dbd-45fa-b54f-80c57a619a3f with status: RECEIVED
+2026-05-10 13:48:46.014 INFO  [payment-worker-%d244] c.p.bridge.service.PaymentService - Successfully created payment: 68a67a1f-1b7e-4451-8a76-3ec750a1a622 with status: RECEIVED
+2026-05-10 13:48:46.014 INFO  [payment-worker-%d241] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: 252912b5-02ce-4df6-a158-7cfce256beca
+2026-05-10 13:48:46.014 INFO  [http-nio-auto-2-exec-8] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:46.014 INFO  [payment-worker-%d241] c.p.b.controller.PaymentController - Payment request processed successfully: 252912b5-02ce-4df6-a158-7cfce256beca
+2026-05-10 13:48:46.014 INFO  [payment-worker-%d248] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:46.014 DEBUG [payment-worker-%d248] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-98
+2026-05-10 13:48:46.014 DEBUG [payment-worker-%d247] c.p.bridge.service.PaymentService - Published payment task for processing: 252912b5-02ce-4df6-a158-7cfce256beca
+2026-05-10 13:48:46.014 INFO  [payment-worker-%d248] c.p.bridge.service.PaymentService - Successfully created payment: 7415b709-97ea-4c34-9d9c-b47e05916c4e with status: RECEIVED
+2026-05-10 13:48:46.015 INFO  [payment-worker-%d248] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: 7415b709-97ea-4c34-9d9c-b47e05916c4e
+2026-05-10 13:48:46.015 INFO  [payment-worker-%d248] c.p.b.controller.PaymentController - Payment request processed successfully: 7415b709-97ea-4c34-9d9c-b47e05916c4e
+2026-05-10 13:48:46.015 INFO  [payment-worker-%d243] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: 8792015f-6dbd-45fa-b54f-80c57a619a3f
+2026-05-10 13:48:46.015 INFO  [payment-worker-%d243] c.p.b.controller.PaymentController - Payment request processed successfully: 8792015f-6dbd-45fa-b54f-80c57a619a3f
+2026-05-10 13:48:46.015 INFO  [http-nio-auto-2-exec-7] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:46.015 INFO  [http-nio-auto-2-exec-10] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:46.015 DEBUG [payment-worker-%d249] c.p.bridge.service.PaymentService - Published payment task for processing: 7415b709-97ea-4c34-9d9c-b47e05916c4e
+2026-05-10 13:48:46.015 INFO  [payment-worker-%d244] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: 68a67a1f-1b7e-4451-8a76-3ec750a1a622
+2026-05-10 13:48:46.015 INFO  [http-nio-auto-2-exec-2] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:46.015 INFO  [payment-worker-%d244] c.p.b.controller.PaymentController - Payment request processed successfully: 68a67a1f-1b7e-4451-8a76-3ec750a1a622
+2026-05-10 13:48:46.015 INFO  [payment-worker-%d252] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:46.015 INFO  [payment-worker-%d251] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:46.015 DEBUG [payment-worker-%d252] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-76
+2026-05-10 13:48:46.015 DEBUG [payment-worker-%d251] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-93
+2026-05-10 13:48:46.015 INFO  [http-nio-auto-2-exec-3] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:46.015 INFO  [payment-worker-%d254] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:46.015 DEBUG [payment-worker-%d254] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-95
+2026-05-10 13:48:46.015 DEBUG [payment-worker-%d253] c.p.bridge.service.PaymentService - Published payment task for processing: 68a67a1f-1b7e-4451-8a76-3ec750a1a622
+2026-05-10 13:48:46.015 INFO  [payment-worker-%d255] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:46.016 INFO  [payment-worker-%d252] c.p.bridge.service.PaymentService - Successfully created payment: 669d5b67-1c81-46b2-ba61-e4e5aca2bb54 with status: RECEIVED
+2026-05-10 13:48:46.016 INFO  [http-nio-auto-2-exec-1] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:46.016 DEBUG [payment-worker-%d255] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-36
+2026-05-10 13:48:46.016 INFO  [payment-worker-%d251] c.p.bridge.service.PaymentService - Successfully created payment: 610d669d-b1bd-46ea-894f-966075d4715d with status: RECEIVED
+2026-05-10 13:48:46.016 INFO  [payment-worker-%d254] c.p.bridge.service.PaymentService - Successfully created payment: 92ebeff4-f4a4-4f2f-9674-7d27755d083e with status: RECEIVED
+2026-05-10 13:48:46.016 INFO  [payment-worker-%d256] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:46.016 INFO  [http-nio-auto-2-exec-1] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:46.016 INFO  [payment-worker-%d252] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: 669d5b67-1c81-46b2-ba61-e4e5aca2bb54
+2026-05-10 13:48:46.016 DEBUG [payment-worker-%d256] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-79
+2026-05-10 13:48:46.016 INFO  [payment-worker-%d255] c.p.bridge.service.PaymentService - Successfully created payment: 33ce32f5-7f5f-4c8b-9a27-786aa2728657 with status: RECEIVED
+2026-05-10 13:48:46.016 INFO  [payment-worker-%d252] c.p.b.controller.PaymentController - Payment request processed successfully: 669d5b67-1c81-46b2-ba61-e4e5aca2bb54
+2026-05-10 13:48:46.016 INFO  [payment-worker-%d257] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:46.016 DEBUG [payment-worker-%d257] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-80
+2026-05-10 13:48:46.016 DEBUG [payment-worker-%d250] c.p.bridge.service.PaymentService - Published payment task for processing: 8792015f-6dbd-45fa-b54f-80c57a619a3f
+2026-05-10 13:48:46.016 DEBUG [payment-worker-%d258] c.p.bridge.service.PaymentService - Published payment task for processing: 669d5b67-1c81-46b2-ba61-e4e5aca2bb54
+2026-05-10 13:48:46.017 INFO  [payment-worker-%d257] c.p.bridge.service.PaymentService - Successfully created payment: 9cf50e1a-8d80-40d9-b661-7b315ead7988 with status: RECEIVED
+2026-05-10 13:48:46.017 INFO  [payment-worker-%d251] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: 610d669d-b1bd-46ea-894f-966075d4715d
+2026-05-10 13:48:46.017 INFO  [payment-worker-%d256] c.p.bridge.service.PaymentService - Successfully created payment: f664cbb3-62d5-42d7-b3fd-3200879b4d19 with status: RECEIVED
+2026-05-10 13:48:46.017 INFO  [payment-worker-%d251] c.p.b.controller.PaymentController - Payment request processed successfully: 610d669d-b1bd-46ea-894f-966075d4715d
+2026-05-10 13:48:46.017 DEBUG [payment-worker-%d259] c.p.bridge.service.PaymentService - Published payment task for processing: 610d669d-b1bd-46ea-894f-966075d4715d
+2026-05-10 13:48:46.017 INFO  [payment-worker-%d254] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: 92ebeff4-f4a4-4f2f-9674-7d27755d083e
+2026-05-10 13:48:46.017 INFO  [payment-worker-%d257] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: 9cf50e1a-8d80-40d9-b661-7b315ead7988
+2026-05-10 13:48:46.017 INFO  [payment-worker-%d254] c.p.b.controller.PaymentController - Payment request processed successfully: 92ebeff4-f4a4-4f2f-9674-7d27755d083e
+2026-05-10 13:48:46.017 INFO  [payment-worker-%d256] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: f664cbb3-62d5-42d7-b3fd-3200879b4d19
+2026-05-10 13:48:46.017 INFO  [payment-worker-%d257] c.p.b.controller.PaymentController - Payment request processed successfully: 9cf50e1a-8d80-40d9-b661-7b315ead7988
+2026-05-10 13:48:46.017 INFO  [payment-worker-%d256] c.p.b.controller.PaymentController - Payment request processed successfully: f664cbb3-62d5-42d7-b3fd-3200879b4d19
+2026-05-10 13:48:46.017 INFO  [payment-worker-%d255] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: 33ce32f5-7f5f-4c8b-9a27-786aa2728657
+2026-05-10 13:48:46.018 DEBUG [payment-worker-%d260] c.p.bridge.service.PaymentService - Published payment task for processing: 92ebeff4-f4a4-4f2f-9674-7d27755d083e
+2026-05-10 13:48:46.018 DEBUG [payment-worker-%d262] c.p.bridge.service.PaymentService - Published payment task for processing: f664cbb3-62d5-42d7-b3fd-3200879b4d19
+2026-05-10 13:48:46.018 DEBUG [payment-worker-%d261] c.p.bridge.service.PaymentService - Published payment task for processing: 9cf50e1a-8d80-40d9-b661-7b315ead7988
+2026-05-10 13:48:46.018 DEBUG [payment-worker-%d263] c.p.bridge.service.PaymentService - Published payment task for processing: 33ce32f5-7f5f-4c8b-9a27-786aa2728657
+2026-05-10 13:48:46.018 INFO  [payment-worker-%d255] c.p.b.controller.PaymentController - Payment request processed successfully: 33ce32f5-7f5f-4c8b-9a27-786aa2728657
+2026-05-10 13:48:46.018 INFO  [http-nio-auto-2-exec-2] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:46.018 INFO  [payment-worker-%d264] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:46.019 DEBUG [payment-worker-%d264] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-94
+2026-05-10 13:48:46.019 INFO  [http-nio-auto-2-exec-1] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:46.019 INFO  [http-nio-auto-2-exec-3] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:46.019 INFO  [payment-worker-%d266] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:46.019 INFO  [payment-worker-%d265] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:46.019 INFO  [http-nio-auto-2-exec-10] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:46.019 DEBUG [payment-worker-%d266] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-75
+2026-05-10 13:48:46.019 DEBUG [payment-worker-%d265] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-56
+2026-05-10 13:48:46.020 INFO  [http-nio-auto-2-exec-3] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:46.020 INFO  [payment-worker-%d264] c.p.bridge.service.PaymentService - Successfully created payment: 399a26ce-24f9-438b-a635-0578913273be with status: RECEIVED
+2026-05-10 13:48:46.020 INFO  [payment-worker-%d267] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:46.020 DEBUG [payment-worker-%d267] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-81
+2026-05-10 13:48:46.020 INFO  [http-nio-auto-2-exec-9] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:46.020 INFO  [payment-worker-%d268] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:46.020 DEBUG [payment-worker-%d268] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-40
+2026-05-10 13:48:46.020 INFO  [http-nio-auto-2-exec-6] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:46.020 INFO  [payment-worker-%d269] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:46.020 DEBUG [payment-worker-%d269] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-67
+2026-05-10 13:48:46.020 INFO  [payment-worker-%d270] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:46.020 INFO  [payment-worker-%d266] c.p.bridge.service.PaymentService - Successfully created payment: 82873ab1-9277-488c-b45e-0ada2a85e135 with status: RECEIVED
+2026-05-10 13:48:46.020 INFO  [payment-worker-%d268] c.p.bridge.service.PaymentService - Successfully created payment: bd373a5a-4e7d-41fd-9a0c-39a93e3f57bc with status: RECEIVED
+2026-05-10 13:48:46.020 INFO  [payment-worker-%d267] c.p.bridge.service.PaymentService - Successfully created payment: 9f754024-5125-43bf-83eb-45efd762b9be with status: RECEIVED
+2026-05-10 13:48:46.020 DEBUG [payment-worker-%d270] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-61
+2026-05-10 13:48:46.020 INFO  [http-nio-auto-2-exec-9] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:46.020 INFO  [payment-worker-%d265] c.p.bridge.service.PaymentService - Successfully created payment: b6d8764b-be64-4c46-9ed1-843d2a0c4b86 with status: RECEIVED
+2026-05-10 13:48:46.020 INFO  [payment-worker-%d269] c.p.bridge.service.PaymentService - Successfully created payment: af65f2a8-3be9-4cb7-a938-5b3803aa0dbe with status: RECEIVED
+2026-05-10 13:48:46.020 INFO  [payment-worker-%d271] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:46.020 DEBUG [payment-worker-%d271] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-22
+2026-05-10 13:48:46.021 INFO  [payment-worker-%d270] c.p.bridge.service.PaymentService - Successfully created payment: e1fce9b4-a77d-40ce-86ef-46fc9e901936 with status: RECEIVED
+2026-05-10 13:48:46.021 INFO  [payment-worker-%d265] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: b6d8764b-be64-4c46-9ed1-843d2a0c4b86
+2026-05-10 13:48:46.021 INFO  [payment-worker-%d265] c.p.b.controller.PaymentController - Payment request processed successfully: b6d8764b-be64-4c46-9ed1-843d2a0c4b86
+2026-05-10 13:48:46.021 INFO  [payment-worker-%d264] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: 399a26ce-24f9-438b-a635-0578913273be
+2026-05-10 13:48:46.021 DEBUG [payment-worker-%d272] c.p.bridge.service.PaymentService - Published payment task for processing: b6d8764b-be64-4c46-9ed1-843d2a0c4b86
+2026-05-10 13:48:46.021 INFO  [payment-worker-%d264] c.p.b.controller.PaymentController - Payment request processed successfully: 399a26ce-24f9-438b-a635-0578913273be
+2026-05-10 13:48:46.021 INFO  [payment-worker-%d267] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: 9f754024-5125-43bf-83eb-45efd762b9be
+2026-05-10 13:48:46.021 INFO  [payment-worker-%d268] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: bd373a5a-4e7d-41fd-9a0c-39a93e3f57bc
+2026-05-10 13:48:46.021 INFO  [payment-worker-%d267] c.p.b.controller.PaymentController - Payment request processed successfully: 9f754024-5125-43bf-83eb-45efd762b9be
+2026-05-10 13:48:46.021 INFO  [payment-worker-%d268] c.p.b.controller.PaymentController - Payment request processed successfully: bd373a5a-4e7d-41fd-9a0c-39a93e3f57bc
+2026-05-10 13:48:46.021 DEBUG [payment-worker-%d273] c.p.bridge.service.PaymentService - Published payment task for processing: 399a26ce-24f9-438b-a635-0578913273be
+2026-05-10 13:48:46.021 DEBUG [payment-worker-%d274] c.p.bridge.service.PaymentService - Published payment task for processing: 9f754024-5125-43bf-83eb-45efd762b9be
+2026-05-10 13:48:46.022 INFO  [payment-worker-%d266] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: 82873ab1-9277-488c-b45e-0ada2a85e135
+2026-05-10 13:48:46.022 INFO  [payment-worker-%d271] c.p.bridge.service.PaymentService - Successfully created payment: a71734e3-af46-4629-baf6-1e9721066f89 with status: RECEIVED
+2026-05-10 13:48:46.022 INFO  [payment-worker-%d266] c.p.b.controller.PaymentController - Payment request processed successfully: 82873ab1-9277-488c-b45e-0ada2a85e135
+2026-05-10 13:48:46.022 INFO  [http-nio-auto-2-exec-7] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:46.022 INFO  [payment-worker-%d269] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: af65f2a8-3be9-4cb7-a938-5b3803aa0dbe
+2026-05-10 13:48:46.022 INFO  [payment-worker-%d269] c.p.b.controller.PaymentController - Payment request processed successfully: af65f2a8-3be9-4cb7-a938-5b3803aa0dbe
+2026-05-10 13:48:46.022 DEBUG [payment-worker-%d275] c.p.bridge.service.PaymentService - Published payment task for processing: bd373a5a-4e7d-41fd-9a0c-39a93e3f57bc
+2026-05-10 13:48:46.022 DEBUG [payment-worker-%d276] c.p.bridge.service.PaymentService - Published payment task for processing: 82873ab1-9277-488c-b45e-0ada2a85e135
+2026-05-10 13:48:46.022 INFO  [payment-worker-%d277] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:46.022 DEBUG [payment-worker-%d277] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-78
+2026-05-10 13:48:46.022 DEBUG [payment-worker-%d278] c.p.bridge.service.PaymentService - Published payment task for processing: af65f2a8-3be9-4cb7-a938-5b3803aa0dbe
+2026-05-10 13:48:46.022 INFO  [payment-worker-%d270] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: e1fce9b4-a77d-40ce-86ef-46fc9e901936
+2026-05-10 13:48:46.023 INFO  [payment-worker-%d277] c.p.bridge.service.PaymentService - Successfully created payment: b2ed0993-28e5-44a8-b55f-230e4ffdef8a with status: RECEIVED
+2026-05-10 13:48:46.023 INFO  [payment-worker-%d270] c.p.b.controller.PaymentController - Payment request processed successfully: e1fce9b4-a77d-40ce-86ef-46fc9e901936
+2026-05-10 13:48:46.023 DEBUG [payment-worker-%d279] c.p.bridge.service.PaymentService - Published payment task for processing: e1fce9b4-a77d-40ce-86ef-46fc9e901936
+2026-05-10 13:48:46.023 INFO  [http-nio-auto-2-exec-5] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:46.024 INFO  [payment-worker-%d277] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: b2ed0993-28e5-44a8-b55f-230e4ffdef8a
+2026-05-10 13:48:46.024 INFO  [payment-worker-%d280] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:46.024 DEBUG [payment-worker-%d280] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-70
+2026-05-10 13:48:46.024 INFO  [http-nio-auto-2-exec-4] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:46.024 INFO  [payment-worker-%d277] c.p.b.controller.PaymentController - Payment request processed successfully: b2ed0993-28e5-44a8-b55f-230e4ffdef8a
+2026-05-10 13:48:46.024 DEBUG [payment-worker-%d281] c.p.bridge.service.PaymentService - Published payment task for processing: b2ed0993-28e5-44a8-b55f-230e4ffdef8a
+2026-05-10 13:48:46.024 INFO  [payment-worker-%d271] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: a71734e3-af46-4629-baf6-1e9721066f89
+2026-05-10 13:48:46.024 INFO  [payment-worker-%d282] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:46.024 DEBUG [payment-worker-%d282] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-4
+2026-05-10 13:48:46.024 INFO  [http-nio-auto-2-exec-8] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:46.024 INFO  [payment-worker-%d271] c.p.b.controller.PaymentController - Payment request processed successfully: a71734e3-af46-4629-baf6-1e9721066f89
+2026-05-10 13:48:46.024 INFO  [payment-worker-%d280] c.p.bridge.service.PaymentService - Successfully created payment: 6754010f-4c7d-4e85-bbb8-5d4b9c978e83 with status: RECEIVED
+2026-05-10 13:48:46.024 INFO  [payment-worker-%d282] c.p.bridge.service.PaymentService - Successfully created payment: 27b547e2-6d8d-4fa7-8917-060aaf873cb5 with status: RECEIVED
+2026-05-10 13:48:46.024 INFO  [payment-worker-%d284] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:46.024 DEBUG [payment-worker-%d284] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-64
+2026-05-10 13:48:46.024 DEBUG [payment-worker-%d283] c.p.bridge.service.PaymentService - Published payment task for processing: a71734e3-af46-4629-baf6-1e9721066f89
+2026-05-10 13:48:46.024 INFO  [http-nio-auto-2-exec-1] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:46.025 INFO  [payment-worker-%d282] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: 27b547e2-6d8d-4fa7-8917-060aaf873cb5
+2026-05-10 13:48:46.025 INFO  [payment-worker-%d280] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: 6754010f-4c7d-4e85-bbb8-5d4b9c978e83
+2026-05-10 13:48:46.025 INFO  [payment-worker-%d282] c.p.b.controller.PaymentController - Payment request processed successfully: 27b547e2-6d8d-4fa7-8917-060aaf873cb5
+2026-05-10 13:48:46.025 INFO  [payment-worker-%d280] c.p.b.controller.PaymentController - Payment request processed successfully: 6754010f-4c7d-4e85-bbb8-5d4b9c978e83
+2026-05-10 13:48:46.025 INFO  [payment-worker-%d285] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:46.025 DEBUG [payment-worker-%d287] c.p.bridge.service.PaymentService - Published payment task for processing: 6754010f-4c7d-4e85-bbb8-5d4b9c978e83
+2026-05-10 13:48:46.025 DEBUG [payment-worker-%d285] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-88
+2026-05-10 13:48:46.025 INFO  [payment-worker-%d284] c.p.bridge.service.PaymentService - Successfully created payment: b2cd9a99-f2d3-409c-8f20-e365cdf312aa with status: RECEIVED
+2026-05-10 13:48:46.025 DEBUG [payment-worker-%d286] c.p.bridge.service.PaymentService - Published payment task for processing: 27b547e2-6d8d-4fa7-8917-060aaf873cb5
+2026-05-10 13:48:46.025 INFO  [payment-worker-%d285] c.p.bridge.service.PaymentService - Successfully created payment: 7ddb1941-fe1c-4d74-b8c1-00c5d793f40b with status: RECEIVED
+2026-05-10 13:48:46.025 INFO  [http-nio-auto-2-exec-1] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:46.026 INFO  [payment-worker-%d284] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: b2cd9a99-f2d3-409c-8f20-e365cdf312aa
+2026-05-10 13:48:46.026 INFO  [payment-worker-%d285] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: 7ddb1941-fe1c-4d74-b8c1-00c5d793f40b
+2026-05-10 13:48:46.026 INFO  [payment-worker-%d285] c.p.b.controller.PaymentController - Payment request processed successfully: 7ddb1941-fe1c-4d74-b8c1-00c5d793f40b
+2026-05-10 13:48:46.026 INFO  [payment-worker-%d284] c.p.b.controller.PaymentController - Payment request processed successfully: b2cd9a99-f2d3-409c-8f20-e365cdf312aa
+2026-05-10 13:48:46.026 INFO  [payment-worker-%d288] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:46.026 DEBUG [payment-worker-%d289] c.p.bridge.service.PaymentService - Published payment task for processing: b2cd9a99-f2d3-409c-8f20-e365cdf312aa
+2026-05-10 13:48:46.026 DEBUG [payment-worker-%d288] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-68
+2026-05-10 13:48:46.026 DEBUG [payment-worker-%d290] c.p.bridge.service.PaymentService - Published payment task for processing: 7ddb1941-fe1c-4d74-b8c1-00c5d793f40b
+2026-05-10 13:48:46.026 INFO  [http-nio-auto-2-exec-1] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:46.026 INFO  [payment-worker-%d291] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:46.026 DEBUG [payment-worker-%d291] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-69
+2026-05-10 13:48:46.026 INFO  [payment-worker-%d288] c.p.bridge.service.PaymentService - Successfully created payment: 305eea72-18ad-4f56-bd41-5bd8e0041b48 with status: RECEIVED
+2026-05-10 13:48:46.027 INFO  [http-nio-auto-2-exec-8] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:46.027 INFO  [payment-worker-%d292] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:46.027 DEBUG [payment-worker-%d292] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-62
+2026-05-10 13:48:46.027 INFO  [payment-worker-%d292] c.p.bridge.service.PaymentService - Successfully created payment: 02466913-1d99-4751-b0be-ab1ba0192b3f with status: RECEIVED
+2026-05-10 13:48:46.027 INFO  [payment-worker-%d288] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: 305eea72-18ad-4f56-bd41-5bd8e0041b48
+2026-05-10 13:48:46.027 INFO  [http-nio-auto-2-exec-7] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:46.027 INFO  [payment-worker-%d288] c.p.b.controller.PaymentController - Payment request processed successfully: 305eea72-18ad-4f56-bd41-5bd8e0041b48
+2026-05-10 13:48:46.027 INFO  [payment-worker-%d294] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:46.027 DEBUG [payment-worker-%d294] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-65
+2026-05-10 13:48:46.027 INFO  [payment-worker-%d291] c.p.bridge.service.PaymentService - Successfully created payment: 7c4b2532-2a91-412a-a5c2-d1b6e3c46434 with status: RECEIVED
+2026-05-10 13:48:46.027 INFO  [payment-worker-%d294] c.p.bridge.service.PaymentService - Successfully created payment: 0ed9cbb9-9192-4c98-a1a0-8d01ae9afa67 with status: RECEIVED
+2026-05-10 13:48:46.027 INFO  [payment-worker-%d292] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: 02466913-1d99-4751-b0be-ab1ba0192b3f
+2026-05-10 13:48:46.027 INFO  [payment-worker-%d292] c.p.b.controller.PaymentController - Payment request processed successfully: 02466913-1d99-4751-b0be-ab1ba0192b3f
+2026-05-10 13:48:46.028 DEBUG [payment-worker-%d295] c.p.bridge.service.PaymentService - Published payment task for processing: 02466913-1d99-4751-b0be-ab1ba0192b3f
+2026-05-10 13:48:46.028 DEBUG [payment-worker-%d293] c.p.bridge.service.PaymentService - Published payment task for processing: 305eea72-18ad-4f56-bd41-5bd8e0041b48
+2026-05-10 13:48:46.028 INFO  [http-nio-auto-2-exec-6] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:46.029 INFO  [payment-worker-%d291] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: 7c4b2532-2a91-412a-a5c2-d1b6e3c46434
+2026-05-10 13:48:46.029 INFO  [payment-worker-%d291] c.p.b.controller.PaymentController - Payment request processed successfully: 7c4b2532-2a91-412a-a5c2-d1b6e3c46434
+2026-05-10 13:48:46.029 INFO  [payment-worker-%d296] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:46.029 DEBUG [payment-worker-%d296] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-82
+2026-05-10 13:48:46.029 DEBUG [payment-worker-%d297] c.p.bridge.service.PaymentService - Published payment task for processing: 7c4b2532-2a91-412a-a5c2-d1b6e3c46434
+2026-05-10 13:48:46.029 INFO  [payment-worker-%d296] c.p.bridge.service.PaymentService - Successfully created payment: 5837b4d0-8fa4-48f0-a910-99b7cca86bb6 with status: RECEIVED
+2026-05-10 13:48:46.029 INFO  [payment-worker-%d296] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: 5837b4d0-8fa4-48f0-a910-99b7cca86bb6
+2026-05-10 13:48:46.030 INFO  [payment-worker-%d296] c.p.b.controller.PaymentController - Payment request processed successfully: 5837b4d0-8fa4-48f0-a910-99b7cca86bb6
+2026-05-10 13:48:46.030 INFO  [http-nio-auto-2-exec-6] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:46.030 DEBUG [payment-worker-%d298] c.p.bridge.service.PaymentService - Published payment task for processing: 5837b4d0-8fa4-48f0-a910-99b7cca86bb6
+2026-05-10 13:48:46.030 INFO  [payment-worker-%d294] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: 0ed9cbb9-9192-4c98-a1a0-8d01ae9afa67
+2026-05-10 13:48:46.030 INFO  [payment-worker-%d299] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:46.030 DEBUG [payment-worker-%d299] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-66
+2026-05-10 13:48:46.030 DEBUG [payment-worker-%d300] c.p.bridge.service.PaymentService - Published payment task for processing: 0ed9cbb9-9192-4c98-a1a0-8d01ae9afa67
+2026-05-10 13:48:46.030 INFO  [payment-worker-%d294] c.p.b.controller.PaymentController - Payment request processed successfully: 0ed9cbb9-9192-4c98-a1a0-8d01ae9afa67
+2026-05-10 13:48:46.030 INFO  [payment-worker-%d299] c.p.bridge.service.PaymentService - Successfully created payment: 40b65eb6-32ec-42a9-8020-2b469c3e13c5 with status: RECEIVED
+2026-05-10 13:48:46.031 INFO  [payment-worker-%d299] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: 40b65eb6-32ec-42a9-8020-2b469c3e13c5
+2026-05-10 13:48:46.031 INFO  [payment-worker-%d299] c.p.b.controller.PaymentController - Payment request processed successfully: 40b65eb6-32ec-42a9-8020-2b469c3e13c5
+2026-05-10 13:48:46.031 DEBUG [payment-worker-%d301] c.p.bridge.service.PaymentService - Published payment task for processing: 40b65eb6-32ec-42a9-8020-2b469c3e13c5
+2026-05-10 13:48:46.031 INFO  [http-nio-auto-2-exec-1] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:46.031 INFO  [payment-worker-%d302] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:46.031 DEBUG [payment-worker-%d302] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-63
+2026-05-10 13:48:46.032 INFO  [payment-worker-%d302] c.p.bridge.service.PaymentService - Successfully created payment: 60c2ec82-d988-4c0a-aa8e-9871d34e6e82 with status: RECEIVED
+2026-05-10 13:48:46.032 INFO  [http-nio-auto-2-exec-7] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:46.032 INFO  [payment-worker-%d303] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:46.032 DEBUG [payment-worker-%d303] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-86
+2026-05-10 13:48:46.032 INFO  [http-nio-auto-2-exec-2] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:46.032 INFO  [payment-worker-%d304] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:46.032 INFO  [payment-worker-%d303] c.p.bridge.service.PaymentService - Successfully created payment: 13760dbb-fe09-42c4-8b34-7366101a9051 with status: RECEIVED
+2026-05-10 13:48:46.032 DEBUG [payment-worker-%d304] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-84
+2026-05-10 13:48:46.032 INFO  [http-nio-auto-2-exec-5] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:46.032 INFO  [http-nio-auto-2-exec-6] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:46.033 INFO  [payment-worker-%d304] c.p.bridge.service.PaymentService - Successfully created payment: 5c921c68-2b63-46b8-b6a2-e831daa37bcb with status: RECEIVED
+2026-05-10 13:48:46.033 INFO  [payment-worker-%d306] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:46.033 DEBUG [payment-worker-%d306] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-37
+2026-05-10 13:48:46.033 INFO  [payment-worker-%d302] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: 60c2ec82-d988-4c0a-aa8e-9871d34e6e82
+2026-05-10 13:48:46.033 INFO  [payment-worker-%d305] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:46.033 DEBUG [payment-worker-%d305] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-53
+2026-05-10 13:48:46.033 INFO  [payment-worker-%d303] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: 13760dbb-fe09-42c4-8b34-7366101a9051
+2026-05-10 13:48:46.033 INFO  [payment-worker-%d303] c.p.b.controller.PaymentController - Payment request processed successfully: 13760dbb-fe09-42c4-8b34-7366101a9051
+2026-05-10 13:48:46.033 INFO  [payment-worker-%d302] c.p.b.controller.PaymentController - Payment request processed successfully: 60c2ec82-d988-4c0a-aa8e-9871d34e6e82
+2026-05-10 13:48:46.033 DEBUG [payment-worker-%d307] c.p.bridge.service.PaymentService - Published payment task for processing: 60c2ec82-d988-4c0a-aa8e-9871d34e6e82
+2026-05-10 13:48:46.033 DEBUG [payment-worker-%d308] c.p.bridge.service.PaymentService - Published payment task for processing: 13760dbb-fe09-42c4-8b34-7366101a9051
+2026-05-10 13:48:46.033 INFO  [payment-worker-%d306] c.p.bridge.service.PaymentService - Successfully created payment: 34239294-3f75-4320-9302-058dc07e80b7 with status: RECEIVED
+2026-05-10 13:48:46.033 INFO  [http-nio-auto-2-exec-9] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:46.033 INFO  [payment-worker-%d309] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:46.033 INFO  [payment-worker-%d306] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: 34239294-3f75-4320-9302-058dc07e80b7
+2026-05-10 13:48:46.034 INFO  [payment-worker-%d306] c.p.b.controller.PaymentController - Payment request processed successfully: 34239294-3f75-4320-9302-058dc07e80b7
+2026-05-10 13:48:46.034 DEBUG [payment-worker-%d309] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-77
+2026-05-10 13:48:46.033 INFO  [payment-worker-%d304] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: 5c921c68-2b63-46b8-b6a2-e831daa37bcb
+2026-05-10 13:48:46.034 INFO  [payment-worker-%d304] c.p.b.controller.PaymentController - Payment request processed successfully: 5c921c68-2b63-46b8-b6a2-e831daa37bcb
+2026-05-10 13:48:46.034 DEBUG [payment-worker-%d310] c.p.bridge.service.PaymentService - Published payment task for processing: 34239294-3f75-4320-9302-058dc07e80b7
+2026-05-10 13:48:46.034 INFO  [http-nio-auto-2-exec-6] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:46.034 DEBUG [payment-worker-%d311] c.p.bridge.service.PaymentService - Published payment task for processing: 5c921c68-2b63-46b8-b6a2-e831daa37bcb
+2026-05-10 13:48:46.034 INFO  [payment-worker-%d305] c.p.bridge.service.PaymentService - Successfully created payment: 06d8a5a6-4741-4ae4-aa95-3599bc0f83a0 with status: RECEIVED
+2026-05-10 13:48:46.034 INFO  [payment-worker-%d309] c.p.bridge.service.PaymentService - Successfully created payment: d2b3df7b-6964-4885-998a-b5dfe819dc74 with status: RECEIVED
+2026-05-10 13:48:46.034 INFO  [http-nio-auto-2-exec-3] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:46.034 INFO  [http-nio-auto-2-exec-1] c.p.b.controller.PaymentController - Received payment request for amount: 100.00 USD, idempotencyKey: null
+2026-05-10 13:48:46.034 INFO  [payment-worker-%d312] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:46.034 DEBUG [payment-worker-%d312] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-90
+2026-05-10 13:48:46.034 INFO  [payment-worker-%d314] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:46.035 INFO  [payment-worker-%d313] c.p.bridge.service.PaymentService - Creating payment for amount: 100.00 USD
+2026-05-10 13:48:46.035 DEBUG [payment-worker-%d314] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-85
+2026-05-10 13:48:46.035 DEBUG [payment-worker-%d313] c.p.b.service.IdempotencyService - New idempotent request with key: client_ref:LOAD-CLIENT-73
+2026-05-10 13:48:46.035 INFO  [payment-worker-%d309] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: d2b3df7b-6964-4885-998a-b5dfe819dc74
+2026-05-10 13:48:46.035 INFO  [payment-worker-%d309] c.p.b.controller.PaymentController - Payment request processed successfully: d2b3df7b-6964-4885-998a-b5dfe819dc74
+2026-05-10 13:48:46.035 INFO  [payment-worker-%d313] c.p.bridge.service.PaymentService - Successfully created payment: 15ce7b1c-2c80-4b49-a3f1-b8d993945f09 with status: RECEIVED
+2026-05-10 13:48:46.035 INFO  [payment-worker-%d314] c.p.bridge.service.PaymentService - Successfully created payment: 3f97932d-eb06-4394-a991-f416f3a3e136 with status: RECEIVED
+2026-05-10 13:48:46.035 DEBUG [payment-worker-%d315] c.p.bridge.service.PaymentService - Published payment task for processing: d2b3df7b-6964-4885-998a-b5dfe819dc74
+2026-05-10 13:48:46.035 INFO  [payment-worker-%d312] c.p.bridge.service.PaymentService - Successfully created payment: e5c1ad12-4caa-40e1-943c-27861a08238b with status: RECEIVED
+2026-05-10 13:48:46.035 INFO  [payment-worker-%d305] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: 06d8a5a6-4741-4ae4-aa95-3599bc0f83a0
+2026-05-10 13:48:46.035 INFO  [payment-worker-%d314] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: 3f97932d-eb06-4394-a991-f416f3a3e136
+2026-05-10 13:48:46.036 INFO  [payment-worker-%d314] c.p.b.controller.PaymentController - Payment request processed successfully: 3f97932d-eb06-4394-a991-f416f3a3e136
+2026-05-10 13:48:46.036 INFO  [payment-worker-%d305] c.p.b.controller.PaymentController - Payment request processed successfully: 06d8a5a6-4741-4ae4-aa95-3599bc0f83a0
+2026-05-10 13:48:46.035 INFO  [payment-worker-%d313] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: 15ce7b1c-2c80-4b49-a3f1-b8d993945f09
+2026-05-10 13:48:46.036 INFO  [payment-worker-%d313] c.p.b.controller.PaymentController - Payment request processed successfully: 15ce7b1c-2c80-4b49-a3f1-b8d993945f09
+2026-05-10 13:48:46.036 DEBUG [payment-worker-%d316] c.p.bridge.service.PaymentService - Published payment task for processing: 06d8a5a6-4741-4ae4-aa95-3599bc0f83a0
+2026-05-10 13:48:46.036 DEBUG [payment-worker-%d318] c.p.bridge.service.PaymentService - Published payment task for processing: 15ce7b1c-2c80-4b49-a3f1-b8d993945f09
+2026-05-10 13:48:46.036 DEBUG [payment-worker-%d317] c.p.bridge.service.PaymentService - Published payment task for processing: 3f97932d-eb06-4394-a991-f416f3a3e136
+2026-05-10 13:48:46.037 INFO  [payment-worker-%d312] c.p.bridge.service.PaymentService - Transaction committed; publishing payment task after commit: e5c1ad12-4caa-40e1-943c-27861a08238b
+2026-05-10 13:48:46.037 INFO  [payment-worker-%d312] c.p.b.controller.PaymentController - Payment request processed successfully: e5c1ad12-4caa-40e1-943c-27861a08238b
+2026-05-10 13:48:46.037 DEBUG [payment-worker-%d319] c.p.bridge.service.PaymentService - Published payment task for processing: e5c1ad12-4caa-40e1-943c-27861a08238b
+Payment ingestion latency summary: p50=56ms, p95=65ms, p99=67ms, max=67ms, mean=45ms
+]]></system-out>
+  </testcase>
+</testsuite>

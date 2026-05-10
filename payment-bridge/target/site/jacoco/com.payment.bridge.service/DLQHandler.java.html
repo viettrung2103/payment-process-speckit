@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DLQHandler.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Payment Bridge</a> &gt; <a href="index.source.html" class="el_package">com.payment.bridge.service</a> &gt; <span class="el_source">DLQHandler.java</span></div><h1>DLQHandler.java</h1><pre class="source lang-java linenums">package com.payment.bridge.service;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.payment.bridge.model.DeadLetterQueueEntry;
+import com.payment.bridge.model.MessageQueueTask;
+import com.payment.bridge.model.Payment;
+import com.payment.bridge.repository.DeadLetterQueueRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
+@Service
+public class DLQHandler {
+
+<span class="fc" id="L22">    private static final Logger logger = LoggerFactory.getLogger(DLQHandler.class);</span>
+
+    private final DeadLetterQueueRepository dlqRepository;
+    private final ObjectMapper objectMapper;
+
+<span class="fc" id="L27">    public DLQHandler(DeadLetterQueueRepository dlqRepository, ObjectMapper objectMapper) {</span>
+<span class="fc" id="L28">        this.dlqRepository = dlqRepository;</span>
+<span class="fc" id="L29">        this.objectMapper = objectMapper;</span>
+<span class="fc" id="L30">    }</span>
+
+    /**
+     * Creates a DLQ entry for a failed payment with full context.
+     *
+     * @param payment The payment that failed
+     * @param task The message queue task that failed
+     * @param failedAction The action that failed (e.g., &quot;EXTERNAL_API_CALL&quot;, &quot;DB_UPDATE&quot;)
+     * @param failureReason The reason for failure
+     * @param apiResponse The API response (if applicable)
+     * @return The created DLQ entry
+     */
+    public DeadLetterQueueEntry createDLQEntry(Payment payment, MessageQueueTask task,
+                                               String failedAction, String failureReason,
+                                               String apiResponse) {
+        try {
+<span class="fc" id="L46">            DeadLetterQueueEntry entry = new DeadLetterQueueEntry();</span>
+<span class="fc" id="L47">            entry.setDlqId(UUID.randomUUID());</span>
+<span class="fc" id="L48">            entry.setPaymentId(payment.getPaymentId());</span>
+<span class="fc" id="L49">            entry.setFailedAction(failedAction);</span>
+<span class="fc" id="L50">            entry.setFailureReason(failureReason);</span>
+<span class="fc" id="L51">            entry.setApiResponse(apiResponse);</span>
+
+            // Create payment context as JSON
+<span class="fc" id="L54">            Map&lt;String, Object&gt; paymentContext = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L55">            paymentContext.put(&quot;paymentId&quot;, payment.getPaymentId());</span>
+<span class="fc" id="L56">            paymentContext.put(&quot;amount&quot;, payment.getAmount());</span>
+<span class="fc" id="L57">            paymentContext.put(&quot;currency&quot;, payment.getCurrency());</span>
+<span class="fc" id="L58">            paymentContext.put(&quot;clientReference&quot;, payment.getClientReference());</span>
+<span class="fc" id="L59">            paymentContext.put(&quot;status&quot;, payment.getStatus());</span>
+<span class="fc" id="L60">            paymentContext.put(&quot;createdAt&quot;, payment.getCreatedAt());</span>
+<span class="fc" id="L61">            paymentContext.put(&quot;updatedAt&quot;, payment.getUpdatedAt());</span>
+
+<span class="fc" id="L63">            entry.setPaymentContext(objectMapper.writeValueAsString(paymentContext));</span>
+
+            // Create retry history as JSON
+<span class="fc" id="L66">            Map&lt;String, Object&gt; retryHistory = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L67">            retryHistory.put(&quot;currentAttempt&quot;, task.getRetryAttempt());</span>
+<span class="fc" id="L68">            retryHistory.put(&quot;maxAttempts&quot;, 5);</span>
+
+            // In a real implementation, we'd track all retry attempts
+<span class="fc" id="L71">            List&lt;Map&lt;String, Object&gt;&gt; attempts = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L72" title="All 2 branches covered.">            for (int i = 1; i &lt;= task.getRetryAttempt(); i++) {</span>
+<span class="fc" id="L73">                Map&lt;String, Object&gt; attempt = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L74">                attempt.put(&quot;attemptNumber&quot;, i);</span>
+<span class="fc" id="L75">                attempt.put(&quot;timestamp&quot;, System.currentTimeMillis());</span>
+<span class="fc" id="L76">                attempt.put(&quot;action&quot;, failedAction);</span>
+<span class="fc" id="L77">                attempts.add(attempt);</span>
+            }
+<span class="fc" id="L79">            retryHistory.put(&quot;attempts&quot;, attempts);</span>
+
+<span class="fc" id="L81">            entry.setRetryHistory(objectMapper.writeValueAsString(retryHistory));</span>
+
+<span class="fc" id="L83">            DeadLetterQueueEntry savedEntry = dlqRepository.save(entry);</span>
+
+<span class="fc" id="L85">            logger.error(&quot;Created DLQ entry {} for payment {} - action: {}, reason: {}&quot;,</span>
+<span class="fc" id="L86">                        savedEntry.getDlqId(), payment.getPaymentId(), failedAction, failureReason);</span>
+
+<span class="fc" id="L88">            return savedEntry;</span>
+
+<span class="nc" id="L90">        } catch (JsonProcessingException e) {</span>
+<span class="nc" id="L91">            logger.error(&quot;Failed to serialize DLQ entry data for payment {}&quot;, payment.getPaymentId(), e);</span>
+<span class="nc" id="L92">            throw new RuntimeException(&quot;Failed to create DLQ entry&quot;, e);</span>
+        }
+    }
+
+    /**
+     * Creates a DLQ entry for database operation failures.
+     *
+     * @param payment The payment that failed to update
+     * @param task The message queue task
+     * @param operation The DB operation that failed
+     * @param exception The exception that occurred
+     * @return The created DLQ entry
+     */
+    public DeadLetterQueueEntry createDBFailureDLQEntry(Payment payment, MessageQueueTask task,
+                                                        String operation, Exception exception) {
+<span class="fc" id="L107">        return createDLQEntry(payment, task, &quot;DB_&quot; + operation.toUpperCase(),</span>
+<span class="fc" id="L108">                            exception.getMessage(), null);</span>
+    }
+
+    /**
+     * Creates a DLQ entry for external API failures.
+     *
+     * @param payment The payment that failed
+     * @param task The message queue task
+     * @param apiResponse The API response/error details
+     * @param exception The exception that occurred
+     * @return The created DLQ entry
+     */
+    public DeadLetterQueueEntry createAPIFailureDLQEntry(Payment payment, MessageQueueTask task,
+                                                         String apiResponse, Exception exception) {
+<span class="fc" id="L122">        return createDLQEntry(payment, task, &quot;EXTERNAL_API_CALL&quot;,</span>
+<span class="fc" id="L123">                            exception.getMessage(), apiResponse);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

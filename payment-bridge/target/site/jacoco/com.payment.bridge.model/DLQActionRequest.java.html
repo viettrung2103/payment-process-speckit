@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DLQActionRequest.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Payment Bridge</a> &gt; <a href="index.source.html" class="el_package">com.payment.bridge.model</a> &gt; <span class="el_source">DLQActionRequest.java</span></div><h1>DLQActionRequest.java</h1><pre class="source lang-java linenums">package com.payment.bridge.model;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.NotBlank;
+
+public class DLQActionRequest {
+
+    @NotBlank(message = &quot;Operator is required&quot;)
+    private String operator;
+
+    @NotBlank(message = &quot;Resolution details are required&quot;)
+    private String resolutionDetails;
+
+<span class="nc" id="L14">    public DLQActionRequest() {</span>
+<span class="nc" id="L15">    }</span>
+
+<span class="fc" id="L17">    public DLQActionRequest(String operator, String resolutionDetails) {</span>
+<span class="fc" id="L18">        this.operator = operator;</span>
+<span class="fc" id="L19">        this.resolutionDetails = resolutionDetails;</span>
+<span class="fc" id="L20">    }</span>
+
+    public String getOperator() {
+<span class="fc" id="L23">        return operator;</span>
+    }
+
+    public void setOperator(String operator) {
+<span class="nc" id="L27">        this.operator = operator;</span>
+<span class="nc" id="L28">    }</span>
+
+    @JsonProperty(&quot;resolution_details&quot;)
+    public String getResolutionDetails() {
+<span class="fc" id="L32">        return resolutionDetails;</span>
+    }
+
+    public void setResolutionDetails(String resolutionDetails) {
+<span class="nc" id="L36">        this.resolutionDetails = resolutionDetails;</span>
+<span class="nc" id="L37">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

@@ -1,0 +1,183 @@
+2026-05-10 12:42:09,780 INFO o.a.j.u.JMeterUtils: Setting Locale to en_EN
+2026-05-10 12:42:09,790 INFO o.a.j.JMeter: Loading user properties from: /opt/homebrew/Cellar/jmeter/5.6.3/libexec/bin/user.properties
+2026-05-10 12:42:09,791 INFO o.a.j.JMeter: Loading system properties from: /opt/homebrew/Cellar/jmeter/5.6.3/libexec/bin/system.properties
+2026-05-10 12:42:09,791 INFO o.a.j.JMeter: Setting JMeter property: TARGET_HOST=localhost
+2026-05-10 12:42:09,791 INFO o.a.j.JMeter: Setting JMeter property: TARGET_PORT=8080
+2026-05-10 12:42:09,791 INFO o.a.j.JMeter: Setting JMeter property: USERS=50
+2026-05-10 12:42:09,791 INFO o.a.j.JMeter: Setting JMeter property: RAMP_UP=60
+2026-05-10 12:42:09,791 INFO o.a.j.JMeter: Setting JMeter property: DURATION=300
+2026-05-10 12:42:09,791 INFO o.a.j.JMeter: Setting JMeter property: THINK_TIME=400
+2026-05-10 12:42:09,791 INFO o.a.j.JMeter: Setting JMeter property: RANDOM_DELAY=300
+2026-05-10 12:42:09,793 INFO o.a.j.JMeter: Copyright (c) 1998-2024 The Apache Software Foundation
+2026-05-10 12:42:09,793 INFO o.a.j.JMeter: Version 5.6.3
+2026-05-10 12:42:09,793 INFO o.a.j.JMeter: java.version=21.0.10
+2026-05-10 12:42:09,793 INFO o.a.j.JMeter: java.vm.name=OpenJDK 64-Bit Server VM
+2026-05-10 12:42:09,793 INFO o.a.j.JMeter: os.name=Mac OS X
+2026-05-10 12:42:09,793 INFO o.a.j.JMeter: os.arch=aarch64
+2026-05-10 12:42:09,793 INFO o.a.j.JMeter: os.version=26.3
+2026-05-10 12:42:09,793 INFO o.a.j.JMeter: file.encoding=UTF-8
+2026-05-10 12:42:09,793 INFO o.a.j.JMeter: java.awt.headless=true
+2026-05-10 12:42:09,794 INFO o.a.j.JMeter: Max memory     =1073741824
+2026-05-10 12:42:09,794 INFO o.a.j.JMeter: Available Processors =10
+2026-05-10 12:42:09,798 INFO o.a.j.JMeter: Default Locale=English (EN)
+2026-05-10 12:42:09,798 INFO o.a.j.JMeter: JMeter  Locale=English (EN)
+2026-05-10 12:42:09,798 INFO o.a.j.JMeter: JMeterHome=/opt/homebrew/Cellar/jmeter/5.6.3/libexec
+2026-05-10 12:42:09,798 INFO o.a.j.JMeter: user.dir  =/Users/mac/Programming/payment-system-speckit/performance-test
+2026-05-10 12:42:09,798 INFO o.a.j.JMeter: PWD       =/Users/mac/Programming/payment-system-speckit/performance-test
+2026-05-10 12:42:09,800 INFO o.a.j.JMeter: IP: 127.0.0.1 Name: macs-MacBook-Air.local FullName: localhost
+2026-05-10 12:42:09,807 INFO o.a.j.s.FileServer: Default base='/Users/mac/Programming/payment-system-speckit/performance-test'
+2026-05-10 12:42:09,807 INFO o.a.j.s.FileServer: Set new base='/Users/mac/Programming/payment-system-speckit/performance-test/jmeter'
+2026-05-10 12:42:09,874 INFO o.a.j.s.SaveService: Testplan (JMX) version: 2.2. Testlog (JTL) version: 2.2
+2026-05-10 12:42:09,887 INFO o.a.j.s.SaveService: Using SaveService properties version 5.0
+2026-05-10 12:42:09,888 INFO o.a.j.s.SaveService: Using SaveService properties file encoding UTF-8
+2026-05-10 12:42:09,889 INFO o.a.j.s.SaveService: Loading file: /Users/mac/Programming/payment-system-speckit/performance-test/jmeter/payment-realistic-stress-test.jmx
+2026-05-10 12:42:09,914 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for text/html is org.apache.jmeter.protocol.http.parser.LagartoBasedHtmlParser
+2026-05-10 12:42:09,914 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for application/xhtml+xml is org.apache.jmeter.protocol.http.parser.LagartoBasedHtmlParser
+2026-05-10 12:42:09,914 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for application/xml is org.apache.jmeter.protocol.http.parser.LagartoBasedHtmlParser
+2026-05-10 12:42:09,914 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for text/xml is org.apache.jmeter.protocol.http.parser.LagartoBasedHtmlParser
+2026-05-10 12:42:09,914 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for text/vnd.wap.wml is org.apache.jmeter.protocol.http.parser.RegexpHTMLParser
+2026-05-10 12:42:09,914 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for text/css is org.apache.jmeter.protocol.http.parser.CssParser
+2026-05-10 12:42:09,928 INFO o.a.j.JMeter: Creating summariser <summary>
+2026-05-10 12:42:09,933 INFO o.a.j.e.StandardJMeterEngine: Running the test!
+2026-05-10 12:42:09,934 INFO o.a.j.s.SampleEvent: List of sample_variables: []
+2026-05-10 12:42:09,934 INFO o.a.j.s.SampleEvent: List of sample_variables: []
+2026-05-10 12:42:09,935 INFO o.a.j.e.u.CompoundVariable: Note: Function class names must contain the string: '.functions.'
+2026-05-10 12:42:09,935 INFO o.a.j.e.u.CompoundVariable: Note: Function class names must not contain the string: '.gui.'
+2026-05-10 12:42:09,960 INFO o.a.j.r.ClassFinder: Will scan jar /opt/homebrew/Cellar/jmeter/5.6.3/libexec/lib/ext/jmeter-plugins-manager-1.9.jar with filter ExtendsClassFilter [parents=[interface org.apache.jmeter.functions.Function], inner=false, contains=null, notContains=null]. Consider exposing JMeter plugins via META-INF/services, and add JMeter-Skip-Class-Scanning=true manifest attribute so JMeter can skip classfile scanning
+2026-05-10 12:42:09,998 INFO o.a.j.JMeter: Running test (1778391729998)
+2026-05-10 12:42:10,006 INFO o.a.j.e.StandardJMeterEngine: Starting ThreadGroup: 1 : Realistic User Load
+2026-05-10 12:42:10,006 INFO o.a.j.e.StandardJMeterEngine: Starting 50 threads for group Realistic User Load.
+2026-05-10 12:42:10,006 INFO o.a.j.e.StandardJMeterEngine: Thread will continue on error
+2026-05-10 12:42:10,006 INFO o.a.j.t.ThreadGroup: Starting thread group... number=1 threads=50 ramp-up=60 delayedStart=false
+2026-05-10 12:42:10,008 INFO o.a.j.t.JMeterThread: Thread started: Realistic User Load 1-1
+2026-05-10 12:42:10,013 INFO o.a.j.t.ThreadGroup: Started thread group number 1
+2026-05-10 12:42:10,013 INFO o.a.j.e.StandardJMeterEngine: All thread groups have been started
+2026-05-10 12:42:10,998 INFO o.a.j.p.h.s.HTTPHCAbstractImpl: Local host = macs-MacBook-Air.local
+2026-05-10 12:42:11,004 INFO o.a.j.p.h.s.HTTPHC4Impl: HTTP request retry count = 0
+2026-05-10 12:42:11,004 INFO o.a.j.s.SampleResult: Note: Sample TimeStamps are START times
+2026-05-10 12:42:11,004 INFO o.a.j.s.SampleResult: sampleresult.default.encoding is set to UTF-8
+2026-05-10 12:42:11,004 INFO o.a.j.s.SampleResult: sampleresult.useNanoTime=true
+2026-05-10 12:42:11,004 INFO o.a.j.s.SampleResult: sampleresult.nanoThreadSleep=5000
+2026-05-10 12:42:11,210 INFO o.a.j.t.JMeterThread: Thread started: Realistic User Load 1-2
+2026-05-10 12:42:12,012 INFO o.a.j.u.JsseSSLManager: Using default SSL protocol: TLS
+2026-05-10 12:42:12,012 INFO o.a.j.u.JsseSSLManager: SSL session context: per-thread
+2026-05-10 12:42:12,408 INFO o.a.j.t.JMeterThread: Thread started: Realistic User Load 1-3
+2026-05-10 12:42:13,611 INFO o.a.j.t.JMeterThread: Thread started: Realistic User Load 1-4
+2026-05-10 12:42:14,811 INFO o.a.j.t.JMeterThread: Thread started: Realistic User Load 1-5
+2026-05-10 12:42:16,011 INFO o.a.j.t.JMeterThread: Thread started: Realistic User Load 1-6
+2026-05-10 12:42:17,212 INFO o.a.j.t.JMeterThread: Thread started: Realistic User Load 1-7
+2026-05-10 12:42:18,410 INFO o.a.j.t.JMeterThread: Thread started: Realistic User Load 1-8
+2026-05-10 12:42:19,612 INFO o.a.j.t.JMeterThread: Thread started: Realistic User Load 1-9
+2026-05-10 12:42:20,807 INFO o.a.j.t.JMeterThread: Thread started: Realistic User Load 1-10
+2026-05-10 12:42:22,011 INFO o.a.j.t.JMeterThread: Thread started: Realistic User Load 1-11
+2026-05-10 12:42:23,211 INFO o.a.j.t.JMeterThread: Thread started: Realistic User Load 1-12
+2026-05-10 12:42:24,406 INFO o.a.j.t.JMeterThread: Thread started: Realistic User Load 1-13
+2026-05-10 12:42:25,612 INFO o.a.j.t.JMeterThread: Thread started: Realistic User Load 1-14
+2026-05-10 12:42:26,811 INFO o.a.j.t.JMeterThread: Thread started: Realistic User Load 1-15
+2026-05-10 12:42:28,011 INFO o.a.j.t.JMeterThread: Thread started: Realistic User Load 1-16
+2026-05-10 12:42:29,211 INFO o.a.j.t.JMeterThread: Thread started: Realistic User Load 1-17
+2026-05-10 12:42:30,060 INFO o.a.j.r.Summariser: summary +    177 in 00:00:20 =    8.8/s Avg:     1 Min:     0 Max:    11 Err:   177 (100.00%) Active: 17 Started: 17 Finished: 0
+2026-05-10 12:42:30,411 INFO o.a.j.t.JMeterThread: Thread started: Realistic User Load 1-18
+2026-05-10 12:42:31,611 INFO o.a.j.t.JMeterThread: Thread started: Realistic User Load 1-19
+2026-05-10 12:42:32,812 INFO o.a.j.t.JMeterThread: Thread started: Realistic User Load 1-20
+2026-05-10 12:42:34,011 INFO o.a.j.t.JMeterThread: Thread started: Realistic User Load 1-21
+2026-05-10 12:42:35,213 INFO o.a.j.t.JMeterThread: Thread started: Realistic User Load 1-22
+2026-05-10 12:42:36,412 INFO o.a.j.t.JMeterThread: Thread started: Realistic User Load 1-23
+2026-05-10 12:42:37,611 INFO o.a.j.t.JMeterThread: Thread started: Realistic User Load 1-24
+2026-05-10 12:42:38,811 INFO o.a.j.t.JMeterThread: Thread started: Realistic User Load 1-25
+2026-05-10 12:42:40,011 INFO o.a.j.t.JMeterThread: Thread started: Realistic User Load 1-26
+2026-05-10 12:42:41,211 INFO o.a.j.t.JMeterThread: Thread started: Realistic User Load 1-27
+2026-05-10 12:42:42,411 INFO o.a.j.t.JMeterThread: Thread started: Realistic User Load 1-28
+2026-05-10 12:42:43,612 INFO o.a.j.t.JMeterThread: Thread started: Realistic User Load 1-29
+2026-05-10 12:42:44,811 INFO o.a.j.t.JMeterThread: Thread started: Realistic User Load 1-30
+2026-05-10 12:42:46,011 INFO o.a.j.t.JMeterThread: Thread started: Realistic User Load 1-31
+2026-05-10 12:42:47,210 INFO o.a.j.t.JMeterThread: Thread started: Realistic User Load 1-32
+2026-05-10 12:42:48,412 INFO o.a.j.t.JMeterThread: Thread started: Realistic User Load 1-33
+2026-05-10 12:42:49,611 INFO o.a.j.t.JMeterThread: Thread started: Realistic User Load 1-34
+2026-05-10 12:42:50,811 INFO o.a.j.t.JMeterThread: Thread started: Realistic User Load 1-35
+2026-05-10 12:42:52,011 INFO o.a.j.t.JMeterThread: Thread started: Realistic User Load 1-36
+2026-05-10 12:42:53,211 INFO o.a.j.t.JMeterThread: Thread started: Realistic User Load 1-37
+2026-05-10 12:42:54,412 INFO o.a.j.t.JMeterThread: Thread started: Realistic User Load 1-38
+2026-05-10 12:42:55,607 INFO o.a.j.t.JMeterThread: Thread started: Realistic User Load 1-39
+2026-05-10 12:42:56,811 INFO o.a.j.t.JMeterThread: Thread started: Realistic User Load 1-40
+2026-05-10 12:42:58,010 INFO o.a.j.t.JMeterThread: Thread started: Realistic User Load 1-41
+2026-05-10 12:42:59,211 INFO o.a.j.t.JMeterThread: Thread started: Realistic User Load 1-42
+2026-05-10 12:43:00,046 INFO o.a.j.r.Summariser: summary +    920 in 00:00:30 =   30.7/s Avg:     0 Min:     0 Max:     5 Err:   920 (100.00%) Active: 42 Started: 42 Finished: 0
+2026-05-10 12:43:00,047 INFO o.a.j.r.Summariser: summary =   1097 in 00:00:50 =   21.9/s Avg:     0 Min:     0 Max:    11 Err:  1097 (100.00%)
+2026-05-10 12:43:00,408 INFO o.a.j.t.JMeterThread: Thread started: Realistic User Load 1-43
+2026-05-10 12:43:01,611 INFO o.a.j.t.JMeterThread: Thread started: Realistic User Load 1-44
+2026-05-10 12:43:02,811 INFO o.a.j.t.JMeterThread: Thread started: Realistic User Load 1-45
+2026-05-10 12:43:04,011 INFO o.a.j.t.JMeterThread: Thread started: Realistic User Load 1-46
+2026-05-10 12:43:05,209 INFO o.a.j.t.JMeterThread: Thread started: Realistic User Load 1-47
+2026-05-10 12:43:06,411 INFO o.a.j.t.JMeterThread: Thread started: Realistic User Load 1-48
+2026-05-10 12:43:07,611 INFO o.a.j.t.JMeterThread: Thread started: Realistic User Load 1-49
+2026-05-10 12:43:08,809 INFO o.a.j.t.JMeterThread: Thread started: Realistic User Load 1-50
+2026-05-10 12:43:30,022 INFO o.a.j.r.Summariser: summary +   1531 in 00:00:30 =   51.1/s Avg:     0 Min:     0 Max:     3 Err:  1531 (100.00%) Active: 50 Started: 50 Finished: 0
+2026-05-10 12:43:30,023 INFO o.a.j.r.Summariser: summary =   2628 in 00:01:20 =   32.8/s Avg:     0 Min:     0 Max:    11 Err:  2628 (100.00%)
+2026-05-10 12:44:00,023 INFO o.a.j.r.Summariser: summary +   1574 in 00:00:30 =   52.5/s Avg:     0 Min:     0 Max:     2 Err:  1574 (100.00%) Active: 50 Started: 50 Finished: 0
+2026-05-10 12:44:00,025 INFO o.a.j.r.Summariser: summary =   4202 in 00:01:50 =   38.2/s Avg:     0 Min:     0 Max:    11 Err:  4202 (100.00%)
+2026-05-10 12:44:30,031 INFO o.a.j.r.Summariser: summary +   1570 in 00:00:30 =   52.3/s Avg:     0 Min:     0 Max:     3 Err:  1570 (100.00%) Active: 50 Started: 50 Finished: 0
+2026-05-10 12:44:30,033 INFO o.a.j.r.Summariser: summary =   5772 in 00:02:20 =   41.2/s Avg:     0 Min:     0 Max:    11 Err:  5772 (100.00%)
+2026-05-10 12:45:00,019 INFO o.a.j.r.Summariser: summary +   1565 in 00:00:30 =   52.2/s Avg:     0 Min:     0 Max:    10 Err:  1565 (100.00%) Active: 50 Started: 50 Finished: 0
+2026-05-10 12:45:00,020 INFO o.a.j.r.Summariser: summary =   7337 in 00:02:50 =   43.2/s Avg:     0 Min:     0 Max:    11 Err:  7337 (100.00%)
+2026-05-10 12:45:30,006 INFO o.a.j.r.Summariser: summary +   1573 in 00:00:30 =   52.5/s Avg:     0 Min:     0 Max:    19 Err:  1573 (100.00%) Active: 50 Started: 50 Finished: 0
+2026-05-10 12:45:30,008 INFO o.a.j.r.Summariser: summary =   8910 in 00:03:20 =   44.5/s Avg:     0 Min:     0 Max:    19 Err:  8910 (100.00%)
+2026-05-10 12:46:00,015 INFO o.a.j.r.Summariser: summary +   1578 in 00:00:30 =   52.6/s Avg:     0 Min:     0 Max:     6 Err:  1578 (100.00%) Active: 50 Started: 50 Finished: 0
+2026-05-10 12:46:00,016 INFO o.a.j.r.Summariser: summary =  10488 in 00:03:50 =   45.6/s Avg:     0 Min:     0 Max:    19 Err: 10488 (100.00%)
+2026-05-10 12:46:30,031 INFO o.a.j.r.Summariser: summary +   1569 in 00:00:30 =   52.3/s Avg:     0 Min:     0 Max:     2 Err:  1569 (100.00%) Active: 50 Started: 50 Finished: 0
+2026-05-10 12:46:30,032 INFO o.a.j.r.Summariser: summary =  12057 in 00:04:20 =   46.4/s Avg:     0 Min:     0 Max:    19 Err: 12057 (100.00%)
+2026-05-10 12:47:00,005 INFO o.a.j.r.Summariser: summary +   1572 in 00:00:30 =   52.4/s Avg:     0 Min:     0 Max:     4 Err:  1572 (100.00%) Active: 50 Started: 50 Finished: 0
+2026-05-10 12:47:00,005 INFO o.a.j.r.Summariser: summary =  13629 in 00:04:50 =   47.0/s Avg:     0 Min:     0 Max:    19 Err: 13629 (100.00%)
+2026-05-10 12:47:09,075 INFO o.a.j.t.JMeterThread: Thread finished: Realistic User Load 1-23
+2026-05-10 12:47:09,088 INFO o.a.j.t.JMeterThread: Thread finished: Realistic User Load 1-33
+2026-05-10 12:47:09,159 INFO o.a.j.t.JMeterThread: Thread finished: Realistic User Load 1-34
+2026-05-10 12:47:09,177 INFO o.a.j.t.JMeterThread: Thread finished: Realistic User Load 1-24
+2026-05-10 12:47:09,182 INFO o.a.j.t.JMeterThread: Thread finished: Realistic User Load 1-15
+2026-05-10 12:47:09,199 INFO o.a.j.t.JMeterThread: Thread finished: Realistic User Load 1-5
+2026-05-10 12:47:09,221 INFO o.a.j.t.JMeterThread: Thread finished: Realistic User Load 1-22
+2026-05-10 12:47:09,270 INFO o.a.j.t.JMeterThread: Thread finished: Realistic User Load 1-26
+2026-05-10 12:47:09,278 INFO o.a.j.t.JMeterThread: Thread finished: Realistic User Load 1-18
+2026-05-10 12:47:09,282 INFO o.a.j.t.JMeterThread: Thread finished: Realistic User Load 1-46
+2026-05-10 12:47:09,316 INFO o.a.j.t.JMeterThread: Thread finished: Realistic User Load 1-4
+2026-05-10 12:47:09,403 INFO o.a.j.t.JMeterThread: Thread finished: Realistic User Load 1-47
+2026-05-10 12:47:09,418 INFO o.a.j.t.JMeterThread: Thread finished: Realistic User Load 1-6
+2026-05-10 12:47:09,422 INFO o.a.j.t.JMeterThread: Thread finished: Realistic User Load 1-16
+2026-05-10 12:47:09,432 INFO o.a.j.t.JMeterThread: Thread finished: Realistic User Load 1-30
+2026-05-10 12:47:09,452 INFO o.a.j.t.JMeterThread: Thread finished: Realistic User Load 1-12
+2026-05-10 12:47:09,463 INFO o.a.j.t.JMeterThread: Thread finished: Realistic User Load 1-28
+2026-05-10 12:47:09,491 INFO o.a.j.t.JMeterThread: Thread finished: Realistic User Load 1-49
+2026-05-10 12:47:09,494 INFO o.a.j.t.JMeterThread: Thread finished: Realistic User Load 1-35
+2026-05-10 12:47:09,512 INFO o.a.j.t.JMeterThread: Thread finished: Realistic User Load 1-17
+2026-05-10 12:47:09,520 INFO o.a.j.t.JMeterThread: Thread finished: Realistic User Load 1-45
+2026-05-10 12:47:09,520 INFO o.a.j.t.JMeterThread: Thread finished: Realistic User Load 1-10
+2026-05-10 12:47:09,537 INFO o.a.j.t.JMeterThread: Thread finished: Realistic User Load 1-36
+2026-05-10 12:47:09,546 INFO o.a.j.t.JMeterThread: Thread finished: Realistic User Load 1-14
+2026-05-10 12:47:09,579 INFO o.a.j.t.JMeterThread: Thread finished: Realistic User Load 1-25
+2026-05-10 12:47:09,598 INFO o.a.j.t.JMeterThread: Thread finished: Realistic User Load 1-19
+2026-05-10 12:47:09,599 INFO o.a.j.t.JMeterThread: Thread finished: Realistic User Load 1-39
+2026-05-10 12:47:09,680 INFO o.a.j.t.JMeterThread: Thread finished: Realistic User Load 1-20
+2026-05-10 12:47:09,683 INFO o.a.j.t.JMeterThread: Thread finished: Realistic User Load 1-3
+2026-05-10 12:47:09,715 INFO o.a.j.t.JMeterThread: Thread finished: Realistic User Load 1-13
+2026-05-10 12:47:09,716 INFO o.a.j.t.JMeterThread: Thread finished: Realistic User Load 1-37
+2026-05-10 12:47:09,726 INFO o.a.j.t.JMeterThread: Thread finished: Realistic User Load 1-8
+2026-05-10 12:47:09,732 INFO o.a.j.t.JMeterThread: Thread finished: Realistic User Load 1-41
+2026-05-10 12:47:09,760 INFO o.a.j.t.JMeterThread: Thread finished: Realistic User Load 1-11
+2026-05-10 12:47:09,797 INFO o.a.j.t.JMeterThread: Thread finished: Realistic User Load 1-7
+2026-05-10 12:47:09,798 INFO o.a.j.t.JMeterThread: Thread finished: Realistic User Load 1-50
+2026-05-10 12:47:09,807 INFO o.a.j.t.JMeterThread: Thread finished: Realistic User Load 1-48
+2026-05-10 12:47:09,807 INFO o.a.j.t.JMeterThread: Thread finished: Realistic User Load 1-38
+2026-05-10 12:47:09,840 INFO o.a.j.t.JMeterThread: Thread finished: Realistic User Load 1-40
+2026-05-10 12:47:09,852 INFO o.a.j.t.JMeterThread: Thread finished: Realistic User Load 1-2
+2026-05-10 12:47:09,859 INFO o.a.j.t.JMeterThread: Thread finished: Realistic User Load 1-32
+2026-05-10 12:47:09,880 INFO o.a.j.t.JMeterThread: Thread finished: Realistic User Load 1-9
+2026-05-10 12:47:09,896 INFO o.a.j.t.JMeterThread: Thread finished: Realistic User Load 1-1
+2026-05-10 12:47:09,945 INFO o.a.j.t.JMeterThread: Thread finished: Realistic User Load 1-44
+2026-05-10 12:47:09,965 INFO o.a.j.t.JMeterThread: Thread finished: Realistic User Load 1-21
+2026-05-10 12:47:09,977 INFO o.a.j.t.JMeterThread: Thread finished: Realistic User Load 1-31
+2026-05-10 12:47:09,980 INFO o.a.j.t.JMeterThread: Thread finished: Realistic User Load 1-29
+2026-05-10 12:47:09,980 INFO o.a.j.t.JMeterThread: Thread finished: Realistic User Load 1-42
+2026-05-10 12:47:09,992 INFO o.a.j.t.JMeterThread: Thread finished: Realistic User Load 1-27
+2026-05-10 12:47:09,992 INFO o.a.j.t.JMeterThread: Thread finished: Realistic User Load 1-43
+2026-05-10 12:47:09,992 INFO o.a.j.e.StandardJMeterEngine: Notifying test listeners of end of test
+2026-05-10 12:47:09,992 INFO o.a.j.r.Summariser: summary +    528 in 00:00:10 =   52.9/s Avg:     0 Min:     0 Max:     2 Err:   528 (100.00%) Active: 0 Started: 50 Finished: 50
+2026-05-10 12:47:09,993 INFO o.a.j.r.Summariser: summary =  14157 in 00:05:00 =   47.2/s Avg:     0 Min:     0 Max:    19 Err: 14157 (100.00%)

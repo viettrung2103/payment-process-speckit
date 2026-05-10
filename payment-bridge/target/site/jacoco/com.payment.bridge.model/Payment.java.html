@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Payment.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Payment Bridge</a> &gt; <a href="index.source.html" class="el_package">com.payment.bridge.model</a> &gt; <span class="el_source">Payment.java</span></div><h1>Payment.java</h1><pre class="source lang-java linenums">package com.payment.bridge.model;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.Version;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+
+import java.math.BigDecimal;
+import java.time.Instant;
+import java.util.UUID;
+
+@Entity
+@Table(name = &quot;payment&quot;)
+<span class="fc" id="L21">public class Payment {</span>
+
+    @Id
+    @Column(name = &quot;payment_id&quot;, nullable = false, updatable = false)
+    private UUID paymentId;
+
+<span class="fc" id="L27">    @Version</span>
+    @Column(name = &quot;version&quot;, nullable = false)
+<span class="fc" id="L29">    private Integer version = 0;</span>
+
+    @Column(name = &quot;client_reference&quot;, length = 255)
+    private String clientReference;
+
+    @Column(name = &quot;amount&quot;, nullable = false)
+    private BigDecimal amount;
+
+    @Column(name = &quot;currency&quot;, nullable = false, length = 3)
+    private String currency;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = &quot;status&quot;, nullable = false, length = 20)
+    private PaymentStatus status;
+
+    @CreationTimestamp
+    @Column(name = &quot;created_at&quot;, nullable = false, updatable = false)
+    private Instant createdAt;
+
+    @UpdateTimestamp
+    @Column(name = &quot;updated_at&quot;, nullable = false)
+    private Instant updatedAt;
+
+    @JdbcTypeCode(SqlTypes.JSON) // This tells Hibernate to treat the String as JSON
+    @Column(name = &quot;api_response&quot;, columnDefinition = &quot;jsonb&quot;)
+    private String apiResponse;
+
+    @Column(name = &quot;api_status_code&quot;)
+    private Integer apiStatusCode;
+
+    @Column(name = &quot;external_transaction_id&quot;, length = 255)
+    private String externalTransactionId;
+
+<span class="fc" id="L62">    @Column(name = &quot;retry_count_api&quot;, nullable = false)</span>
+<span class="fc" id="L63">    private Integer retryCountApi = 0;</span>
+
+<span class="fc" id="L65">    @Column(name = &quot;retry_count_db&quot;, nullable = false)</span>
+<span class="fc" id="L66">    private Integer retryCountDb = 0;</span>
+
+    @Column(name = &quot;error_reason&quot;, columnDefinition = &quot;text&quot;)
+    private String errorReason;
+
+    @JdbcTypeCode(SqlTypes.JSON) // Do the same for errorDetails
+    @Column(name = &quot;error_details&quot;, columnDefinition = &quot;jsonb&quot;)
+    private String errorDetails;
+
+    public UUID getPaymentId() {
+<span class="fc" id="L76">        return paymentId;</span>
+    }
+
+    public void setPaymentId(UUID paymentId) {
+<span class="fc" id="L80">        this.paymentId = paymentId;</span>
+<span class="fc" id="L81">    }</span>
+
+    public Integer getVersion() {
+<span class="fc" id="L84">        return version;</span>
+    }
+
+    public void setVersion(Integer version) {
+<span class="fc" id="L88">        this.version = version;</span>
+<span class="fc" id="L89">    }</span>
+
+    public String getClientReference() {
+<span class="fc" id="L92">        return clientReference;</span>
+    }
+
+    public void setClientReference(String clientReference) {
+<span class="fc" id="L96">        this.clientReference = clientReference;</span>
+<span class="fc" id="L97">    }</span>
+
+    public BigDecimal getAmount() {
+<span class="fc" id="L100">        return amount;</span>
+    }
+
+    public void setAmount(BigDecimal amount) {
+<span class="fc" id="L104">        this.amount = amount;</span>
+<span class="fc" id="L105">    }</span>
+
+    public String getCurrency() {
+<span class="fc" id="L108">        return currency;</span>
+    }
+
+    public void setCurrency(String currency) {
+<span class="fc" id="L112">        this.currency = currency;</span>
+<span class="fc" id="L113">    }</span>
+
+    public PaymentStatus getStatus() {
+<span class="fc" id="L116">        return status;</span>
+    }
+
+    public void setStatus(PaymentStatus status) {
+<span class="fc" id="L120">        this.status = status;</span>
+<span class="fc" id="L121">    }</span>
+
+    public Instant getCreatedAt() {
+<span class="fc" id="L124">        return createdAt;</span>
+    }
+
+    public Instant getUpdatedAt() {
+<span class="fc" id="L128">        return updatedAt;</span>
+    }
+
+    public String getApiResponse() {
+<span class="fc" id="L132">        return apiResponse;</span>
+    }
+
+    public void setApiResponse(String apiResponse) {
+<span class="fc" id="L136">        this.apiResponse = apiResponse;</span>
+<span class="fc" id="L137">    }</span>
+
+    public Integer getApiStatusCode() {
+<span class="fc" id="L140">        return apiStatusCode;</span>
+    }
+
+    public void setApiStatusCode(Integer apiStatusCode) {
+<span class="fc" id="L144">        this.apiStatusCode = apiStatusCode;</span>
+<span class="fc" id="L145">    }</span>
+
+    public String getExternalTransactionId() {
+<span class="fc" id="L148">        return externalTransactionId;</span>
+    }
+
+    public void setExternalTransactionId(String externalTransactionId) {
+<span class="fc" id="L152">        this.externalTransactionId = externalTransactionId;</span>
+<span class="fc" id="L153">    }</span>
+
+    public Integer getRetryCountApi() {
+<span class="nc" id="L156">        return retryCountApi;</span>
+    }
+
+    public void setRetryCountApi(Integer retryCountApi) {
+<span class="nc" id="L160">        this.retryCountApi = retryCountApi;</span>
+<span class="nc" id="L161">    }</span>
+
+    public Integer getRetryCountDb() {
+<span class="nc" id="L164">        return retryCountDb;</span>
+    }
+
+    public void setRetryCountDb(Integer retryCountDb) {
+<span class="nc" id="L168">        this.retryCountDb = retryCountDb;</span>
+<span class="nc" id="L169">    }</span>
+
+    public String getErrorReason() {
+<span class="fc" id="L172">        return errorReason;</span>
+    }
+
+    public void setErrorReason(String errorReason) {
+<span class="fc" id="L176">        this.errorReason = errorReason;</span>
+<span class="fc" id="L177">    }</span>
+
+    public String getErrorDetails() {
+<span class="nc" id="L180">        return errorDetails;</span>
+    }
+
+    public void setErrorDetails(String errorDetails) {
+<span class="fc" id="L184">        this.errorDetails = errorDetails;</span>
+<span class="fc" id="L185">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

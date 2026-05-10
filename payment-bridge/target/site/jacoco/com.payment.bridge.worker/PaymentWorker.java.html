@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PaymentWorker.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Payment Bridge</a> &gt; <a href="index.source.html" class="el_package">com.payment.bridge.worker</a> &gt; <span class="el_source">PaymentWorker.java</span></div><h1>PaymentWorker.java</h1><pre class="source lang-java linenums">package com.payment.bridge.worker;
+
+import com.payment.bridge.config.RabbitMQConfig;
+import com.payment.bridge.exception.PaymentProcessingException;
+import com.payment.bridge.model.MessageQueueTask;
+import com.payment.bridge.model.Payment;
+import com.payment.bridge.model.PaymentStatus;
+import com.payment.bridge.repository.PaymentRepository;
+import com.payment.bridge.service.DLQHandler;
+import com.payment.bridge.service.ErrorClassifier;
+import com.payment.bridge.service.PaymentAuditService;
+import com.payment.bridge.service.PaymentService;
+import com.payment.bridge.service.RetryHandler;
+import com.rabbitmq.client.Channel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.amqp.core.Message;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Service;
+
+import java.io.IOException;
+import java.util.Optional;
+
+@Service
+@Profile(&quot;!integration&quot;)
+public class PaymentWorker {
+
+<span class="fc" id="L29">    public enum ProcessingResult {</span>
+<span class="fc" id="L30">        SUCCESS, RETRY_SCHEDULED, FAILED</span>
+    }
+
+<span class="fc" id="L33">    private static final Logger logger = LoggerFactory.getLogger(PaymentWorker.class);</span>
+
+    private final PaymentRepository paymentRepository;
+    private final PaymentService paymentService;
+    private final ErrorClassifier errorClassifier;
+    private final RetryHandler retryHandler;
+    private final DLQHandler dlqHandler;
+    private final PaymentAuditService paymentAuditService;
+
+<span class="fc" id="L42">    public PaymentWorker(PaymentRepository paymentRepository,</span>
+                        PaymentService paymentService,
+                        ErrorClassifier errorClassifier,
+                        RetryHandler retryHandler,
+                        DLQHandler dlqHandler,
+                        PaymentAuditService paymentAuditService) {
+<span class="fc" id="L48">        this.paymentRepository = paymentRepository;</span>
+<span class="fc" id="L49">        this.paymentService = paymentService;</span>
+<span class="fc" id="L50">        this.errorClassifier = errorClassifier;</span>
+<span class="fc" id="L51">        this.retryHandler = retryHandler;</span>
+<span class="fc" id="L52">        this.dlqHandler = dlqHandler;</span>
+<span class="fc" id="L53">        this.paymentAuditService = paymentAuditService;</span>
+<span class="fc" id="L54">    }</span>
+
+    @RabbitListener(queues = RabbitMQConfig.PAYMENT_QUEUE, containerFactory = &quot;rabbitListenerContainerFactory&quot;)
+    public void receive(MessageQueueTask task, Message message, Channel channel) {
+        try {
+<span class="fc" id="L59">            ProcessingResult result = processPaymentTask(task);</span>
+            try {
+<span class="pc bpc" id="L61" title="1 of 4 branches missed.">                switch (result) {</span>
+                    case SUCCESS:
+<span class="fc" id="L63">                        channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);</span>
+<span class="fc" id="L64">                        logger.info(&quot;Acknowledged payment task: {}&quot;, task.getPaymentId());</span>
+<span class="fc" id="L65">                        break;</span>
+                    case RETRY_SCHEDULED:
+<span class="fc" id="L67">                        channel.basicNack(message.getMessageProperties().getDeliveryTag(), false, false);</span>
+<span class="fc" id="L68">                        logger.info(&quot;NACKed payment task for retry: {}&quot;, task.getPaymentId());</span>
+<span class="fc" id="L69">                        break;</span>
+                    case FAILED:
+<span class="fc" id="L71">                        channel.basicNack(message.getMessageProperties().getDeliveryTag(), false, false);</span>
+<span class="fc" id="L72">                        logger.error(&quot;NACKed failed payment task: {}&quot;, task.getPaymentId());</span>
+                        break;
+                }
+<span class="pc" id="L75">            } catch (IOException ioException) {</span>
+<span class="nc" id="L76">                logger.error(&quot;Failed to ACK/NACK message for payment {}&quot;, task.getPaymentId(), ioException);</span>
+            }
+<span class="pc" id="L78">        } catch (Exception e) {</span>
+            try {
+<span class="fc" id="L80">                channel.basicNack(message.getMessageProperties().getDeliveryTag(), false, false);</span>
+<span class="fc" id="L81">                logger.error(&quot;NACKed payment task due to processing exception: {}&quot;, task.getPaymentId(), e);</span>
+<span class="pc" id="L82">            } catch (IOException ioException) {</span>
+<span class="nc" id="L83">                logger.error(&quot;Failed to NACK message for payment {} after processing exception&quot;, task.getPaymentId(), ioException);</span>
+            }
+        }
+<span class="fc" id="L86">    }</span>
+
+    public ProcessingResult processPaymentTask(MessageQueueTask task) {
+<span class="fc" id="L89">        logger.info(&quot;Processing payment task: {} retryAttempt={} &quot;, task.getPaymentId(), task.getRetryAttempt());</span>
+
+<span class="fc" id="L91">        Optional&lt;Payment&gt; paymentOpt = paymentRepository.findById(task.getPaymentId());</span>
+<span class="fc bfc" id="L92" title="All 2 branches covered.">        if (paymentOpt.isEmpty()) {</span>
+<span class="fc" id="L93">            logger.warn(&quot;Payment not found for task: {}&quot;, task.getPaymentId());</span>
+<span class="fc" id="L94">            throw new PaymentProcessingException(&quot;Payment not found for task: &quot; + task.getPaymentId());</span>
+        }
+
+<span class="fc" id="L97">        Payment payment = paymentOpt.get();</span>
+
+<span class="pc bpc" id="L99" title="1 of 2 branches missed.">        if (payment.getStatus() == PaymentStatus.COMPLETED) {</span>
+<span class="nc" id="L100">            logger.info(&quot;Skipping already completed payment task: {}&quot;, task.getPaymentId());</span>
+<span class="nc" id="L101">            return ProcessingResult.SUCCESS;</span>
+        }
+
+<span class="fc bfc" id="L104" title="All 2 branches covered.">        if (payment.getStatus() == PaymentStatus.FAILED) {</span>
+<span class="fc" id="L105">            logger.info(&quot;Skipping already failed payment task: {}&quot;, task.getPaymentId());</span>
+<span class="fc" id="L106">            return ProcessingResult.FAILED;</span>
+        }
+
+        try {
+            // Only update status to IN_PROGRESS if this is the first attempt and we are still in RECEIVED state
+<span class="pc bpc" id="L111" title="1 of 4 branches missed.">            if (task.getRetryAttempt() == 0 &amp;&amp; payment.getStatus() == PaymentStatus.RECEIVED) {</span>
+<span class="fc" id="L112">                payment.setStatus(PaymentStatus.IN_PROGRESS);</span>
+<span class="fc" id="L113">                paymentRepository.save(payment);</span>
+            }
+
+<span class="fc" id="L116">            paymentService.processPaymentWithExternalAPI(task.getPaymentId());</span>
+
+<span class="fc" id="L118">            logger.info(&quot;Successfully processed payment {} on attempt {}&quot;, task.getPaymentId(), task.getRetryAttempt() + 1);</span>
+<span class="fc" id="L119">            return ProcessingResult.SUCCESS;</span>
+
+<span class="fc" id="L121">        } catch (Exception e) {</span>
+<span class="fc" id="L122">            logger.error(&quot;Payment {} failed on attempt {}: {}&quot;, task.getPaymentId(), task.getRetryAttempt() + 1, e.getMessage());</span>
+
+            // Determine if this is a retryable error
+<span class="fc" id="L125">            ErrorClassifier.ErrorAction action = errorClassifier.classify(e);</span>
+
+<span class="fc bfc" id="L127" title="All 4 branches covered.">            if (action == ErrorClassifier.ErrorAction.RETRY &amp;&amp; !retryHandler.hasExceededMaxRetries(task)) {</span>
+                // Schedule retry
+<span class="fc" id="L129">                boolean retryScheduled = retryHandler.scheduleRetry(task);</span>
+<span class="pc bpc" id="L130" title="1 of 2 branches missed.">                if (retryScheduled) {</span>
+<span class="fc" id="L131">                    logger.info(&quot;Scheduled retry for payment {} (attempt {})&quot;, task.getPaymentId(), task.getRetryAttempt() + 1);</span>
+<span class="fc" id="L132">                    return ProcessingResult.RETRY_SCHEDULED;</span>
+                }
+            }
+
+            // Either non-retryable error or max retries exceeded - send to DLQ
+<span class="fc" id="L137">            logger.error(&quot;Sending payment {} to DLQ after {} attempts&quot;, task.getPaymentId(), task.getRetryAttempt() + 1);</span>
+
+            // Update payment status to FAILED
+<span class="fc" id="L140">            PaymentStatus oldStatus = payment.getStatus();</span>
+<span class="fc" id="L141">            payment.setStatus(PaymentStatus.FAILED);</span>
+<span class="fc" id="L142">            payment.setErrorReason(e.getMessage());</span>
+<span class="fc" id="L143">            paymentRepository.save(payment);</span>
+<span class="fc" id="L144">            paymentAuditService.recordTransition(payment, oldStatus, PaymentStatus.FAILED,</span>
+<span class="fc" id="L145">                    &quot;Transitioned to failed after retry exhaustion or non-retryable error&quot;, &quot;worker&quot;);</span>
+
+            // Create DLQ entry
+<span class="fc" id="L148">            dlqHandler.createAPIFailureDLQEntry(payment, task, null, e);</span>
+
+<span class="fc" id="L150">            return ProcessingResult.FAILED;</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>
