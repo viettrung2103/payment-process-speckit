@@ -520,7 +520,7 @@ curl http://localhost:8080/actuator/health/rabbit
 ./run-integration-test.sh
 
 # Run end-to-end tests
-./run-integration-test.sh
+./test-both-apps.sh
 ```
 
 > Note: local integration execution has been run; if failures occur, inspect `mock-payment-api/target/surefire-reports` for forked VM crash details and `mock-payment-api/target/jacoco.exec` for coverage artifacts.
