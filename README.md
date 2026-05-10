@@ -1333,5 +1333,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 **Contact**: For questions about this implementation, please reach out to:
 
-- taha.othman@nokia.com
-- xiaoxia.chen@nokia.com
+- viettrung21.work@gmail.com
