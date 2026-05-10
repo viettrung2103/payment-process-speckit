@@ -14,12 +14,34 @@ Build a high-throughput, horizontally scalable payment middleware using Java 21 
 **Language/Version**: Java 21 (Virtual Threads for concurrency)  
 **Primary Dependencies**: Spring Boot 3.4, Spring AMQP, Resilience4j  
 **Storage**: PostgreSQL (ACID compliance, optimistic locking with version column)  
+**Messaging**: RabbitMQ with direct exchange, retry queue, and DLQ routing  
+**Deployment**: Docker / Docker Compose with Nginx load balancer and health checks  
 **Testing**: JUnit 5 + Gatling (TDD + load testing for P99 latency)  
 **Target Platform**: Linux server (horizontal scaling to 10 instances)  
 **Project Type**: Web service (payment middleware API)  
 **Performance Goals**: 1000 payments/minute per instance, P99 latency <500ms  
 **Constraints**: Zero data loss, stateless instances, 10ms-2s API latency tolerance  
 **Scale/Scope**: 10 instances max, 10k payments/minute total throughput
+
+## Tech Stack
+
+- Java 21 with Virtual Threads
+- Spring Boot 3.4 for rapid service development and dependency management
+- RabbitMQ for asynchronous message delivery, retries, and DLQ governance
+- PostgreSQL for durable transaction state and optimistic locking support
+- Docker Compose for local environment orchestration
+- Nginx load balancer for upstream health checking, rate limiting, and horizontal scaling
+- JUnit 5 and Gatling/JMeter for quality and performance validation
+
+## Architecture Overview
+
+The implementation uses a modular payment bridge design with clear separation of concerns:
+
+- **Ingress**: A REST API endpoint accepts payment requests, validates idempotency, and persists an initial RECEIVED state.
+- **Queueing**: `PaymentPublisher` enqueues payment work to RabbitMQ using a direct exchange and retry/DLQ topology.
+- **Processing**: `PaymentWorker` consumes messages, calls the external payment API client under Resilience4j circuit breaker protection, and transitions payment state.
+- **Resilience**: Transaction boundary synchronization, retry classification, DLQ routing, and optimistic locking handling keep the system reliable and recoverable.
+- **Observability**: Health checks, metrics, audit trails, and queue depth endpoints provide runtime visibility and diagnostics.
 
 ## Constitution Check
 

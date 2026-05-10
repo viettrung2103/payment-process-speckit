@@ -564,6 +564,33 @@ cd performance-test && ./scripts/quick-scaled-performance-test.sh
 - 20,000 total requests at 5 concurrent users
 - Duration: ~5 minutes
 
+**Realistic Stress Test (Single Instance):**
+
+```bash
+cd performance-test && ./scripts/realistic-performance-test.sh single
+```
+
+- Runs the realistic JMeter plan `payment-realistic-stress-test.jmx`
+- Default load: 50 users, 60s ramp-up, 300s duration
+- Uses health gating and cleans up Docker services after completion
+
+**Realistic Stress Test (Scaled 3 instances):**
+
+```bash
+cd performance-test && ./scripts/realistic-performance-test.sh scaled
+```
+
+- Runs the realistic load against 3 payment bridge instances behind nginx
+- Uses the same realistic plan with health checks and cleanup
+
+**Both Realistic Tests (Single + Scaled):**
+
+```bash
+cd performance-test && ./scripts/realistic-performance-test.sh all
+```
+
+- Runs single-instance and scaled realistic tests sequentially
+
 **Both Tests (Single + Scaled):**
 
 ```bash
@@ -1029,75 +1056,91 @@ Speckit follows a systematic workflow that transforms high-level requirements in
 
 1. **Constitution** (`/speckit.constitution`) - Define fundamental principles and architectural constraints
 2. **Specification** (`/speckit.spec`) - Define detailed functional and non-functional requirements
-3. **Planning** (`/speckit.plan`) - Create technical architecture and implementation strategy  
+3. **Planning** (`/speckit.plan`) - Create technical architecture and implementation strategy
 4. **Task Generation** (`/speckit.tasks`) - Break down implementation into actionable tasks
 5. **Implementation** (`/speckit.implement`) - Execute tasks with automated code generation
 
 #### Actual Prompts Used in This Project
 
 **Step 1: Constitution Definition**
+
 ```bash
 /speckit.constitution
 ```
-*Defined 6 constitutional principles: idempotency, MQ-driven statelessness, hybrid retry mechanisms, DLQ governance, and latency tolerance*
+
+_Defined 6 constitutional principles: idempotency, MQ-driven statelessness, hybrid retry mechanisms, DLQ governance, and latency tolerance_
 
 **Step 2: Specification Generation**
+
 ```bash
 /speckit.spec "Resilient Distributed Payment Bridge with high-throughput, horizontally scalable payment middleware ensuring zero data loss through message-driven architecture and persistent state management"
 ```
 
 **Step 3: Implementation Planning**
+
 ```bash
 /speckit.plan
 "In this specification, I will use a Java/Spring Boot backend with Maven for build management, Postgres for database, Docker for containerization, and Nginx as the API gateway/load balancer. The architecture will be modular: a payment bridge service handles incoming requests, validates and enriches payment data, and routes calls to external payment adapters or mock payment APIs. Supporting components include centralized configuration, observability/logging, and container orchestration to keep the system resilient, testable, and easy to deploy."
 ```
-*Input: Feature specification from `/specs/001-resilient-payment-bridge/spec.md`*
+
+_Input: Feature specification from `/specs/001-resilient-payment-bridge/spec.md`_
 
 **Step 4: Task Breakdown**
+
 ```bash
 /speckit.tasks
 ```
-*Input: Design documents from `/specs/001-resilient-payment-bridge/` (plan.md, spec.md, research.md, data-model.md, contracts/, quickstart.md)*
+
+_Input: Design documents from `/specs/001-resilient-payment-bridge/` (plan.md, spec.md, research.md, data-model.md, contracts/, quickstart.md)_
 
 **Step 5: Implementation Execution**
+
 ```bash
 /speckit.implement
 ```
-*Executed iteratively for each user story and phase*
+
+_Executed iteratively for each user story and phase_
 
 #### How Speckit Shaped This Project
 
 **Constitutional Foundation:**
+
 - Established 6 fundamental principles: idempotency, MQ-driven statelessness, hybrid retry mechanisms, DLQ governance, and latency tolerance
 - Created architectural constraints that guided all subsequent decisions
 - Ensured system resilience and scalability from the ground up
 
 **Structured Requirements Engineering:**
+
 - Generated comprehensive specification covering all functional requirements (FR-001 through FR-010)
 - Established clear acceptance criteria for each requirement
 - Maintained traceability from constitutional principles through implementation
 
 **Technical Architecture Design:**
+
 - Selected optimal technology stack (Java 21 Virtual Threads, Spring Boot 3.4, PostgreSQL, RabbitMQ)
 - Designed message-driven architecture for horizontal scalability
 - Implemented hybrid retry mechanisms for fault tolerance
 
 **Implementation Planning:**
+
 - Created detailed implementation plan with 13 phases and 5 user stories
 - Defined performance targets (1000 payments/minute per instance, P99 <500ms latency)
 - Established testing strategy (TDD with JUnit 5, load testing with Gatling)
 
 **Task-Driven Development:**
+
 - Generated 100+ specific tasks organized by user story
 - Enabled parallel development and independent testing
 - Provided clear completion criteria for each task
 
 **Quality Assurance Integration:**
+
 - Built-in constitution checks ensuring compliance with resilience principles
 - Automated testing requirements (unit, integration, load tests)
 - Performance validation against defined SLAs
 
 **Iterative Refinement:**
+
 - Continuous validation against constitutional principles
 - Race condition identification and resolution
 - Performance optimization through iterative testing

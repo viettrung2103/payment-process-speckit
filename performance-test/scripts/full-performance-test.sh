@@ -9,7 +9,7 @@ RESULTS_DIR="$PERF_DIR/results/full-$(date +%Y%m%d-%H%M%S)"
 JMETER_PLAN="$PERF_DIR/jmeter/payment-load-test-100k.jmx"
 ONE_INSTANCE_COMPOSE="$PROJECT_ROOT/docker-compose.yml"
 SCALED_COMPOSE="$PERF_DIR/config/docker-compose.scaled.yml"
-ANALYZER="$SCRIPT_DIR/analyze-results.sh"
+ANALYZER="$SCRIPT_DIR/helpers/analyze-results.sh"
 
 TOTAL_REQUESTS=100000
 LOAD_LEVELS=(5 10 20)
@@ -118,6 +118,36 @@ wait_for_nginx_health() {
   return 1
 }
 
+wait_for_container_health() {
+  local container_name="$1"
+  local max_attempts="${2:-30}"
+  local attempt=1
+
+  echo "⏳ Waiting for container $container_name to report healthy..."
+  while [ "$attempt" -le "$max_attempts" ]; do
+    local status
+    status=$(docker inspect --format='{{.State.Health.Status}}' "$container_name" 2>/dev/null || echo "unknown")
+    if [ "$status" = "healthy" ]; then
+      echo "✅ $container_name is healthy"
+      return 0
+    fi
+    echo "   Attempt $attempt/$max_attempts - $container_name health=$status"
+    sleep 5
+    attempt=$((attempt + 1))
+  done
+  echo "❌ $container_name failed to become healthy after $max_attempts attempts"
+  return 1
+}
+
+wait_for_containers_healthy() {
+  local max_attempts="${1:-30}"
+  shift
+  local container
+  for container in "$@"; do
+    wait_for_container_health "$container" "$max_attempts" || return 1
+  done
+}
+
 jmeter_command() {
   if command_exists jmeter; then
     echo "jmeter"
@@ -177,6 +207,39 @@ run_jmeter_test() {
   "$ANALYZER" "$jtl_file" "$RESULTS_DIR/summary-${test_name}.txt"
 }
 
+generate_combined_report() {
+  echo "📊 Generating combined performance report..."
+  local report_file="$RESULTS_DIR/combined-summary.txt"
+
+  cat << EOF > "$report_file"
+FULL PERFORMANCE TEST RESULTS
+============================
+
+Run Date: $(date)
+Results Directory: $(basename "$RESULTS_DIR")
+
+EOF
+
+  for prefix in "single-instance" "scaled-3-instances"; do
+    echo "$prefix SUMMARY" >> "$report_file"
+    echo "-----------------------------" >> "$report_file"
+    for users in "${LOAD_LEVELS[@]}"; do
+      local summary_file="$RESULTS_DIR/summary-${prefix}-${users}-users.txt"
+      if [ -f "$summary_file" ]; then
+        echo "--- $prefix, $users users ---" >> "$report_file"
+        grep -A 12 "SUMMARY METRICS" "$summary_file" >> "$report_file" 2>/dev/null
+        echo >> "$report_file"
+      else
+        echo "No summary file found for $prefix $users users" >> "$report_file"
+        echo >> "$report_file"
+      fi
+    done
+    echo >> "$report_file"
+  done
+
+  echo "✅ Combined report generated: $report_file"
+}
+
 start_one_instance() {
   echo "🐳 Starting one-instance environment..."
   cd "$PROJECT_ROOT"
@@ -191,6 +254,7 @@ start_one_instance() {
   wait_for_service "RabbitMQ" "http://localhost:15672/api/aliveness-test/%2F" ok 10 admin admin || exit 1
   wait_for_service "Mock Payment API" "http://localhost:8081/actuator/health" || exit 1
   wait_for_service "Payment Bridge" "http://localhost:8080/actuator/health" || exit 1
+  wait_for_containers_healthy 20 payment-system-postgres payment-system-rabbitmq mock-payment-api payment-bridge payment-system-nginx || exit 1
 
   purge_queues
   for users in "${LOAD_LEVELS[@]}"; do
@@ -218,6 +282,7 @@ start_scaled_instance() {
   docker-compose -f "$SCALED_COMPOSE" up -d payment-bridge-1 payment-bridge-2 payment-bridge-3 nginx
 
   wait_for_nginx_health || exit 1
+  wait_for_containers_healthy 20 payment-system-postgres payment-system-rabbitmq mock-payment-api payment-bridge-1 payment-bridge-2 payment-bridge-3 payment-system-nginx || exit 1
 
   purge_queues
   for users in "${LOAD_LEVELS[@]}"; do
@@ -230,5 +295,7 @@ start_scaled_instance() {
 
 start_one_instance
 start_scaled_instance
+
+generate_combined_report
 
 echo "🎉 Full performance test completed"

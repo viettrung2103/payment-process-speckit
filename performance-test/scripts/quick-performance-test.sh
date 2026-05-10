@@ -11,11 +11,11 @@ TOTAL_REQUESTS=20000
 LOAD_LEVELS=(5)
 ONE_INSTANCE_COMPOSE="$PROJECT_ROOT/docker-compose.yml"
 SCALED_COMPOSE="$PERF_DIR/config/docker-compose.scaled.yml"
-ANALYZER="$SCRIPT_DIR/analyze-results.sh"
+ANALYZER="$SCRIPT_DIR/helpers/analyze-results.sh"
 MODE="${1:-all}"
 
-if [[ "$MODE" != "all" && "$MODE" != "single" && "$MODE" != "scaled" ]]; then
-  echo "Usage: $0 [single|scaled|all]"
+if [[ "$MODE" != "all" && "$MODE" != "single" && "$MODE" != "scaled" && "$MODE" != "single-shutdown" && "$MODE" != "scaled-shutdown" ]]; then
+  echo "Usage: $0 [single|scaled|single-shutdown|scaled-shutdown|all]"
   exit 1
 fi
 
@@ -181,6 +181,38 @@ run_jmeter_test() {
   "$ANALYZER" "$jtl_file" "$RESULTS_DIR/summary-${test_name}.txt"
 }
 
+schedule_service_shutdown() {
+  local compose_file="$1"
+  local service_name="$2"
+  local delay="$3"
+  local duration="$4"
+
+  (
+    sleep "$delay"
+    echo "⏸️  Shutting down $service_name for ${duration}s"
+    docker compose -f "$compose_file" stop "$service_name" || true
+    sleep "$duration"
+    echo "🚀 Restarting $service_name"
+    docker compose -f "$compose_file" up -d "$service_name" >/dev/null 2>&1 || true
+    echo "✅ $service_name restart requested"
+  ) &
+  echo $!
+}
+
+run_jmeter_test_with_shutdown() {
+  local users="$1"
+  local prefix="$2"
+  local compose_file="$3"
+  local service_name="$4"
+  local delay="${5:-15}"
+  local downtime="${6:-10}"
+  local shutdown_pid
+
+  shutdown_pid=$(schedule_service_shutdown "$compose_file" "$service_name" "$delay" "$downtime")
+  run_jmeter_test "$users" "$prefix"
+  wait "$shutdown_pid" 2>/dev/null || true
+}
+
 start_one_instance() {
   echo "🐳 Starting one-instance environment..."
   cd "$PROJECT_ROOT"
@@ -225,6 +257,53 @@ start_scaled_instance() {
   purge_queues
   for users in "${LOAD_LEVELS[@]}"; do
     run_jmeter_test "$users" scaled-3-instances
+    purge_queues
+  done
+  docker-compose -f "$SCALED_COMPOSE" down --volumes --remove-orphans --timeout 30 || true
+}
+
+start_one_instance_shutdown() {
+  echo "🐳 Starting one-instance shutdown resilience test..."
+  cd "$PROJECT_ROOT"
+  echo "🧹 Cleaning up previous containers..."
+  docker-compose -f "$ONE_INSTANCE_COMPOSE" down --volumes --remove-orphans --timeout 30 || true
+  docker rm -f payment-system-postgres payment-system-rabbitmq payment-bridge mock-payment-api payment-system-nginx 2>/dev/null || true
+  docker-compose -f "$ONE_INSTANCE_COMPOSE" build payment-bridge mock-payment-api
+  docker-compose -f "$ONE_INSTANCE_COMPOSE" up -d --build
+
+  wait_for_db localhost 5432 || exit 1
+  wait_for_service "RabbitMQ" "http://localhost:15672/api/aliveness-test/%2F" ok 10 admin admin || exit 1
+  wait_for_service "Mock Payment API" "http://localhost:8081/actuator/health" || exit 1
+  wait_for_service "Payment Bridge" "http://localhost:8080/actuator/health" || exit 1
+
+  purge_queues
+  for users in "${LOAD_LEVELS[@]}"; do
+    run_jmeter_test_with_shutdown "$users" single-instance-shutdown "$ONE_INSTANCE_COMPOSE" payment-bridge 15 10
+    purge_queues
+  done
+  docker-compose -f "$ONE_INSTANCE_COMPOSE" down --volumes --remove-orphans --timeout 30 || true
+}
+
+start_scaled_instance_shutdown() {
+  echo "🐳 Starting scaled 3-instance shutdown resilience test..."
+  cd "$PERF_DIR/config"
+  echo "🧹 Cleaning up previous containers..."
+  docker-compose -f "$SCALED_COMPOSE" down --volumes --remove-orphans --timeout 30 || true
+  docker rm -f payment-system-postgres payment-system-rabbitmq payment-bridge-1 payment-bridge-2 payment-bridge-3 mock-payment-api payment-system-nginx 2>/dev/null || true
+  COMPOSE_BAKE=1 DOCKER_BUILDKIT=1 docker-compose -f "$SCALED_COMPOSE" build payment-bridge-1 mock-payment-api
+  docker-compose -f "$SCALED_COMPOSE" up -d postgres rabbitmq mock-payment-api
+
+  wait_for_db localhost 5432 || exit 1
+  wait_for_service "RabbitMQ" "http://localhost:15672/api/aliveness-test/%2F" ok 10 admin admin || exit 1
+  wait_for_service "Mock Payment API" "http://localhost:8081/actuator/health" || exit 1
+
+  docker-compose -f "$SCALED_COMPOSE" up -d payment-bridge-1 payment-bridge-2 payment-bridge-3 nginx
+
+  wait_for_nginx_health || exit 1
+
+  purge_queues
+  for users in "${LOAD_LEVELS[@]}"; do
+    run_jmeter_test_with_shutdown "$users" scaled-3-instances-shutdown "$SCALED_COMPOSE" payment-bridge-1 15 10
     purge_queues
   done
   docker-compose -f "$SCALED_COMPOSE" down --volumes --remove-orphans --timeout 30 || true
@@ -296,8 +375,16 @@ if [[ "$MODE" == "all" || "$MODE" == "single" ]]; then
   start_one_instance
 fi
 
+if [[ "$MODE" == "single-shutdown" ]]; then
+  start_one_instance_shutdown
+fi
+
 if [[ "$MODE" == "all" || "$MODE" == "scaled" ]]; then
   start_scaled_instance
+fi
+
+if [[ "$MODE" == "scaled-shutdown" ]]; then
+  start_scaled_instance_shutdown
 fi
 
 generate_combined_report
