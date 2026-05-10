@@ -520,12 +520,12 @@ curl http://localhost:8080/actuator/health/rabbit
 ### Unit Tests
 
 ```bash
-# Run all unit tests
-mvn test
+# Run all unit tests via wrapper that auto-detects JAVA_HOME
+./run-mvn-test.sh test
 
 # Run specific module tests
-mvn test -pl payment-bridge
-mvn test -pl mock-payment-api
+./run-mvn-test.sh test -pl payment-bridge
+./run-mvn-test.sh test -pl mock-payment-api
 ```
 
 ### Integration Tests

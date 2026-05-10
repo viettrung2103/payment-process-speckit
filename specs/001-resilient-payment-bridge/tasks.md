@@ -64,6 +64,21 @@
 - [ ] T208 Add metrics tracking for recovery events (deferred, succeeded, failed, retried)
 - [ ] T209 Implement operational alert system for recovery deferred events
 
+## Iteration 2026-05-10: Test Coverage Enhancement
+
+**Problem Identified**: Mock Payment API test coverage is below 80% (currently 73.89% line coverage)
+
+**Goal**: Increase test coverage to over 80% for better code quality and reliability
+
+**Tasks**:
+
+- [x] T215 Analyze current coverage gaps in mock-payment-api module using Jacoco reports
+- [x] T216 Add unit tests for uncovered service methods and edge cases
+- [x] T217 Add integration tests for controller endpoints with error scenarios
+- [x] T218 Add tests for exception handling and validation logic
+- [x] T219 Verify coverage exceeds 80% after test additions
+- [ ] T220 Update coverage thresholds in pom.xml if needed
+
 ## Iteration 2026-05-08: Phase 2 Advanced Features
 
 **Completed**:

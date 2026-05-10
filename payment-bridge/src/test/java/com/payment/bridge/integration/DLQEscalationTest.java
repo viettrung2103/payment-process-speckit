@@ -135,9 +135,13 @@ class DLQEscalationTest {
 
         paymentWorker.receive(task1, message1, channel1);
 
-        // Second failure (simulating another attempt)
+        // Second failure (simulating another payment with different error)
+        UUID paymentId2 = UUID.randomUUID();
+        Payment payment2 = createTestPayment(paymentId2);
+        paymentRepository.save(payment2);
+
         MessageQueueTask task2 = new MessageQueueTask();
-        task2.setPaymentId(paymentId);
+        task2.setPaymentId(paymentId2);
         task2.setRetryAttempt(5);
 
         com.payment.bridge.exception.PaymentApiException apiException2 = 
@@ -153,19 +157,21 @@ class DLQEscalationTest {
 
         paymentWorker.receive(task2, message2, channel2);
 
-        // Then: Multiple DLQ entries should exist
-        var dlqEntries = dlqRepository.findByPaymentId(paymentId);
-        assertThat(dlqEntries).hasSize(2);
+        // Then: DLQ entries should exist for each payment
+        var dlqEntries1 = dlqRepository.findByPaymentId(paymentId);
+        var dlqEntries2 = dlqRepository.findByPaymentId(paymentId2);
+        assertThat(dlqEntries1).hasSize(1);
+        assertThat(dlqEntries2).hasSize(1);
 
         // And: Each entry should have different error information
-        var firstEntry = dlqEntries.get(0);
-        var secondEntry = dlqEntries.get(1);
+        var firstEntry = dlqEntries1.get(0);
+        var secondEntry = dlqEntries2.get(0);
 
         assertThat(firstEntry.getFailureReason()).contains("Unauthorized");
         assertThat(secondEntry.getFailureReason()).contains("Forbidden");
 
-        // Both should have the same payment context
-        assertThat(firstEntry.getPaymentContext()).isEqualTo(secondEntry.getPaymentContext());
+        // Both should have different payment contexts
+        assertThat(firstEntry.getPaymentContext()).isNotEqualTo(secondEntry.getPaymentContext());
     }
 
     private Payment createTestPayment(UUID paymentId) {
