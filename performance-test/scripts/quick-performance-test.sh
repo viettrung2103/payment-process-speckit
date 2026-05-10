@@ -11,7 +11,7 @@ TOTAL_REQUESTS=20000
 LOAD_LEVELS=(5)
 ONE_INSTANCE_COMPOSE="$PROJECT_ROOT/docker-compose.yml"
 SCALED_COMPOSE="$PERF_DIR/config/docker-compose.scaled.yml"
-ANALYZER="$SCRIPT_DIR/analyze-results.sh"
+ANALYZER="$SCRIPT_DIR/helpers/analyze-results.sh"
 MODE="${1:-all}"
 
 if [[ "$MODE" != "all" && "$MODE" != "single" && "$MODE" != "scaled" && "$MODE" != "single-shutdown" && "$MODE" != "scaled-shutdown" ]]; then

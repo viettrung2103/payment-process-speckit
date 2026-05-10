@@ -253,11 +253,11 @@ wait_for_service "Mock Payment API" "http://localhost:8081/actuator/health" || e
 
         # Generate summary
         echo -e "${YELLOW}   📊 Generating summary...${NC}"
-        "$SCRIPT_DIR/analyze-results.sh" "$jtl_file" "$RESULTS_DIR/summary-${test_name}.txt"
+        "$SCRIPT_DIR/helpers/analyze-results.sh" "$jtl_file" "$RESULTS_DIR/summary-${test_name}.txt"
 
         # Collect load distribution metrics
         echo -e "${YELLOW}   📊 Collecting load distribution metrics...${NC}"
-        "$SCRIPT_DIR/collect-load-distribution.sh" "$RESULTS_DIR" "$test_name"
+        "$SCRIPT_DIR/helpers/collect-load-distribution.sh" "$RESULTS_DIR" "$test_name"
 
     else
         echo -e "${RED}   ❌ JMeter test failed${NC}"
@@ -280,11 +280,11 @@ done
 
 # Collect system metrics
 echo -e "${YELLOW}📊 Collecting system metrics...${NC}"
-"$SCRIPT_DIR/collect-metrics.sh" "$RESULTS_DIR"
+"$SCRIPT_DIR/helpers/collect-metrics.sh" "$RESULTS_DIR"
 
 # Generate final report
 echo -e "${YELLOW}📋 Generating final report...${NC}"
-"$SCRIPT_DIR/generate-report.sh" "$RESULTS_DIR" "scaled-3-instances"
+"$SCRIPT_DIR/helpers/generate-report.sh" "$RESULTS_DIR" "scaled-3-instances"
 
 echo
 echo -e "${GREEN}🎉 Scaled performance testing completed!${NC}"

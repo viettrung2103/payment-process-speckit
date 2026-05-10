@@ -21,7 +21,7 @@ set -e # Re-enable if desired
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 PERF_DIR="$PROJECT_ROOT/performance-test"
-ANALYZER="$SCRIPT_DIR/analyze-results.sh"
+ANALYZER="$SCRIPT_DIR/helpers/analyze-results.sh"
 
 echo "🚀 Starting Phase 9: Single-Instance Performance Testing"
 echo "======================================================"
@@ -290,11 +290,11 @@ done
 
 # Collect system metrics
 echo -e "${YELLOW}📊 Collecting system metrics...${NC}"
-"$SCRIPT_DIR/collect-metrics.sh" "$RESULTS_DIR"
+"$SCRIPT_DIR/helpers/collect-metrics.sh" "$RESULTS_DIR"
 
 # Generate final report
 echo -e "${YELLOW}📋 Generating final report...${NC}"
-"$SCRIPT_DIR/generate-report.sh" "$RESULTS_DIR" "single-instance"
+"$SCRIPT_DIR/helpers/generate-report.sh" "$RESULTS_DIR" "single-instance"
 
 echo
 echo -e "${GREEN}🎉 Single-instance performance testing completed!${NC}"
