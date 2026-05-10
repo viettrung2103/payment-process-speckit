@@ -22,7 +22,7 @@
 
 ## 🎯 Overview
 
-This project implements a **resilient distributed payment bridge** that processes payment requests by calling an external Payment REST API. The system is designed to handle high-throughput payment processing while ensuring zero data loss through restart scenarios and supporting horizontal scalability.
+This project implements a **resilient distributed payment bridge** with [SpecKit](https://github.com/github/spec-kit) that processes payment requests by calling an external Payment REST API. The system is designed to handle high-throughput payment processing while ensuring zero data loss through restart scenarios and supporting horizontal scalability. Read here for challenges and lessons.[link](docs/SPECKIT,%20CHALLENGE,%20AND%20SOLUTION.md)
 
 ### 🎯 Problem Statement
 
@@ -1293,6 +1293,7 @@ docker compose -f performance-test/config/docker-compose.scaled.yml up -d \
 - **Monitoring**: Prometheus + Grafana stack
 - **Logging**: ELK stack or CloudWatch
 - **Security**: TLS encryption, API authentication, secrets management
+- **Future Implementation**: Try to implement deployment on cloud infrastructure for real distributed scaling and managed services.
 
 ## 🔧 Troubleshooting
 
