@@ -1,0 +1,50 @@
+<<<<<<< HEAD
+<<<<<<< HEAD
+# Maven
+/target/
+# /payment-bridge/target/
+# /mock-payment-api/target/
+*/target/
+# IntelliJ
+/.idea/
+*.iml
+
+# VS Code
+.vscode/
+
+# OS files
+.DS_Store
+
+# Logs
+*.log
+
+# Compiled Java classes
+*.class
+
+# Generated wrapper files
+/mvnw
+/mvnw.cmd
+
+# Spring Boot Devtools
+spring-boot-devtools.properties
+=======
+**/target/
+>>>>>>> b1afda2 (chore: ignore build output directories)
+=======
+# Build outputs
+**/target/
+**/build/
+
+# IDE and editor files
+.idea/
+.vscode/
+*.iml
+
+# Logs and runtime output
+*.log
+logs/
+jmeter.log
+
+# OS metadata
+.DS_Store
+>>>>>>> 182e147 (chore: update gitignore with build, IDE, logs, and OS exclusions)
