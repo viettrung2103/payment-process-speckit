@@ -1,17 +1,4 @@
 # 🚀 Payment System Speckit
-
-[![Build Status](https://github.com/[OWNER]/payment-system-speckit/actions/workflows/build-and-test.yml/badge.svg?branch=main)](https://github.com/[OWNER]/payment-system-speckit/actions/workflows/build-and-test.yml)
-[![Integration Tests](https://github.com/[OWNER]/payment-system-speckit/actions/workflows/integration-tests.yml/badge.svg?branch=main)](https://github.com/[OWNER]/payment-system-speckit/actions/workflows/integration-tests.yml)
-[![Code Coverage](https://github.com/[OWNER]/payment-system-speckit/actions/workflows/code-coverage.yml/badge.svg?branch=main)](https://github.com/[OWNER]/payment-system-speckit/actions/workflows/code-coverage.yml)
-
-> **Take-Home Assignment Submission** - Resilient Distributed Payment Bridge
->
-> **Submitted by**: [Your Name]  
-> **Date**: May 10, 2026  
-> **Repository**: [GitHub URL]
-
----
-
 ## 📋 Table of Contents
 
 - [🎯 Overview](#-overview)
