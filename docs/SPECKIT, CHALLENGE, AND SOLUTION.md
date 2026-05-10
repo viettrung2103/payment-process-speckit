@@ -32,6 +32,8 @@ I observed in the logs that while some payments succeeded, others threw "Payment
 
 ## 3. Performance & Resource Findings
 Using `docker stats`, I monitored resource utilization during load tests with 5, 10, and 20 users.
+![one instance quick performance test](images/one-instance-quick.png)
+![three instance quick performance test](images/three-instance-quick.png)
 
 
 ### 📈 Bottleneck 1: Single-Instance CPU Saturation
