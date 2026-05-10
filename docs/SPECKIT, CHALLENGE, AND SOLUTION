@@ -28,16 +28,11 @@ The development process evolved as real-world problems were identified and solve
 I observed in the logs that while some payments succeeded, others threw "Payment not found" errors.
 * **Discovery:** The RabbitMQ worker thread was too fast for the database; it attempted to fetch records before the controller thread had finished committing the transaction.
 * **Resolution:** Implemented a `TransactionalEventListener` to ensure messages are only published after a successful database commit.
-
-### 🛠️ Environment Parity
-Discrepancies were found between IDE, Terminal, and Docker environments.
-* **IDE vs. Terminal:** The application failed in IntelliJ due to missing Byte Buddy dependencies required for Java 21, despite running correctly in the terminal via Maven.
-* **Docker Permissions:** The Nginx Load Balancer failed to start because it could not write to `/var/run/nginx.pid`. I found this was a permission denial caused by running the container as a non-root user.
-
 ---
 
 ## 3. Performance & Resource Findings
 Using `docker stats`, I monitored resource utilization during load tests with 5, 10, and 20 users.
+
 
 ### 📈 Bottleneck 1: Single-Instance CPU Saturation
 In single-instance tests, I found that the `payment-bridge` quickly hit a hardware ceiling.
