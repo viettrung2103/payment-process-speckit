@@ -1,3 +1,5 @@
+<<<<<<< HEAD
+<<<<<<< HEAD
 # Maven
 /target/
 # /payment-bridge/target/
@@ -25,3 +27,24 @@
 
 # Spring Boot Devtools
 spring-boot-devtools.properties
+=======
+**/target/
+>>>>>>> b1afda2 (chore: ignore build output directories)
+=======
+# Build outputs
+**/target/
+**/build/
+
+# IDE and editor files
+.idea/
+.vscode/
+*.iml
+
+# Logs and runtime output
+*.log
+logs/
+jmeter.log
+
+# OS metadata
+.DS_Store
+>>>>>>> 182e147 (chore: update gitignore with build, IDE, logs, and OS exclusions)

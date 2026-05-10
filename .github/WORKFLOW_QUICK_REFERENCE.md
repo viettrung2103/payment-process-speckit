@@ -117,10 +117,6 @@ git commit -m "Update docs [skip ci]"
 ```
 .github/workflows/
 ├── build-and-test.yml           # Core build & tests
-<<<<<<< HEAD
-├── multi-java-test.yml          # Java 21 testing
-=======
->>>>>>> 001-resilient-payment-bridge
 ├── integration-tests.yml        # E2E and load tests
 ├── code-coverage.yml            # Coverage reporting
 ├── security-scan.yml            # Vulnerability scanning
