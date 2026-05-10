@@ -312,6 +312,26 @@ start_scaled_instance_shutdown() {
 generate_combined_report() {
   echo "📊 Generating combined performance report..."
   local combined_report="$RESULTS_DIR/combined-summary.txt"
+  local single_prefix=""
+  local scaled_prefix=""
+
+  case "$MODE" in
+    all|single)
+      single_prefix="single-instance"
+      ;;
+    single-shutdown)
+      single_prefix="single-instance-shutdown"
+      ;;
+  esac
+
+  case "$MODE" in
+    all|scaled)
+      scaled_prefix="scaled-3-instances"
+      ;;
+    scaled-shutdown)
+      scaled_prefix="scaled-3-instances-shutdown"
+      ;;
+  esac
 
   cat << EOF > "$combined_report"
 QUICK PERFORMANCE TEST RESULTS
@@ -322,50 +342,62 @@ Results Directory: $(basename "$RESULTS_DIR")
 
 SINGLE INSTANCE RESULTS
 -----------------------
-$(for users in "${LOAD_LEVELS[@]}"; do
-  summary_file="$RESULTS_DIR/summary-single-instance-${users}-users.txt"
-  if [ -f "$summary_file" ]; then
-    echo "--- ${users} users ---"
-    cat "$summary_file" | grep -A 20 "SUMMARY METRICS"
-  else
-    echo "No single instance results found for ${users} users"
-  fi
-  echo
- done)
+$(if [ -n "$single_prefix" ]; then
+  for users in "${LOAD_LEVELS[@]}"; do
+    summary_file="$RESULTS_DIR/summary-${single_prefix}-${users}-users.txt"
+    if [ -f "$summary_file" ]; then
+      echo "--- ${users} users ---"
+      grep -A 20 "SUMMARY METRICS" "$summary_file"
+    else
+      echo "No single instance results found for ${users} users"
+    fi
+    echo
+  done
+else
+  echo "Not run in this mode"
+fi)
 
 SCALED INSTANCE RESULTS (3 instances)
 -------------------------------------
-$(for users in "${LOAD_LEVELS[@]}"; do
-  summary_file="$RESULTS_DIR/summary-scaled-3-instances-${users}-users.txt"
-  if [ -f "$summary_file" ]; then
-    echo "--- ${users} users ---"
-    cat "$summary_file" | grep -A 20 "SUMMARY METRICS"
-  else
-    echo "No scaled instance results found for ${users} users"
-  fi
-  echo
- done)
+$(if [ -n "$scaled_prefix" ]; then
+  for users in "${LOAD_LEVELS[@]}"; do
+    summary_file="$RESULTS_DIR/summary-${scaled_prefix}-${users}-users.txt"
+    if [ -f "$summary_file" ]; then
+      echo "--- ${users} users ---"
+      grep -A 20 "SUMMARY METRICS" "$summary_file"
+    else
+      echo "No scaled instance results found for ${users} users"
+    fi
+    echo
+  done
+else
+  echo "Not run in this mode"
+fi)
 
 OVERALL ASSESSMENT
 ------------------
-$(for users in "${LOAD_LEVELS[@]}"; do
-  single_file="$RESULTS_DIR/summary-single-instance-${users}-users.txt"
-  scaled_file="$RESULTS_DIR/summary-scaled-3-instances-${users}-users.txt"
-  if [ -f "$single_file" ] && [ -f "$scaled_file" ]; then
-    SINGLE_ERRORS=$(grep "Error Rate:" "$single_file" | awk '{print $3}' | tr -d '%')
-    SCALED_ERRORS=$(grep "Error Rate:" "$scaled_file" | awk '{print $3}' | tr -d '%')
-    SINGLE_THROUGHPUT=$(grep "Requests/Second:" "$single_file" | awk '{print $2}')
-    SCALED_THROUGHPUT=$(grep "Requests/Second:" "$scaled_file" | awk '{print $2}')
-    echo "Load ${users} users"
-    echo "  Single Instance: ${SINGLE_ERRORS}% errors, ${SINGLE_THROUGHPUT} RPS"
-    echo "  Scaled 3 instances: ${SCALED_ERRORS}% errors, ${SCALED_THROUGHPUT} RPS"
-    echo "  Efficiency: $(echo "scale=2; ($SCALED_THROUGHPUT / $SINGLE_THROUGHPUT) * 100 / 3" | bc 2>/dev/null || echo "N/A")% per instance"
-    echo
-  else
-    echo "Load ${users} users: cannot compare results - missing summary files"
-    echo
-  fi
- done)
+$(if [ -n "$single_prefix" ] && [ -n "$scaled_prefix" ]; then
+  for users in "${LOAD_LEVELS[@]}"; do
+    single_file="$RESULTS_DIR/summary-${single_prefix}-${users}-users.txt"
+    scaled_file="$RESULTS_DIR/summary-${scaled_prefix}-${users}-users.txt"
+    if [ -f "$single_file" ] && [ -f "$scaled_file" ]; then
+      SINGLE_ERRORS=$(grep "Error Rate:" "$single_file" | awk '{print $3}' | tr -d '%')
+      SCALED_ERRORS=$(grep "Error Rate:" "$scaled_file" | awk '{print $3}' | tr -d '%')
+      SINGLE_THROUGHPUT=$(grep "Requests/Second:" "$single_file" | awk '{print $2}')
+      SCALED_THROUGHPUT=$(grep "Requests/Second:" "$scaled_file" | awk '{print $2}')
+      echo "Load ${users} users"
+      echo "  Single Instance: ${SINGLE_ERRORS}% errors, ${SINGLE_THROUGHPUT} RPS"
+      echo "  Scaled 3 instances: ${SCALED_ERRORS}% errors, ${SCALED_THROUGHPUT} RPS"
+      echo "  Efficiency: $(echo "scale=2; ($SCALED_THROUGHPUT / $SINGLE_THROUGHPUT) * 100 / 3" | bc 2>/dev/null || echo "N/A")% per instance"
+      echo
+    else
+      echo "Load ${users} users: cannot compare results - missing summary files"
+      echo
+    fi
+  done
+else
+  echo "Comparison not applicable for this mode"
+fi)
 EOF
 
   echo "✅ Combined report generated: $combined_report"

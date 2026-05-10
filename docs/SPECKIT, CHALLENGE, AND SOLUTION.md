@@ -1,0 +1,67 @@
+# Payment System Development & Performance Report
+## Project: Mock Payment API & Bridge System
+**Methodology:** SpectKit (Spec-Driven Development)
+
+---
+
+## 1. The SpectKit Methodology
+SpectKit is a spec-driven toolkit that helps build applications fast, robust, and reliable by following a structured development cycle.
+
+### 🔄 The Development Lifecycle
+* **Constitution:** A set of rules or principles followed for every action.
+* **Spec:** Detailed feature descriptions and user stories provided by the "Product Owner" to ensure quality results.
+* **Plan:** Defined technical stack and infrastructure.
+* **Task:** Granular task lists created by combining templates with the Plan and Spec.
+* **Implement:** Feature construction strictly following the task list.
+
+### 🛡️ The "Triad of Quality" (Helper Steps)
+* **Clarify:** Resolving ambiguities in the plan before creating tasks.
+* **Analyse:** Ensuring the task list aligns with the Constitution and Plan.
+* **Checklist:** Validating that all requirements from the Spec and Constitution are met.
+
+---
+
+## 2. Technical Challenges & Discoveries
+The development process evolved as real-world problems were identified and solved.
+
+### 🧩 The "Race Condition" Paradox
+I observed in the logs that while some payments succeeded, others threw "Payment not found" errors.
+* **Discovery:** The RabbitMQ worker thread was too fast for the database; it attempted to fetch records before the controller thread had finished committing the transaction.
+* **Resolution:** Implemented a `TransactionalEventListener` to ensure messages are only published after a successful database commit.
+---
+
+## 3. Performance & Resource Findings
+Using `docker stats`, I monitored resource utilization during load tests with 5, 10, and 20 users.
+![one instance quick performance test](images/one-instance-quick.png)
+![three instance quick performance test](images/three-instance-quick.png)
+
+
+### 📈 Bottleneck 1: Single-Instance CPU Saturation
+In single-instance tests, I found that the `payment-bridge` quickly hit a hardware ceiling.
+* **CPU Peak:** The `payment-bridge` reached extreme CPU utilization, peaking at **257.62%** and later hitting **299.57%** under sustained load.
+* **Service Impact:** While the bridge was saturated, the `mock-payment-api` utilized nearly **100% (99.80%)** of its allocated CPU resources.
+* **Database Load:** The `payment-system-postgres` instance maintained steady utilization around **58%** during these peak saturation periods.
+
+### ⚖️ Bottleneck 2: Scaling and Resource Contention
+Scaling horizontally was implemented to relieve the single-instance CPU bottleneck.
+* **Multi-Instance Distribution:** By scaling to three instances, the load was distributed across `payment-bridge-1`, `payment-bridge-2`, and `payment-bridge-3`.
+* **Observed Balancing:** In one snapshot, the CPU load was spread as **151.67%**, **117.90%**, and **116.71%** respectively. Another test showed even higher throughput, with instances reaching **191.20%**, **165.17%**, and **151.02%** CPU usage.
+* **Hardware Limit Finding:** I found that while scaling instances helps, running them on a single machine still shares the same physical CPU. One machine per instance is ideal to avoid this resource sharing.
+
+---
+
+## 4. Reliability & High-Integrity Design
+
+### 🔑 Idempotency & Manual ACK
+* **Header-Based Keys:** I implemented an Idempotency Key in the HTTP header for easy lifecycle tracking (Bridge -> MQ -> Mock API) without unwrapping message bodies.
+* **Downstream Safety:** These keys are saved in the Mock API database to prevent duplicate processing if a race condition occurs.
+* **Manual Acknowledge:** RabbitMQ manual ACKs ensure tasks are only removed from the queue after successful instance handling.
+
+### 🛡️ Resilience & State Management
+* **State Flow:** Implemented a flow of **RECEIVE >> IN PROGRESS >> COMPLETED >> FAILED**.
+* **Hybrid Retry & DLQ:** Used a backoff retry strategy. Tasks that fail after retries are moved to a **Dead Letter Queue (DLQ)** for manual developer intervention, ensuring no data is lost.
+
+---
+
+## 5. Conclusion
+SpectKit shifted the focus from "writing code" to "managing intent." Performance testing with `docker stats` proved that the architecture successfully distributes load, but also identified the physical limits of local hardware. The system is now cloud-ready, with isolated resource nodes identified as the final step for linear scaling.

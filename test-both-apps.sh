@@ -35,6 +35,48 @@ print_warning() {
     echo -e "${YELLOW}[WARNING]${NC} $1"
 }
 
+find_java_home() {
+    if [[ -n "${JAVA_HOME:-}" ]] && [[ -x "${JAVA_HOME}/bin/java" ]]; then
+        echo "$JAVA_HOME"
+        return 0
+    fi
+
+    if [[ "$OSTYPE" == darwin* ]]; then
+        if command -v /usr/libexec/java_home >/dev/null 2>&1; then
+            local candidate
+            candidate=$( /usr/libexec/java_home -v 21 2>/dev/null || true )
+            if [[ -n "$candidate" ]] && [[ -x "$candidate/bin/java" ]]; then
+                echo "$candidate"
+                return 0
+            fi
+        fi
+    fi
+
+    if command -v java >/dev/null 2>&1; then
+        local java_cmd
+        java_cmd=$(command -v java)
+        local candidate
+        candidate=$(dirname "$(dirname "$java_cmd")")
+        if [[ -x "$candidate/bin/java" ]]; then
+            echo "$candidate"
+            return 0
+        fi
+    fi
+
+    return 1
+}
+
+set_java_home() {
+    if java_home_value=$(find_java_home); then
+        export JAVA_HOME="$java_home_value"
+        print_status "Using JAVA_HOME=$JAVA_HOME"
+        return 0
+    fi
+
+    print_error "Could not determine JAVA_HOME. Please install Java 21 or set JAVA_HOME."
+    return 1
+}
+
 # Test Mock Payment API
 test_mock_api() {
     print_status "Testing Mock Payment API..."
@@ -124,7 +166,7 @@ test_docker_services() {
     
     # First check database schema
     print_status "Checking database schema..."
-    docker-compose exec postgres psql -U payment_user -d payment_bridge -c "\d payment" 2>/dev/null || echo "Could not check schema"
+    docker-compose exec -T -e PGPASSWORD=payment_pass postgres psql -U payment_user -d payment_bridge -c "\d payment" 2>/dev/null || echo "Could not check schema"
     
     RESPONSE=$(curl -s -w "\nHTTP_STATUS:%{http_code}" \
         -X POST http://localhost:8080/api/v1/payments \
@@ -144,7 +186,7 @@ test_docker_services() {
         print_success "End-to-end payment flow test passed (HTTP 202)"
         
         # Check if payment was actually created in database
-        PAYMENT_COUNT=$(docker-compose exec postgres psql -U payment_user -d payment_bridge -t -c "SELECT COUNT(*) FROM payment;" 2>/dev/null | tr -d ' ')
+        PAYMENT_COUNT=$(docker-compose exec -T -e PGPASSWORD=payment_pass postgres psql -U payment_user -d payment_bridge -t -c "SELECT COUNT(*) FROM payment;" 2>/dev/null | tr -d ' ')
         if [ "$PAYMENT_COUNT" -gt 0 ]; then
             print_success "Payment record created in database ($PAYMENT_COUNT records)"
         else
@@ -160,10 +202,10 @@ test_docker_services() {
         docker-compose logs payment-bridge --tail=30 2>/dev/null || echo "Could not retrieve logs"
         
         print_status "Checking database migration status..."
-        docker-compose exec postgres psql -U payment_user -d payment_bridge -c "SELECT * FROM flyway_schema_history ORDER BY installed_rank;" 2>/dev/null || echo "Could not check migrations"
+        docker-compose exec -T -e PGPASSWORD=payment_pass postgres psql -U payment_user -d payment_bridge -c "SELECT * FROM flyway_schema_history ORDER BY installed_rank;" 2>/dev/null || echo "Could not check migrations"
         
         print_status "Checking database table structure..."
-        docker-compose exec postgres psql -U payment_user -d payment_bridge -c "\d payment" 2>/dev/null || echo "Could not check table structure"
+        docker-compose exec -T -e PGPASSWORD=payment_pass postgres psql -U payment_user -d payment_bridge -c "\d payment" 2>/dev/null || echo "Could not check table structure"
         
         return 1
     fi
@@ -182,6 +224,10 @@ main() {
     local docker_passed=0
 
     print_status "Starting comprehensive application testing..."
+
+    if ! set_java_home; then
+        return 1
+    fi
 
     # Test Mock Payment API
     if test_mock_api; then
